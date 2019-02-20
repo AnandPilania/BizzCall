@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".Home"
+    tools:showIn="@layout/app_bar_home">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar1"
+            android:layout_width="fill_parent"
+            android:layout_height="58dp"
+            android:background="@color/blue_text"
+            android:minHeight="?attr/actionBarSize"
+            android:titleTextColor="#ffff">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:text="Dashboard"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!--
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                     <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Select Status and Click Submit:"
+                    android:textColor="@color/black"
+                    android:textSize="18dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"/>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/border"
+                            android:layout_marginLeft="10dp">
+                            <Spinner
+                           android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                android:layout_marginLeft="20dp"
+                                  android:layout_marginRight="10dp"
+                                 android:layout_marginTop="5dp"
+                                android:id="@+id/spinnerStatus"></Spinner>
+                        </LinearLayout>
+                    </LinearLayout>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btnSubmit"
+                    android:background="@color/blue_text"
+                    android:textColor="@color/white"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="35dp"
+                    android:text="Submit"
+                    android:layout_marginBottom="10dp"/>
+                </LinearLayout>-->
+            <!--<LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:id="@+id/txtCID"
+                    android:paddingTop="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtCounselorId"
+            android:textSize="20dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"/>
+            </LinearLayout>-->
+            <!-- <LinearLayout
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:orientation="horizontal">
+                 <TextView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:id="@+id/txtSID"
+                     android:textSize="20dp"></TextView>
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:id="@+id/txtSelectedStatus"
+             android:textSize="20dp"
+             android:paddingLeft="10dp"
+             />
+             </LinearLayout>-->
+
+            <!--
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tblCounselorData"
+                    android:visibility="visible"
+                    android:layout_marginTop="15dp">
+
+                    <TableRow
+                       android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:paddingLeft="7dp"
+                        android:paddingRight="7dp">
+
+                        <TextView  android:layout_height="match_parent"
+                            android:layout_weight="0.8"
+                            android:layout_width="0dp"
+                            android:gravity="center"
+                            android:text="Sr.No"
+                            android:background="@drawable/table_drawable"
+                            android:textSize="12sp"></TextView>
+                        &lt;!&ndash;<TextView  android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:gravity="center"
+                            android:text="Whatsapp"
+                            android:background="@drawable/table_drawable"
+                            android:textSize="12sp"></TextView>&ndash;&gt;
+                        <TextView  android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:gravity="center"
+                            android:text="SMS"
+                            android:background="@drawable/table_drawable"
+                            android:textSize="12sp"></TextView>
+
+                        <TextView  android:layout_height="match_parent"
+                            android:layout_weight="1.8"
+                            android:layout_width="0dp"
+                            android:text="Mobile"
+                            android:gravity="center"
+                            android:background="@drawable/table_drawable"
+                            android:textSize="12sp"></TextView>
+                        <TextView  android:layout_height="match_parent"
+                            android:layout_weight="2"
+                            android:layout_width="0dp"
+                            android:text="Candidate Name"
+                            android:gravity="center"
+                            android:background="@drawable/table_drawable"
+                            android:textSize="12sp"></TextView>
+                        <TextView android:layout_height="match_parent"
+                            android:layout_weight="1.3"
+                            android:layout_width="0dp"
+                            android:text="Course"
+                            android:gravity="center"
+                            android:background="@drawable/table_drawable"
+                            android:textSize="12sp"></TextView>
+
+                        <TextView  android:layout_height="match_parent"
+                            android:layout_weight="2.3"
+                            android:layout_width="0dp"
+                            android:text="Email Id"
+                            android:gravity="center"
+                            android:background="@drawable/table_drawable"
+                            android:textSize="12sp"></TextView>
+                       &lt;!&ndash; <TextView  android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:text="Data From"
+                            android:gravity="center"
+                            android:background="@drawable/table_drawable"
+                            android:textSize="12sp"></TextView>&ndash;&gt;
+                    </TableRow>
+                </TableLayout>
+            -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/border"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/spinnerFilter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"></Spinner>
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerStatusTotalCnt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

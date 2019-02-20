@@ -1,0 +1,89 @@
+<resources>
+    <string name="app_name">BizzCall</string>
+    <string name="title_activity_home">Home</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="my_string">Recording</string>
+
+
+    <string name="C">com.example.wayto.sample</string>
+    <string-array name="Courses">
+        <item><font size="17">-Select Course-</font></item>
+        <item> <font size="17">Engineering</font></item>
+        <item><font size="17">Management</font></item>
+        <item><font size="17">Medical</font></item>
+        <item><font size="17">Other</font></item>
+    </string-array>
+    <string-array name="States">
+        <item><font size="17">-Select State-</font></item>
+        <item><font size="17">Andhra Pradesh</font></item>
+        <item> <font size="17">Andaman and Nicobar Islands</font></item>
+        <item> <font size="17">Arunachal Pradesh</font></item>
+        <item><font size="17"> Assam</font></item>
+        <item> <font size="17">Bihar</font></item>
+        <item> <font size="17">Chandigarh</font></item>
+        <item> <font size="17">Chhattisgarh</font></item>
+        <item> <font size="17">Dadar and Nagar Haveli</font></item>
+        <item> <font size="17">Daman and Diu</font></item>
+        <item> <font size="17">Delhi</font></item>
+        <item> <font size="17">Goa</font></item>
+        <item> <font size="17">Gujarat</font></item>
+        <item> <font size="17">Haryana</font></item>
+        <item> <font size="17">Himachal Pradesh</font></item>
+        <item> <font size="17">Jammu and Kashmir</font></item>
+        <item> <font size="17">Jharkhand</font></item>
+        <item> <font size="17">Karnataka</font></item>
+        <item> <font size="17">Kerala</font></item>
+        <item> <font size="17">Lakshadweep</font></item>
+        <item> <font size="17">Madhya Pradesh</font></item>
+        <item> <font size="17">Maharashtra</font></item>
+        <item> <font size="17">Manipur</font></item>
+        <item> <font size="17">Meghalaya</font></item>
+        <item> <font size="17">Mizoram</font></item>
+        <item> <font size="17">Nagaland</font></item>
+        <item> <font size="17">Odisha</font></item>
+        <item> <font size="17">Puducherry</font></item>
+        <item> <font size="17">Haryana</font></item>
+        <item> <font size="17">Punjab</font></item>
+        <item> <font size="17">Rajasthan</font></item>
+        <item> <font size="17">Sikkim</font></item>
+        <item> <font size="17">Tamil Nadu</font></item>
+        <item> <font size="17">Telangana</font></item>
+        <item> <font size="17">Tripura</font></item>
+        <item> <font size="17">Uttar Pradesh</font></item>
+        <item> <font size="17">Uttarakhand</font></item>
+        <item> <font size="17">West Bengal</font></item>
+    </string-array>
+    <string-array name="SchoolBoard">
+        <item><font size="17">-Select Board-</font></item>
+        <item><font size="17">Andhra Pradesh Board of Intermediate Education:(BIEAP)</font></item>
+        <item><font size="17">Andhra Pradesh Board of Secondary Education:(BSEAP)</font></item>
+        <item><font size="17">Andhra Pradesh Open School Society:(APOSS)</font></item>
+        <item><font size="17">Telangana Board of Intermediate and Education:(BIETS)</font></item>
+        <item><font size="17">Telangana Board of Secondary Education:(BSETS)</font></item>
+        <item><font size="17">Board of Higher Secondary Education,Delhi:(BHSE Delhi)</font></item>
+        <item><font size="17">Assam Higher Secondary Education Counsil:(AHSEC)</font></item>
+        <item><font size="17">Board of Secondary Education Assam:(SEBA)</font></item>
+        <item><font size="17">Bihar School Examination Board:(BSEB)</font></item>
+        <item><font size="17">Bihar Board of Open Schooling and Examnation:(BBOSE)</font></item>
+        <item><font size="17">Bihar State Madarsa Education Board:(BSMEB)</font></item>
+        <item><font size="17">Bihar Sanskrit Shiksha Board:(BSSB)</font></item>
+        <item><font size="17">Board of Youth Education India:(BYEI)</font></item>
+        <item><font size="17">Central Board of Secondary Education:(CBSE)</font></item>
+        <item><font size="17">Chhattisgarh State Open School:(CGSOS)</font></item>
+        <item><font size="17">Chhattisgarh Madhyamik Shiksha Mandal:(CGBSE)</font></item>
+        <item><font size="17">Chhattisgarh Madarsa Board</font></item>
+        <item><font size="17">Counsil for the Indaian School Certificate Examinations(CISCE)</font></item>
+        <item><font size="17">Goa Board of Secondary and Higher Secondary Education:(GBSHSE)</font></item>
+        <item><font size="17">Gujarat Secondary and Higher Secondary Education Board:(GSEB)</font></item>
+        <item><font size="17">Haryana Board of Secondary Education:(BSEH)</font></item>
+        <item><font size="17">Himachal Pradesh Board of School Education:(HPBOSE)</font></item>
+        <item><font size="17">Indian Certificate of Secondary Education:(ICSE)</font></item>
+    </string-array>
+</resources>
+
+
