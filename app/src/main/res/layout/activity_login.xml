@@ -172,12 +172,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Version:1.0"
-            android:textStyle="bold"/>
+           />
     <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="Client Id:"
-    android:textStyle="bold" />
+    />
     </LinearLayout>-->
     <LinearLayout
         android:layout_width="match_parent"

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/linearCallColumns"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:layout_marginLeft="5dp"
+                        android:background="@color/blue_text"
+                        android:textColor="@color/white"
+                        android:text="Call"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:id="@+id/txtCall"
+                        android:textAlignment="center"
+                        android:textSize="17dp"></TextView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@color/blue_text"
+                        android:textColor="@color/white"
+                        android:text="Clear"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:id="@+id/txtClearReminder"
+                        android:textAlignment="center"
+                        android:textSize="17dp"></TextView>
+                    <TextView
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:background="@drawable/border"
+                        android:textColor="@color/black"
+                        android:text="Call Date"
+                        android:id="@+id/txtReminderCallDate"
+                        android:textAlignment="center"
+                        android:textSize="15dp"></TextView>
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:background="@drawable/border"
+                        android:textColor="@color/black"
+                        android:text="Call Time"
+                        android:id="@+id/txtReminderCallTime"
+                        android:textAlignment="center"
+                        android:textSize="15dp"></TextView>
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/border"
+                        android:textColor="@color/black"
+                        android:text="Sr.No."
+                        android:id="@+id/txtReminderSrNo"
+                        android:textAlignment="center"
+                        android:textSize="15dp"></TextView>
+
+
+
+                    <TextView
+                        android:layout_width="130dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:background="@drawable/border"
+
+                        android:textColor="@color/black"
+                        android:text="Course"
+                        android:id="@+id/txtReminderCourse"
+                        android:textAlignment="center"
+                        android:textSize="15dp"></TextView>
+
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:background="@drawable/border"
+
+                        android:textColor="@color/black"
+                        android:text="Mobile"
+                        android:id="@+id/txtReminderMobile"
+                        android:textAlignment="center"
+                        android:textSize="15dp"></TextView>
+                    <TextView
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:background="@drawable/border"
+
+                        android:textColor="@color/black"
+                        android:text="Mobile2"
+                        android:id="@+id/txtReminderMobile2"
+                        android:textAlignment="center"
+                        android:textSize="15dp"></TextView>
+
+                    <TextView
+                        android:layout_width="220dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:background="@drawable/border"
+
+                        android:textColor="@color/black"
+                        android:text="Remarks"
+                        android:id="@+id/txtReminderRemarks"
+                        android:textAlignment="center"
+                        android:textSize="15dp"></TextView>
+                    <TextView
+                        android:layout_width="220dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:background="@drawable/border"
+
+                        android:textColor="@color/black"
+                        android:text="Name"
+                        android:id="@+id/txtReminderName"
+                        android:textAlignment="center"
+                        android:textSize="15dp"></TextView>
+
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+    </HorizontalScrollView>
+</LinearLayout>

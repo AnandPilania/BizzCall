@@ -26,6 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
+        android:textColor="@color/black"
         android:text="CounselorId"
         android:textSize="15dp" />
 
@@ -34,6 +35,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
+        android:textColor="@color/black"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
         android:text="CounselorName"
         android:textSize="15dp" />
 

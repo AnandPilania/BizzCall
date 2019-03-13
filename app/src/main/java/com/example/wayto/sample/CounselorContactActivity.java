@@ -12,8 +12,11 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -50,24 +53,30 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class CounselorContactActivity extends Activity {
+public class CounselorContactActivity extends FragmentActivity {
 
     static final int TIME_DIALOG_ID = 1111;
+    int pos;
+    String fetchedName,fetchedCourse,fetchedMobile,fetchedAddress,fetchedCity,fetchedState,fetchedPin,fetchedParentNo,fetchedEmail,fetchedDataFrom,fetchedAllocatedTo,fetchedAllocationDate,fetchedCurrentStatus,fetchedRemarks,fetchedCreatedDate,fetchedStatus;
+    int flag=0,flag1=0,flag2=0,call1,call2;
+    long timeout;
+    String clienturl;
+    ArrayList<String> arrayListStatusId;
     public static TextView txtSelectedCname, txtSelecteCId, txtSelctedSrNo;
     public static LinearLayout linearReallocateTo, linearSelectDate, linearSelectTime;
-    TextView txtSrno, txtCName, txtCourse, txtCount1, txtMobile, txtSMS;
+    TextView txtSrno, txtCName, txtCourse, txtCount1, txtMobile, txtSMS,txtCurrentStatus,txtRemark,txtCoin;
     CardView cardAction, cardInfo;
-    ImageView imgBack, imgClock;
+    ImageView imgBack, imgClock,imgCoin;
     EditText edtName1, edtAddress1, edtCity1, edtPincode1, edtParent1, edtEmail1;
     Spinner spinnerState1;
     Button btnCall, btnMsg, btnMail, btnDetails, btnCancel;
     LinearLayout linearLayout;
-    int temp = 0;
+    int eventid;
     SharedPreferences sp;
     SharedPreferences.Editor editor;
-    String name11, address1, city1, state11, parentno1, pincode1;
+    String name11, address1, city1, state11, parentno1, pincode1,status11,statusid,remark,enteredRemark;
     String msg, text1, smbl, mbl, sms, clientid, name, course, sr_no, email, email1, activityName, remarks, path1, duration1, callDate, id1, parentno;
-    String adrs, city, state1, pincode;
+    String adrs, city, state1, pincode,updatedStatus;
     Intent intent;
     int status1;
     ArrayList<String> arraySms;
@@ -77,7 +86,8 @@ public class CounselorContactActivity extends Activity {
     String uploadFileName = "";
     ProgressDialog dialog, dialog1;
     AlertDialog alertDialog;
-    TextView txtName, txtCloseWindow, txtTime, txtSelect;
+    TextView txtName, txtCloseWindow, txtTime, txtSelect,txtReallocationTitle,txtReportTitle;
+    LinearLayout linearReport;
     EditText edtMessage, edtMobile;
     Spinner spinnerTemplate;
     ImageView imgCloseWindow, imgClearText;
@@ -85,17 +95,24 @@ public class CounselorContactActivity extends Activity {
     Spinner spinnerStatus, spinnerMobile;
     TextView edtRemarks;
     ImageView imgCalender;
-    TextView txtDateView;
+    TextView txtDateView,txtReminderTitle,txtDiamond;
     int serverResponseCode = 0;
+    LinearLayout linearReallocation;
     String upLoadServerUri = null;
     ArrayList<String> arrayList1;
     DataListCounselor dataListCounselor;
     RecyclerView recyclerCounselorDetails;
     ArrayList<DataListCounselor> arrayListCounselorDetails;
     int year, day, month;
-    String time11, date11, selectedmbl, allocatedDate, newAllocatedTo;
+    String time11, date11, selectedmbl, allocatedDate, newAllocatedTo,totalcoins;
     private int hour;
     private int minute;
+    LinearLayout linearReminder;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+
+
+
     private TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minutes) {
@@ -136,18 +153,43 @@ public class CounselorContactActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_counselor_contact);
         sp = getSharedPreferences("Settings", Context.MODE_PRIVATE);
         id1 = sp.getString("Id", null);
         id1 = id1.replaceAll(" ", "");
+        clientid = sp.getString("ClientId", null);
+        clienturl=sp.getString("ClientUrl",null);
+        timeout=sp.getLong("TimeOut",0);
+        Log.d("ClientId", clientid);
+        totalcoins=sp.getString("TotalCoin",null);
         editor = sp.edit();
+            arrayListStatusId=new ArrayList<>();
+
+
+      /*  updateStatus=sp.getInt("UpdateStatus",0);
+        call=sp.getInt("Call",0);
+        confirmstatus=sp.getInt("ConfirmSuccess",0);
+        reminder=sp.getInt("Reminder",0);
+        remark1=sp.getInt("Remark1",0);
+        reallocation=sp.getInt("Reallocation",0);*/
+        activityName = getIntent().getStringExtra("ActivityName");
+        Log.d("ActivityName",activityName);
+        sr_no = sp.getString("SelectedSrNo", null);
+        getCounselorData();
+
+        txtCoin=findViewById(R.id.txtCoin);
+        imgCoin=findViewById(R.id.imgCoin);
+        txtDiamond=findViewById(R.id.txtDiamond);
         txtSelctedSrNo = findViewById(R.id.txtSelectedSrno);
         txtSelecteCId = findViewById(R.id.txtSelectedCounselorId);
         txtSelectedCname = findViewById(R.id.txtSelectedCName);
         linearReallocateTo = findViewById(R.id.linearReallocateTo);
         linearSelectDate = findViewById(R.id.linearSelectDate);
         linearSelectTime = findViewById(R.id.linearSelectTime);
+        linearReport=findViewById(R.id.linearReport);
+        txtReportTitle=findViewById(R.id.txtReportTitle);
         txtCName = findViewById(R.id.txtCandidateName1);
         txtCourse = findViewById(R.id.txtCourse1);
         txtSrno = findViewById(R.id.txtSrNo1);
@@ -165,24 +207,76 @@ public class CounselorContactActivity extends Activity {
         spinnerMobile = findViewById(R.id.spinnerMobile);
         btnReallocate = findViewById(R.id.btnReallocate);
         btnCancel = findViewById(R.id.btnCancel1);
+        txtReallocationTitle=findViewById(R.id.txtReallocationTitle);
+        linearReallocation=findViewById(R.id.linearReallocation);
+        txtCurrentStatus=findViewById(R.id.txtCurrentStatus);
+        txtRemark=findViewById(R.id.txtRemarks);
         //txtSrno=findViewById(R.id.txtSerialNo1);
         // txtName=findViewById(R.id.txtCName);
         // txtMobile=findViewById(R.id.txtMobNumber);
         //txtPath=findViewById(R.id.txtPath1);
         edtRemarks = findViewById(R.id.edtRemarks);
+        txtReminderTitle=findViewById(R.id.txtReminderTitle);
+        linearReminder=findViewById(R.id.linearReminder);
         btnUpload = findViewById(R.id.btnUploadStatus);
         arrayList1 = new ArrayList<>();
         recyclerCounselorDetails = findViewById(R.id.recyclerCounselorDetails);
         arrayListCounselorDetails = new ArrayList<>();
 
-        activityName = getIntent().getStringExtra("ActivityName");
 
-        clientid = sp.getString("ClientId", null);
-        Log.d("ClientId", clientid);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
 
-        upLoadServerUri = "http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=4";
+        txtCoin.setText(totalcoins);
+        imgCoin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(CounselorContactActivity.this,PointCollectionDetails.class));
+            }
+        });
+
+        tabLayout.addTab(tabLayout.newTab().setText("Remarks"));
+        tabLayout.addTab(tabLayout.newTab().setText("Status"));
+        tabLayout.addTab(tabLayout.newTab().setText("Call"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        final MyAdapter adapter = new MyAdapter(this,getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        spinnerStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                pos=position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        upLoadServerUri = clienturl+"?clientid=" + clientid + "&caseid=4";
         //  getStatus1();
-        mbl = sp.getString("SelectedMobile", null);
+       /* mbl = sp.getString("SelectedMobile", null);
         parentno = sp.getString("SelectedParentNo", null);
         name = sp.getString("SelectedName", null);
         course = sp.getString("SelectedCourse", null);
@@ -193,38 +287,21 @@ public class CounselorContactActivity extends Activity {
         city = sp.getString("SelectedCity", null);
         state1 = sp.getString("SelectedState", null);
         pincode = sp.getString("SelectedPinCode", null);
+        status11=sp.getString("SelectedStatus",null);
+        statusid=sp.getString("SelectedStatusId",null);
+        remark=sp.getString("SelectedRemark",null);
+*/
+        //Log.d("Mbl", mbl);
+        //Log.d("Status***",status11);
 
-        Log.d("Mbl", mbl);
+     //   getStatus1();
+        getCounselorDetails();
 
-        allocatedDate = allocatedDate.substring(allocatedDate.indexOf("date") + 4, allocatedDate.indexOf(","));
-        Log.d("Date!!!!", allocatedDate);
-        txtCName.setText(name);
-        txtSrno.setText(sr_no);
-        txtCourse.setText(course);
-        ArrayList<String> arrayListMbl = new ArrayList<>();
-        arrayListMbl.add(mbl);
-        arrayListMbl.add(parentno);
 
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(CounselorContactActivity.this, R.layout.spinner_item1, arrayListMbl);
-        //arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerMobile.setAdapter(arrayAdapter);
-        spinnerMobile.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedmbl = spinnerMobile.getSelectedItem().toString();
-                selectedmbl = "91" + selectedmbl;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                spinnerMobile.setSelection(0);
-
-            }
-        });
 
         // selectedmbl=spinnerMobile.getSelectedItem().toString();
         // Log.d("SMbl",selectedmbl);
-        dialog = ProgressDialog.show(CounselorContactActivity.this, "", "Uploading file...", true);
+        dialog = ProgressDialog.show(CounselorContactActivity.this, "", "Loading...", true);
        /* new Thread(new Runnable() {
             public void run() {
                 runOnUiThread(new Runnable() {
@@ -233,16 +310,25 @@ public class CounselorContactActivity extends Activity {
                     }
                 });*/
 
-        getStatus1();
-        getCounselorDetails();
-
-          /*  }
+                /*  }
         }).start();*/
         if (activityName.contains("ServiceRecord")) {
             path1 = sp.getString("RecordedFile", null);
             duration1 = sp.getString("Dur", null);
             Log.d("Path!!!", path1);
+           // int d1= Integer.parseInt(duration1);
 
+         /*   if(20)
+            {
+                eventid=11;
+                insertPointCollection(eventid);
+
+            }
+            else if(d1>60)
+            {
+                eventid=12;
+                insertPointCollection(eventid);
+            }*/
             uploadFilePath = path1.substring(path1.indexOf("/storage"), path1.indexOf("MyRecords/") + 10);
             uploadFileName = path1.substring(path1.indexOf("MyRecords/") + 10);
             callDate = uploadFileName.substring(11, 21);
@@ -251,23 +337,67 @@ public class CounselorContactActivity extends Activity {
             if (callDate.endsWith("_")) {
                 callDate = callDate.substring(0, callDate.length() - 1);
             }
-           /* new Thread(new Runnable() {
+            new Thread(new Runnable() {
                 public void run() {
                     runOnUiThread(new Runnable() {
                         public void run() {
                             // Toast.makeText(CounselorContactActivity.this,"uploading started.....",Toast.LENGTH_SHORT).show();
                         }
                     });
-*/
+
             uploadFile(uploadFilePath + "" + uploadFileName);
             insertCallInfo();
 
-            /*    }
-            }).start();*/
+               }
+            }).start();
         }
-        imgBack.setOnClickListener(new View.OnClickListener() {
+        txtReminderTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                if(linearReminder.getVisibility()==View.GONE)
+                {
+                    linearReminder.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    linearReminder.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        txtReallocationTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(linearReallocation.getVisibility()==View.GONE)
+                {
+                    linearReallocation.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    linearReallocation.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        txtReportTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(linearReport.getVisibility()==View.GONE)
+                {
+                    linearReport.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    linearReport.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        imgBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
                 onBackPressed();
             }
         });
@@ -321,9 +451,24 @@ public class CounselorContactActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //getStatus1();
-                setStatus();
+                enteredRemark=edtRemarks.getText().toString();
+                flag=0;
+                if(enteredRemark.length()==0)
+                {
+                    edtRemarks.setError("Please enter remark");
+                    flag=1;
+                }
+                if(flag==0)
+                {
+                    remarkBackup();
+                }
+                updateStatus();
+                statusBackup();
+               /*// if(flag1==1 || flag2==1)
+                {
 
-            }
+                }*/
+                }
         });
 
         btnCall.setOnClickListener(new View.OnClickListener() {
@@ -358,7 +503,11 @@ public class CounselorContactActivity extends Activity {
                     public void onClick(View view) {
                         intent = new Intent(Intent.ACTION_CALL);
                         intent.setData(Uri.parse("tel:" + selectedmbl + ""));
+                       // call=call+2;
 
+                        //Toast.makeText(CounselorContactActivity.this,"Call"+String.valueOf(call),Toast.LENGTH_SHORT).show();
+                        eventid=2;
+                        insertPointCollection(eventid);
                         //intent.setAction("android.intent.action.CALL");
                         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                             ActivityCompat.requestPermissions((Activity) getApplicationContext(), new String[]{Manifest.permission.CALL_PHONE}, 1);
@@ -493,6 +642,8 @@ public class CounselorContactActivity extends Activity {
                         if (msg.length() != 0) {
                             try {
                                 setSmsEntry();
+                                eventid=3;
+                                insertPointCollection(eventid);
                                 Intent intent = new Intent(Intent.ACTION_VIEW);
                                 intent.setData(Uri.parse("https://api.whatsapp.com/send?phone=" + smbl + "&text=" + msg));
                                 startActivity(intent);
@@ -513,9 +664,12 @@ public class CounselorContactActivity extends Activity {
 
                         if (msg.length() != 0) {
                             setSmsEntry();
+                            eventid=3;
+                            insertPointCollection(eventid);
                             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + smbl));
                             intent.putExtra("sms_body", msg);
                             startActivity(intent);
+
                         } else {
                             edtMessage.setError("Please enter message");
                         }
@@ -528,6 +682,8 @@ public class CounselorContactActivity extends Activity {
             public void onClick(View v) {
                 // String mail=dataCounselor.getEmail();
 
+                eventid=4;
+                insertPointCollection(eventid);
                 Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("text/plain");
                 i.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
@@ -544,154 +700,8 @@ public class CounselorContactActivity extends Activity {
         btnDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LayoutInflater li = LayoutInflater.from(getApplicationContext());
-                //Creating a view to get the dialog box
-                View confirmCall = li.inflate(R.layout.layout_detalis, null);
-                TextView txtSrno = (TextView) confirmCall.findViewById(R.id.txtSrno11);
-                TextView txtCourse = (TextView) confirmCall.findViewById(R.id.txtCourse11);
-                TextView txtMobile = confirmCall.findViewById(R.id.txtPhone11);
-                TextView txtName = confirmCall.findViewById(R.id.txtName11);
-                TextView txtAddress = confirmCall.findViewById(R.id.txtAddress11);
-                TextView txtCity = confirmCall.findViewById(R.id.txtCity11);
-                TextView txtState = confirmCall.findViewById(R.id.txtState11);
-                TextView txtPincode = confirmCall.findViewById(R.id.txtPinCode11);
-                TextView txtEmail = confirmCall.findViewById(R.id.txtEmail11);
-                TextView txtParent = confirmCall.findViewById(R.id.txtParentNo11);
-                Button btnEdit = confirmCall.findViewById(R.id.btnEditDetails);
-                Button btnOk = confirmCall.findViewById(R.id.btnOk11);
-                txtSrno.setText(sr_no);
-                txtCourse.setText(course);
-                txtMobile.setText(mbl);
-                txtName.setText(name);
-                txtAddress.setText(adrs);
-                txtCity.setText(city);
-                txtState.setText(state1);
-                txtPincode.setText(pincode);
-                txtEmail.setText(email);
-                txtParent.setText(parentno);
-
-                AlertDialog.Builder alert = new AlertDialog.Builder(CounselorContactActivity.this);
-                //Adding our dialog box to the view of alert dialog
-                alert.setView(confirmCall);
-                //Creating an alert dialog
-                alertDialog = alert.create();
-                alertDialog.show();
-                btnOk.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alertDialog.dismiss();
-                    }
-                });
-                btnEdit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alertDialog.dismiss();
-
-                        LayoutInflater li = LayoutInflater.from(getApplicationContext());
-                        //Creating a view to get the dialog box
-                        View confirmCall = li.inflate(R.layout.layout_editdetails, null);
-                        TextView txtSrno1 = (TextView) confirmCall.findViewById(R.id.txtSrno12);
-                        TextView txtCourse1 = (TextView) confirmCall.findViewById(R.id.txtCourse12);
-                        TextView txtMobile1 = confirmCall.findViewById(R.id.txtPhone12);
-                        edtName1 = confirmCall.findViewById(R.id.edtName11);
-                        edtAddress1 = confirmCall.findViewById(R.id.edtAddress11);
-                        edtCity1 = confirmCall.findViewById(R.id.edtCity11);
-                        spinnerState1 = confirmCall.findViewById(R.id.spinnerState11);
-                        edtEmail1 = confirmCall.findViewById(R.id.edtEmail11);
-                        edtParent1 = confirmCall.findViewById(R.id.edtParentNo11);
-                        edtPincode1 = confirmCall.findViewById(R.id.edtPinCode11);
-                        Button btnUpdate = confirmCall.findViewById(R.id.btnUpdateDetails);
-                        Button btnCancel = confirmCall.findViewById(R.id.btnCancelUpdate);
-                        txtSrno1.setText(sr_no);
-                        txtCourse1.setText(course);
-                        txtMobile1.setText(mbl);
-                        edtName1.setText(name);
-                        edtAddress1.setText(adrs);
-                        edtCity1.setText(city);
-                        edtParent1.setText(parentno);
-                        edtEmail1.setText(email);
-                        edtPincode1.setText(pincode);
-                        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(CounselorContactActivity.this,
-                                R.array.States, android.R.layout.simple_spinner_item);
-                        // Specify the layout to use when the list of choices appears
-                        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        // Apply the adapter to the spinner
-                        spinnerState1.setAdapter(adapter1);
-
-                        AlertDialog.Builder alert = new AlertDialog.Builder(CounselorContactActivity.this);
-                        //Adding our dialog box to the view of alert dialog
-                        alert.setView(confirmCall);
-                        //Creating an alert dialog
-                        alertDialog = alert.create();
-                        alertDialog.show();
-                        btnUpdate.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-
-                                try {
-                                    temp = 0;
-                                    name11 = edtName1.getText().toString();
-                                    if (name11.length() == 0) {
-                                        edtName1.setError("Please enter name");
-                                        temp = 1;
-                                    }
-                                    address1 = edtAddress1.getText().toString();
-                                    if (address1.length() == 0) {
-                                        edtAddress1.setError("Please enter address");
-                                        temp = 1;
-                                    }
-                                    city1 = edtCity1.getText().toString();
-                                    if (city1.length() == 0) {
-                                        edtCity1.setError("Please enter city");
-                                        temp = 1;
-                                    }
-                                    state11 = spinnerState1.getSelectedItem().toString();
-
-                                    for (int i = 0; i < R.array.States; i++)
-                                  /*  if(state11.contains("-Select State-"))
-                                    {
-
-                                    }*/
-                                        email1 = edtEmail1.getText().toString();
-                                    String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-                                    if (!email1.matches(emailPattern)) {
-                                        edtEmail1.setError("Please enter email");
-                                        temp = 1;
-                                    }
-                                    parentno1 = edtParent1.getText().toString();
-                                    if (parentno1.length() < 10 || parentno1.length() == 0) {
-                                        edtParent1.setError("Invalid number");
-                                        temp = 1;
-                                    }
-                                    pincode1 = edtPincode1.getText().toString();
-                                    if (pincode1.length() < 6 || pincode1.length() == 0) {
-                                        edtPincode1.setError("Invalid pin");
-                                        temp = 1;
-                                    }
-                                    name = name.replaceAll(" ", "");
-                                    email1 = URLEncoder.encode(email1, "UTF-8");
-
-                                    if (temp == 0) {
-                                        alertDialog.dismiss();
-                                        dialog1 = ProgressDialog.show(CounselorContactActivity.this, "", "Uploading file...", true);
-                                        updateCounselorDetails();
-                                    }
-                                } catch (UnsupportedEncodingException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                        btnCancel.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                alertDialog.dismiss();
-                            }
-                        });
-                    }
-                });
-
-            }
+                startActivity(new Intent(CounselorContactActivity.this,DetailsActivity.class));
+                           }
         });
 
         linearSelectDate.setOnClickListener(new View.OnClickListener() {
@@ -709,10 +719,86 @@ public class CounselorContactActivity extends Activity {
     }
 
     @Override
-    public void onBackPressed() {
-        intent = new Intent(CounselorContactActivity.this, CounsellorData.class);
-        startActivity(intent);
+    public void onBackPressed()
+    {
+        if(activityName.contains("AdapterSearch"))
+        {
+            startActivity(new Intent(CounselorContactActivity.this,Home.class));
+        }
+        else if(activityName.contains("ReminderActivity"))
+        {
+            LayoutInflater li = LayoutInflater.from(getApplicationContext());
+            //Creating a view to get the dialog box
+            View confirmCall = li.inflate(R.layout.layout_confirm_call, null);
+
+            //confirmCall.setClipToOutline(true);
+
+            TextView txtYes = (TextView) confirmCall.findViewById(R.id.txtYes);
+            TextView txtTitle=confirmCall.findViewById(R.id.txtConfirmDelete);
+            TextView txtNo = (TextView) confirmCall.findViewById(R.id.txtNo);
+            txtTitle.setText("Do you want to clear reminder?");
+            AlertDialog.Builder alert = new AlertDialog.Builder(CounselorContactActivity.this);
+            //Adding our dialog box to the view of alert dialog
+            alert.setView(confirmCall);
+            //Creating an alert dialog
+            alertDialog = alert.create();
+            alertDialog.show();
+
+            txtYes.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view) {
+                   /* intent = new Intent(Intent.ACTION_CALL);
+                    intent.setData(Uri.parse("tel:" + selectedmbl + ""));
+                    call=call+2;
+                    editor.putInt("Call",call);
+                    editor.commit();*/
+                   // Toast.makeText(CounselorContactActivity.this,"Call"+String.valueOf(call),Toast.LENGTH_SHORT).show();
+
+                    clearReminder();
+                    startActivity(new Intent(CounselorContactActivity.this,ReminderActivity.class));
+                    }
+            });
+
+            txtNo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                    startActivity(new Intent(CounselorContactActivity.this,ReminderActivity.class));
+                }
+            });
+
+            }
+        else {
+            intent = new Intent(CounselorContactActivity.this, CounsellorData.class);
+            startActivity(intent);
+        }
     }
+    public void clearReminder()
+    {
+       String callId=sp.getString("SelectedCallingId",null);
+        urlRequest = UrlRequest.getObject();
+        urlRequest.setContext(getApplicationContext());
+        urlRequest.setUrl("http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=35&cUpdatedBy=" +id1+"&nSrNo=" + sr_no+"&nCallingId="+callId);
+        Log.d("ClearReminder", "http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=35&cUpdatedBy=" +id1+"&nSrNo="+sr_no+"&nCallingId="+callId );
+        urlRequest.getResponse(new ServerCallback() {
+            @Override
+            public void onSuccess(String response) throws JSONException {
+                dialog.dismiss();
+
+                Log.d("ClearReminderResonse", response);
+                if (response.contains("Row updated successfully"))
+                {
+                    eventid=14;
+                    insertPointCollection(eventid);
+                    Toast.makeText(CounselorContactActivity.this, "Cleared reminder", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(CounselorContactActivity.this, "Reminder not cleared", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
 
     // Used to convert 24hr format to 12hr format with AM/PM values
     private void updateTime(int hours, int mins) {
@@ -774,11 +860,36 @@ public class CounselorContactActivity extends Activity {
                 .append(month).append("-").append(day));
     }
 
+
+    public void insertPointCollection(int eid)
+    {
+        urlRequest = UrlRequest.getObject();
+        urlRequest.setContext(getApplicationContext());
+        urlRequest.setUrl(clienturl+"?clientid=" + clientid + "&caseid=36&nCounsellorId=" + id1 + "&nEventId="+eid);
+        Log.d("PointCollectionResponse", clienturl+"?clientid=" + clientid + "&caseid=36&nCounsellorId=" + id1 + "&nEventId="+eid);
+        urlRequest.getResponse(new ServerCallback() {
+            @Override
+            public void onSuccess(String response) throws JSONException {
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                Log.d("PointCollectionResponse", response);
+                if (response.contains("Data inserted successfully")) {
+                    Toast.makeText(CounselorContactActivity.this, "Data inserted successfully", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(CounselorContactActivity.this, "Data not inserted successfully", Toast.LENGTH_SHORT).show();
+                }
+                //   Log.d("Size**", String.valueOf(arrayList.size()));
+            }
+        });
+    }
+
+
     public void getCounselorDetails() {
         urlRequest = UrlRequest.getObject();
         urlRequest.setContext(getApplicationContext());
-        urlRequest.setUrl("http://anilsahasrabuddhe.in/CRM/AnDe828500/CounselorDetails.php");
-        Log.d("CounselorUrl", "http://anilsahasrabuddhe.in/CRM/AnDe828500/CounselorDetails.php");
+        urlRequest.setUrl(clienturl+"?clientid=" + clientid + "&caseid=30");
+        Log.d("CounselorUrl", clienturl+"?clientid=" + clientid + "&caseid=30");
         urlRequest.getResponse(new ServerCallback() {
             @Override
             public void onSuccess(String response) throws JSONException {
@@ -808,27 +919,92 @@ public class CounselorContactActivity extends Activity {
         });
     }
 
-    public void updateCounselorDetails() {
-        String url = "http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=AnDe828500&caseid=18&Srno=" + sr_no + "&CounselorName=" + name11 + "&Address=" +
-                address1 + "&City=" + city1 + "&State=" + state11 + "&Pincode=" + pincode1 + "&Email=" + email1 + "&ParentNo=" + parentno1;
+    public void getCounselorData() {
         urlRequest = UrlRequest.getObject();
         urlRequest.setContext(getApplicationContext());
-        urlRequest.setUrl(url);
-        Log.d("UpdateDetailsUrl", url);
+        urlRequest.setUrl(clienturl+"?clientid=" + clientid + "&caseid=32&nSrNo="+sr_no);
+        Log.d("FetchedCounselorUrl", clienturl+"?clientid=" + clientid + "&caseid=32&nSrNo="+sr_no);
         urlRequest.getResponse(new ServerCallback() {
             @Override
             public void onSuccess(String response) throws JSONException {
-                dialog1.dismiss();
-                Log.d("UpdatedDetailsResponse", response);
-                if (response.contains("Row updated successfully")) {
-                    Toast.makeText(CounselorContactActivity.this, "Data updated successfully", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(CounselorContactActivity.this, "Data not updated successfully", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                Log.d("FetchedResponse", response);
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    Log.d("Json", jsonObject.toString());
+                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                        //String id = String.valueOf(jsonObject1.getInt("cCounselorID"));
+                  /*      mbl=fetchedMobile;
+                        parentno=fetchedParentNo;
+                        name=fetchedName;
+                        course=fetchedCourse;
+                        email=fetchedEmail;
+                        allocatedDate=fetchedAllocationDate;
+                        adrs=fetchedAddress;
+                        city=fetchedCity;
+                        state1=fetchedState;
+                        pincode=fetchedPin;
+                        status11=fetchedStatus;
+                        statusid=fetchedCurrentStatus;
+                        remark=fetchedRemarks;*/
+
+                         name = jsonObject1.getString("cCandidateName");
+                         course=jsonObject1.getString("cCourse");
+                         mbl=jsonObject1.getString("cMobile");
+                         adrs=jsonObject1.getString("cAddressLine");
+                         city=jsonObject1.getString("cCity");
+                         state1=jsonObject1.getString("cState");
+                         pincode=jsonObject1.getString("cPinCode");
+                         parentno=jsonObject1.getString("cParantNo");
+                         email=jsonObject1.getString("cEmail");
+                         fetchedDataFrom=jsonObject1.getString("cDataFrom");
+                         fetchedAllocatedTo=jsonObject1.getString("AllocatedTo");
+                         allocatedDate=jsonObject1.getString("AllocationDate");
+                         statusid=jsonObject1.getString("CurrentStatus");
+                         remark=jsonObject1.getString("cRemarks");
+                         fetchedCreatedDate=jsonObject1.getString("dtCreatedDate");
+                         status11=jsonObject1.getString("cStatus");
+                         }
+
+                    allocatedDate = allocatedDate.substring(allocatedDate.indexOf("date") + 4, allocatedDate.indexOf(","));
+                    Log.d("Date!!!!", allocatedDate);
+                    txtCName.setText(name);
+                    txtSrno.setText(sr_no);
+                    txtCourse.setText(course);
+                    txtCurrentStatus.setText(status11);
+                    txtRemark.setText(remark);
+                    ArrayList<String> arrayListMbl = new ArrayList<>();
+                    arrayListMbl.add(mbl);
+                    arrayListMbl.add(parentno);
+
+                    final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(CounselorContactActivity.this, R.layout.spinner_item1, arrayListMbl);
+                    //arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinnerMobile.setAdapter(arrayAdapter);
+                    spinnerMobile.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            selectedmbl = spinnerMobile.getSelectedItem().toString();
+                            selectedmbl = "91" + selectedmbl;
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+                            spinnerMobile.setSelection(0);
+                        }
+                    });
+
+                    getStatus1();
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         });
-
     }
+
 
     public void getStatus1() {
         urlRequest = UrlRequest.getObject();
@@ -847,18 +1023,28 @@ public class CounselorContactActivity extends Activity {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                         String status1 = jsonObject1.getString("cStatus");
-                        //  statusid=jsonObject1.getString("nStatusID");
-                        // Log.d("Status11",statusid);
+                        statusid=jsonObject1.getString("nStatusID");
+                        Log.d("Status11",status1);
                         //StatusInfo statusInfo=new StatusInfo(status1,statusid);
-
+                            arrayListStatusId.add(statusid);
                         // Log.d("Json33333",statusInfo.toString());
                         //arrayList.add(statusInfo);
                         arrayList1.add(status1);
                         // Log.d("Json11111",arrayList1.toString());
                     }
+                    String setselected=status11;
+
                     ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(CounselorContactActivity.this, R.layout.spinner_item1, arrayList1);
                     //arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinnerStatus.setAdapter(arrayAdapter);
+
+                    for(int i=0;i<arrayList1.size();i++)
+                    {
+                        if(arrayList1.get(i).matches(status11))
+                        {
+                            spinnerStatus.setSelection(i);
+                        }
+                    }
                     Log.d("Size**", String.valueOf(arrayList1.size()));
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -867,21 +1053,39 @@ public class CounselorContactActivity extends Activity {
         });
     }
 
-    public void setStatus() {
-        status1 = (int) spinnerStatus.getSelectedItemId();
+    public void updateStatus()
+    {
+        status1 = Integer.parseInt(arrayListStatusId.get(pos));
+
         Log.d("updateStatus", String.valueOf(status1));
         // status=status.replaceAll(" ","");
         remarks = edtRemarks.getText().toString();
         urlRequest = UrlRequest.getObject();
         urlRequest.setContext(getApplicationContext());
-        urlRequest.setUrl("http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=5&nSrNo=" + sr_no + "&CurrentStatus=" + status1 + "&cRemarks=" + remarks);
-        Log.d("StatusUrl", "http://anilsahasrabuddhe.in/CRM/AnDe828500/updateStatus.php?clientid=" + clientid + "&caseid=5&nSrNo=" + sr_no + "&CurrentStatus=" + status1 + "&cRemarks=" + remarks);
+        urlRequest.setUrl("http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=5&nSrNo=" + sr_no + "&CurrentStatus=" + status1 + "&cRemarks=" + enteredRemark);
+        Log.d("StatusUrl", "http://anilsahasrabuddhe.in/CRM/AnDe828500/updateStatus.php?clientid=" + clientid + "&caseid=5&nSrNo=" + sr_no + "&CurrentStatus=" + status1 + "&cRemarks=" + enteredRemark);
         urlRequest.getResponse(new ServerCallback() {
             @Override
             public void onSuccess(String response) throws JSONException {
                 dialog.dismiss();
+                updatedStatus=spinnerStatus.getSelectedItem().toString();
+                Log.d("UStatus",updatedStatus);
+                txtCurrentStatus.setText(updatedStatus);
                 Log.d("UpdatedStatus", response);
-                if (response.contains("Row updated successfully")) {
+                if (response.contains("Row updated successfully"))
+                {
+                  eventid=6;
+                  insertPointCollection(eventid);
+                    /*editor.putInt("UpdateStatus",updateStatus);
+                    editor.putInt("Remark1",remark1);
+                    editor.commit();*/
+                    if(updatedStatus.contains("CONFIRM SUCCESS"))
+                    {
+                     eventid=7;
+                     insertPointCollection(eventid);
+                       /* editor.putInt("ConfirmSuccess",confirmstatus);
+                        editor.commit();*/
+                    }
                     Toast.makeText(CounselorContactActivity.this, "Status updated successfully", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(CounselorContactActivity.this, "Status not updated successfully", Toast.LENGTH_SHORT).show();
@@ -889,18 +1093,75 @@ public class CounselorContactActivity extends Activity {
             }
         });
     }
+    public void statusBackup()
+    {
+        status1 =  Integer.parseInt(arrayListStatusId.get(pos));
+       // updatedStatus=spinnerStatus.getSelectedItem().toString();
+        Log.d("updateStatus", String.valueOf(status1));
+        // status=status.replaceAll(" ","");
+        //remarks = edtRemarks.getText().toString();
+        urlRequest = UrlRequest.getObject();
+        urlRequest.setContext(getApplicationContext());
+        urlRequest.setUrl(clienturl+"?clientid=" + clientid + "&caseid=19&SrNo=" + sr_no + "&StatusId=" + status1 +"&CounsellorId="+id1);
+        Log.d("StatusBackupUrl", clienturl+"?clientid=" + clientid + "&caseid=19&SrNo=" + sr_no + "&StatusId=" + status1 +"&CounsellorId="+id1);
+        urlRequest.getResponse(new ServerCallback() {
+            @Override
+            public void onSuccess(String response) throws JSONException {
+                dialog.dismiss();
+                flag2=1;
+                Log.d("StatusBackup", response);
+                if (response.contains("Data inserted successfully")) {
+                    Toast.makeText(CounselorContactActivity.this, "Status inserted successfully", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(CounselorContactActivity.this, "Status not inserted successfully", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
 
+    public void remarkBackup() {
+       // status1 = (int) spinnerStatus.getSelectedItemId();
+       // Log.d("updateStatus", String.valueOf(status1));
+        // status=status.replaceAll(" ","");
+        //remarks = edtRemarks.getText().toString();
+        urlRequest = UrlRequest.getObject();
+        urlRequest.setContext(getApplicationContext());
+        urlRequest.setUrl(clienturl+"?clientid=" + clientid + "&caseid=20&SrNo=" + sr_no + "&sRemarks=" + remark +"&CounsellorId="+id1);
+        Log.d("RemarkBackupUrl", clienturl+"?clientid=" + clientid + "&caseid=20&SrNo=" + sr_no + "&sRemarks=" + remark +"&CounsellorId="+id1);
+        urlRequest.getResponse(new ServerCallback()
+        {
+            @Override
+
+            public void onSuccess(String response) throws JSONException {
+                dialog.dismiss();
+                txtRemark.setText(enteredRemark);
+                edtRemarks.setText("");
+                Log.d("RemarkBackup", response);
+                if (response.contains("Data inserted successfully")) {
+                    Toast.makeText(CounselorContactActivity.this, "Remark inserted successfully", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(CounselorContactActivity.this, "Remark not inserted successfully", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+    }
     public void setReminder() {
         urlRequest = UrlRequest.getObject();
         urlRequest.setContext(getApplicationContext());
-        urlRequest.setUrl("http://anilsahasrabuddhe.in/CRM/AnDe828500/SetReminder.php?nSrNo=" + sr_no + "&dtCallDateTime=" + date11 + "&cCounselorID=" + id1 + "&cCallTime=" + time11 + "&nStatus=" + String.valueOf(status1) + "&cUpdatedBy=" + id1);
-        Log.d("ReminderUrl", "http://anilsahasrabuddhe.in/CRM/AnDe828500/SetReminder.php?nSrNo=" + sr_no + "&dtCallDateTime=" + date11 + "&cCounselorID=" + id1 + "&cCallTime=" + time11 + "&nStatus=" + String.valueOf(status1) + "&cUpdatedBy=" + id1);
+        urlRequest.setUrl(clienturl+"?clientid=" + clientid + "&caseid=26&nSrNo=" + sr_no +  "&cCounselorID=" + id1 +"&dtCallDateTime=" + date11 + "&cCallTime=" + time11 + "&nStatus=" + String.valueOf(status1) + "&cUpdatedBy=" + id1);
+        Log.d("ReminderUrl", clienturl+"?clientid=" + clientid + "&caseid=26&nSrNo=" + sr_no +"&cCounselorID=" + id1 + "&dtCallDateTime=" + date11 +  "&cCallTime=" + time11 + "&nStatus=" + String.valueOf(status1) + "&cUpdatedBy=" + id1);
         urlRequest.getResponse(new ServerCallback() {
             @Override
             public void onSuccess(String response) throws JSONException {
                 dialog.dismiss();
                 Log.d("ReminderResponse", response);
-                if (response.contains("Data inserted successfully")) {
+                if (response.contains("Data inserted successfully"))
+                {
+                        eventid=9;
+                        insertPointCollection(eventid);
+                   /* editor.putInt("Reminder",reminder);
+                    editor.commit();*/
                     Toast.makeText(CounselorContactActivity.this, "Reminder set successfully", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(CounselorContactActivity.this, "Reminder not set successfully", Toast.LENGTH_SHORT).show();
@@ -909,7 +1170,8 @@ public class CounselorContactActivity extends Activity {
         });
     }
 
-    public void setSmsEntry() {
+    public void setSmsEntry()
+    {
         urlRequest = UrlRequest.getObject();
         urlRequest.setContext(getApplicationContext());
         urlRequest.setUrl("http://anilsahasrabuddhe.in/CRM/AnDe828500/SMSEntry.php?nSrNo=" + sr_no + "&cMobileNo=" + smbl + "&cCounselorID=" + id1 + "&cSms=" + msg);
@@ -920,6 +1182,7 @@ public class CounselorContactActivity extends Activity {
                 dialog.dismiss();
                 Log.d("SMSResponse", response);
                 if (response.contains("Data inserted successfully")) {
+
                     Toast.makeText(CounselorContactActivity.this, "message inserted successfully", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(CounselorContactActivity.this, "message not inserted successfully", Toast.LENGTH_SHORT).show();
@@ -927,10 +1190,8 @@ public class CounselorContactActivity extends Activity {
             }
         });
     }
-
-
     public void setReallocation() {
-        status1 = (int) spinnerStatus.getSelectedItemId();
+        status1 = Integer.parseInt(arrayListStatusId.get(pos));
         Log.d("updateStatus", String.valueOf(status1));
         urlRequest = UrlRequest.getObject();
         urlRequest.setContext(getApplicationContext());
@@ -941,7 +1202,11 @@ public class CounselorContactActivity extends Activity {
             public void onSuccess(String response) throws JSONException {
                 dialog.dismiss();
                 Log.d("ReallocationResponse", response);
-                if (response.contains("Data inserted successfully")) {
+                if (response.contains("Data inserted successfully"))
+                {
+                        eventid=10;
+                        insertPointCollection(eventid);
+                   // Toast.makeText(CounselorContactActivity.this,"Reallocation:"+String.valueOf(reallocation),Toast.LENGTH_SHORT).show();
                     Toast.makeText(CounselorContactActivity.this, "Reallocated successfully", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(CounselorContactActivity.this, "Not Reallocated successfully", Toast.LENGTH_SHORT).show();
@@ -951,7 +1216,7 @@ public class CounselorContactActivity extends Activity {
     }
 
     public void setReallocateDatabaselist() {
-        status1 = (int) spinnerStatus.getSelectedItemId();
+        status1 = Integer.parseInt(arrayListStatusId.get(pos));
         Log.d("updateStatus", String.valueOf(status1));
         // status=status.replaceAll(" ","");
         remarks = edtRemarks.getText().toString();
@@ -961,7 +1226,8 @@ public class CounselorContactActivity extends Activity {
         Log.d("StatusUrl", "http://anilsahasrabuddhe.in/CRM/AnDe828500/UpdateReallocateDatabaselist.php?nSrNo=" + sr_no + "cCounselorID=" + id1);
         urlRequest.getResponse(new ServerCallback() {
             @Override
-            public void onSuccess(String response) throws JSONException {
+            public void onSuccess(String response) throws JSONException
+            {
                 dialog.dismiss();
                 Log.d("UpdatedStatus", response);
                 if (response.contains("Row updated successfully")) {
@@ -974,7 +1240,7 @@ public class CounselorContactActivity extends Activity {
     }
 
     public void insertCallInfo() {
-        String url = "http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=6&nSrNo=" + sr_no + "&cFileName=" + uploadFileName + "&cMobileNo=" + mbl + "&cCallDuration=" + duration1 + "&cCallDate=" + callDate + "&nCounselorID=" + id1;
+        String url = clienturl+"?clientid=" + clientid + "&caseid=6&nSrNo=" + sr_no + "&cFileName=" + uploadFileName + "&cMobileNo=" + mbl + "&cCallDuration=" + duration1 + "&cCallDate=" + callDate + "&nCounselorID=" + id1;
         urlRequest = UrlRequest.getObject();
         urlRequest.setContext(getApplicationContext());
         urlRequest.setUrl(url);

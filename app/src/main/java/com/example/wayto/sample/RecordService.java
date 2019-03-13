@@ -31,7 +31,7 @@ public class RecordService extends Service {
     long timeSwapBuff = 0L;
     long updatedTime = 0L;
     UrlRequest urlRequest;
-    String duration1, counselorid, phoneNumber, date;
+    String duration1, counselorid, phoneNumber, date,clienturl;
     AlertDialog dialog;
     private long startHTime = 0L;
     private Handler customHandler = new Handler();
@@ -83,13 +83,16 @@ public class RecordService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         sp = getSharedPreferences("Settings", Context.MODE_PRIVATE);
         clientid = sp.getString("ClientId", null);
+        clienturl=sp.getString("ClientUrl",null);
         sr_no = sp.getString("Sr.No", null);
         recorder = new MediaRecorder();
         recorder.reset();
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mmr = new MediaMetadataRetriever();
         //audioManager.setMode(AudioManager.MODE_IN_CALL);
-        //phoneNumber=intent.getStringExtra("number");
+        phoneNumber=intent.getStringExtra("number");
+        Log.d("Number",phoneNumber);
+        phoneNumber=phoneNumber.replace("91","");
 
 
        /* if(!TextUtils.isEmpty(phoneNumber))
@@ -171,11 +174,11 @@ public class RecordService extends Service {
             recorder = null;
             counselorid = sp.getString("Id", null);
             counselorid = counselorid.replaceAll(" ", "");
-            Intent intent = new Intent(RecordService.this, CounselorContactActivity.class);
+           /* Intent intent = new Intent(RecordService.this, CounselorContactActivity.class);
             intent.putExtra("ActivityName", "ServiceRecord");
             // PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
-            startActivity(intent);
-            //checkNumber(counselorid,phoneNumber);
+            startActivity(intent);*/
+            checkNumber(counselorid,phoneNumber);
             timeSwapBuff += timeInMilliseconds;
             customHandler.removeCallbacks(updateTimerThread);
             audioManager.setMode(AudioManager.MODE_NORMAL);
@@ -199,8 +202,8 @@ public class RecordService extends Service {
         // dialog = ProgressDialog.show(RecordService.this, "Loading", "Please wait.....", false, true);
         urlRequest = UrlRequest.getObject();
         urlRequest.setContext(getApplicationContext());
-        urlRequest.setUrl("http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=9&CounselorId=" + cid + "&cMobile=" + phoneNumber1);
-        Log.d("CheckUrl", "http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=9&CounselorId=" + cid + "&cMobile=" + phoneNumber1);
+        urlRequest.setUrl(clienturl+"?clientid=" + clientid + "&caseid=9&CounselorId=" + cid + "&cMobile=" + phoneNumber1);
+        Log.d("CheckUrl", clienturl+"?clientid=" + clientid + "&caseid=9&CounselorId=" + cid + "&cMobile=" + phoneNumber1);
         urlRequest.getResponse(new ServerCallback() {
             @Override
             public void onSuccess(String response) throws JSONException {
@@ -208,6 +211,7 @@ public class RecordService extends Service {
                 Log.d("CheckResponse", response);
                 if (response.contains("Present")) {
                     Intent intent = new Intent(RecordService.this, CounselorContactActivity.class);
+                    intent.putExtra("ActivityName","ServiceRecord");
                     // PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
                     startActivity(intent);
                 } else {

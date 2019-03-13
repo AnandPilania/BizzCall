@@ -27,8 +27,8 @@ public class Splash extends AppCompatActivity {
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.fadeout);
         iv = (ImageView) findViewById(R.id.imageSplash);
         iv.setAnimation(anim);
-        new Handler().postDelayed(new Runnable() {
-
+        new Handler().postDelayed(new Runnable()
+        {
             @Override
             public void run() {
                 if (uname == null) {

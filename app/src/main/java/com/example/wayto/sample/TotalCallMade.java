@@ -2,6 +2,7 @@ package com.example.wayto.sample;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -26,20 +27,25 @@ public class TotalCallMade extends AppCompatActivity {
     ProgressDialog dialog;
     UrlRequest urlRequest;
     TextView txtTotalCallNo;
-    ImageView imgBack;
+    ImageView imgBack,imgCoin;
     SharedPreferences sp;
-    String counselorid, clientid;
+    String counselorid, clientid,clienturl,totalcoins;
     TextView txtMsg;
     LinearLayout linearLayout;
+    TextView txtCoin,txtDiamond;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_total_call_made);
+
+        txtCoin=findViewById(R.id.txtCoin);
+      //  txtDiamond=findViewById(R.id.txtDiamond);
         txtTotalCallNo = findViewById(R.id.txtTotalCallNo);
         imgBack = findViewById(R.id.img_back);
         txtMsg = findViewById(R.id.txtNoCallMadeMsg);
         linearLayout = findViewById(R.id.linearCallColumns);
+        imgCoin=findViewById(R.id.imgCoin);
         imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,9 +57,18 @@ public class TotalCallMade extends AppCompatActivity {
         counselorid = sp.getString("Id", null);
         counselorid = counselorid.replaceAll(" ", "");
         clientid = sp.getString("ClientId", null);
+        clienturl=sp.getString("ClientUrl",null);
+        totalcoins=sp.getString("TotalCoin",null);
         Log.d("CID", clientid);
         getTotalCallNo();
         getTotalCallMade();
+        txtCoin.setText(totalcoins);
+        imgCoin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(TotalCallMade.this,PointCollectionDetails.class));
+            }
+        });
 
     }
 
@@ -62,8 +77,8 @@ public class TotalCallMade extends AppCompatActivity {
         arrayList = new ArrayList<>();
         urlRequest = UrlRequest.getObject();
         urlRequest.setContext(getApplicationContext());
-        urlRequest.setUrl("http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=15&CounsellorId=" + counselorid);
-        Log.d("TotalCallMadeUrl", "http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=15&CounsellorId=" + counselorid);
+        urlRequest.setUrl(clienturl+"?clientid=" + clientid + "&caseid=15&CounsellorId=" + counselorid);
+        Log.d("TotalCallMadeUrl", clienturl+"?clientid=" + clientid + "&caseid=15&CounsellorId=" + counselorid);
         urlRequest.getResponse(new ServerCallback() {
             @Override
             public void onSuccess(String response) throws JSONException {
@@ -117,8 +132,8 @@ public class TotalCallMade extends AppCompatActivity {
         arrayList = new ArrayList<>();
         urlRequest = UrlRequest.getObject();
         urlRequest.setContext(getApplicationContext());
-        urlRequest.setUrl("http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=17&CounsellorId=" + counselorid);
-        Log.d("CallNoUrl", "http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=17&CounsellorId=" + counselorid);
+        urlRequest.setUrl(clienturl+"?clientid=" + clientid + "&caseid=17&CounsellorId=" + counselorid);
+        Log.d("CallNoUrl", clienturl+"?clientid=" + clientid + "&caseid=17&CounsellorId=" + counselorid);
         urlRequest.getResponse(new ServerCallback() {
             @Override
             public void onSuccess(String response) throws JSONException {

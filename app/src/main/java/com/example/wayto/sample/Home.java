@@ -1,15 +1,22 @@
 package com.example.wayto.sample;
 
 import android.Manifest;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -26,25 +33,35 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     String counselorid, uname, emailid, role, mobile, status1, statusid1, selectedStatus;
-    TextView txtUName, txtUId, txtEmail, txtRole, txtMobile, txtCounselorId, txtSelectedStatus, txtCID, txtSID;
+    TextView txtUName, txtCoin, txtDiamond, txtRole, txtMobile, txtCounselorId, txtSelectedStatus, txtCID, txtSID;
     UrlRequest urlRequest;
     ProgressDialog dialog;
     AlertDialog alertDialog;
-    int pos;
+    int pos,check=0;
     // ArrayList<StatusInfo> arrayList;
 
     //  ArrayList<String> arrayList1;
@@ -53,6 +70,7 @@ public class Home extends AppCompatActivity
     SharedPreferences.Editor editor;
     String uname1, id, statusid, sid;
     Intent intent;
+    TextView mtextView;
     Button btnSubmit;
     Toast toast;
     Login login;
@@ -60,12 +78,23 @@ public class Home extends AppCompatActivity
     ArrayList<DataStatusTotal> arrayListTotal;
     AdapterStatusTotalCount adapterTotal;
     RecyclerView recyclerView;
-    String loginDate;
+    String loginDate,clienturl;
     Spinner spinnerRef;
     // ArrayList<DataReference> arrayListRefrences;
     ArrayList<String> arrayListRefId;
     String clientid;
+    Long timeout;
     private long back_pressed = 0;
+
+    private Handler notifyHandler = new Handler();
+    Thread t1;
+    int TotalReminderMatch = 0;
+    int TotalReminderNotMatch = 0;
+    ArrayList<DataReminder> mArrayList;
+    DataReminder dataReminder;
+    ProgressDialog progressDialog;
+    ImageView imgCoin;
+
 
    /* @Override
     protected void onResume() {
@@ -75,6 +104,27 @@ public class Home extends AppCompatActivity
             Toast.makeText(Home.this,"Permission already granted",Toast.LENGTH_SHORT).show();
         }
     }*/
+
+    class MyJSON implements Runnable {
+        @Override
+        public void run() {
+            try {
+                String url = "http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=33";
+                Log.d("ReminderUrl",url);
+                while (true) {
+                    RequestQueue requestQueue = Volley.newRequestQueue(Home.this);
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,
+                            null, new success(), new fail());
+                    requestQueue.add(jsonObjectRequest);
+                    t1.sleep(120000);
+
+                }
+            }catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +144,9 @@ public class Home extends AppCompatActivity
 
         sp = getSharedPreferences("Settings", Context.MODE_PRIVATE);
         clientid = sp.getString("ClientId", null);
+        clienturl=sp.getString("ClientUrl",null);
+        timeout=sp.getLong("TimeOut",0);
+        Log.d("timeout", String.valueOf(timeout));
         login = new Login();
         uname = sp.getString("Name", null);
         counselorid = sp.getString("Id", null);
@@ -114,11 +167,20 @@ public class Home extends AppCompatActivity
         id = sp.getString("Id", null);
         Log.d("U***", uname1);
         Log.d("I***", id);
-        //getLoginInfo();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar1);
+        Runnable mthread1 = new MyJSON();
+          //Runnable mthread2 = new compareDate();
+
+        t1 = new Thread(mthread1);
+         // t2 = new Thread(mthread2);
+
+        t1.start();
 
         spinnerRef = findViewById(R.id.spinnerFilter);
+        txtCoin=findViewById(R.id.txtCoin);
+        txtDiamond=findViewById(R.id.txtDiamond);
+        imgCoin=findViewById(R.id.imgCoin);
         //arrayList = new ArrayList<>();
         // arrayList1 = new ArrayList<>();
         // TextView txtUsername=findViewById(R.id.txtUserName);
@@ -129,21 +191,6 @@ public class Home extends AppCompatActivity
         //  getStatus();
         recyclerView = findViewById(R.id.recyclerStatusTotalCnt);
 
-        //  getCounselor();
-       /* btnSubmit = findViewById(R.id.btnSubmit);
-        // txtCounselorId=findViewById(R.id.txtCounselorId);
-        // txtSelectedStatus=findViewById(R.id.txtSelectedStatus);
-         *//*txtCID=findViewById(R.id.txtCID);
-         txtSID=findViewById(R.id.txtSID);*//*
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sid = String.valueOf(spinnerStatus.getSelectedItemPosition());
-                Log.d("Clicked submit", "clicked");
-
-                getCounselor(counselorid, sid);
-            }
-        });*/
 
 
 
@@ -172,6 +219,47 @@ public class Home extends AppCompatActivity
                 });*/
 
         //getStatusCount();
+        mtextView=findViewById(R.id.txtTimer);
+        new CountDownTimer(timeout, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                //mtextView.setText("seconds remaining: " + millisUntilFinished / 1000);
+            }
+
+            public void onFinish() {
+                if(dialog.isShowing())
+                {
+                    dialog.dismiss();
+                    // mtextView.setText("done!");
+                    LayoutInflater li = LayoutInflater.from(getApplicationContext());
+                    //Creating a view to get the dialog box
+                    View confirmCall = li.inflate(R.layout.layout_popup_slowinternet, null);
+                    TextView txtOk = (TextView) confirmCall.findViewById(R.id.txtOkSlowPopoup);
+
+                    AlertDialog.Builder alert = new AlertDialog.Builder(Home.this);
+                    //Adding our dialog box to the view of alert dialog
+                    alert.setView(confirmCall);
+                    //Creating an alert dialog
+                    alertDialog = alert.create();
+                    alertDialog.show();
+
+                    txtOk.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                            editor = sp.edit();
+                            editor.putString("Name", null);
+                            // editor.putString("Id",null);
+                            editor.commit();
+                            finish();
+                            startActivity(new Intent(Home.this,Login.class));
+
+                        }
+                    });
+
+                    }
+            }
+        }.start();
         editor = sp.edit();
         editor.putString("DtaFrom", "0");
         editor.commit();
@@ -179,41 +267,50 @@ public class Home extends AppCompatActivity
         getRefName();
         getAllRefName();
         lastLoginDetails();
+        getPointCollection();
 
           /*  }
         }).start();*/
 
-
+          imgCoin.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                  startActivity(new Intent(Home.this,PointCollectionDetails.class));
+              }
+          });
         spinnerRef.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                pos = position;
-                String texttoload = spinnerRef.getSelectedItem().toString();
-                editor = sp.edit();
-                editor.putString("DataRefName", texttoload);
-                editor.commit();
-                LayoutInflater li = LayoutInflater.from(getApplicationContext());
-                //Creating a view to get the dialog box
-                View confirmCall = li.inflate(R.layout.layout_confirm_loadtext, null);
-                TextView txtYes = (TextView) confirmCall.findViewById(R.id.txtYes);
-                TextView txtNo = (TextView) confirmCall.findViewById(R.id.txtNo);
-                TextView txtLoad = confirmCall.findViewById(R.id.txtConfirmLoad);
-                txtLoad.setText("Do you want to load " + texttoload + "?");
-                AlertDialog.Builder alert = new AlertDialog.Builder(Home.this);
-                //Adding our dialog box to the view of alert dialog
-                alert.setView(confirmCall);
-                //Creating an alert dialog
-                alertDialog = alert.create();
-                alertDialog.show();
 
-                txtYes.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (pos == 0) {
-                            editor = sp.edit();
-                            editor.putString("DtaFrom", "0");
-                            editor.commit();
-                            dialog = ProgressDialog.show(Home.this, "", "Loading...", true);
+                    pos = position;
+                    String texttoload = spinnerRef.getSelectedItem().toString();
+                    editor = sp.edit();
+                    editor.putString("DataRefName", texttoload);
+                    editor.commit();
+                    LayoutInflater li = LayoutInflater.from(getApplicationContext());
+                    //Creating a view to get the dialog box
+                    View confirmCall = li.inflate(R.layout.layout_confirm_loadtext, null);
+                    TextView txtYes = (TextView) confirmCall.findViewById(R.id.txtYes);
+                    TextView txtNo = (TextView) confirmCall.findViewById(R.id.txtNo);
+                    TextView txtLoad = confirmCall.findViewById(R.id.txtConfirmLoad);
+                    txtLoad.setText("Do you want to load " + texttoload + "?");
+                    AlertDialog.Builder alert = new AlertDialog.Builder(Home.this);
+                    //Adding our dialog box to the view of alert dialog
+                    alert.setView(confirmCall);
+                    //Creating an alert dialog
+                    alertDialog = alert.create();
+                if (++check > 1) {
+                    alertDialog.show();
+                }
+
+                    txtYes.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (pos == 0) {
+                                editor = sp.edit();
+                                editor.putString("DtaFrom", "0");
+                                editor.commit();
+                                dialog = ProgressDialog.show(Home.this, "", "Loading...", true);
                            /* new Thread(new Runnable() {
                                 public void run() {
                                     runOnUiThread(new Runnable() {
@@ -222,21 +319,21 @@ public class Home extends AppCompatActivity
                                         }
                                     });*/
 
-                            //getStatusCount();
-                            getAllRefName();
+                                //getStatusCount();
+                                getAllRefName();
                                /* }
                             }).start();*/
 
-                        } else {
-                            int p = pos - 1;
+                            } else {
+                                int p = pos - 1;
 
-                            // DataReference dataReference1=arrayListRefrences.get(position);
-                            dataFrom1 = arrayListRefId.get(p);
-                            Log.d("RefId", dataFrom1);
-                            editor = sp.edit();
-                            editor.putString("DtaFrom", dataFrom1);
-                            editor.commit();
-                            dialog = ProgressDialog.show(Home.this, "", "Loading...", true);
+                                // DataReference dataReference1=arrayListRefrences.get(position);
+                                dataFrom1 = arrayListRefId.get(p);
+                                Log.d("RefId", dataFrom1);
+                                editor = sp.edit();
+                                editor.putString("DtaFrom", dataFrom1);
+                                editor.commit();
+                                dialog = ProgressDialog.show(Home.this, "", "Loading...", true);
                            /* new Thread(new Runnable() {
                                 public void run() {
                                     runOnUiThread(new Runnable() {
@@ -245,25 +342,26 @@ public class Home extends AppCompatActivity
                                         }
                                     });*/
 
-                            //getStatusCount();
-                            getRestRefName();
+                                //getStatusCount();
+                                getRestRefName();
                               /*  }
                             }).start();*/
 
 
+                            }
+                            alertDialog.dismiss();
+
                         }
-                        alertDialog.dismiss();
+                    });
 
-                    }
-                });
+                    txtNo.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
 
-                txtNo.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        alertDialog.dismiss();
-                    }
-                });
-
+                //}
             }
 
             @Override
@@ -295,25 +393,7 @@ public class Home extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    public void getLoginInfo() {
-        dialog = ProgressDialog.show(Home.this, "Loading", "Please wait.....", false, true);
 
-        arrayListTotal = new ArrayList<>();
-        urlRequest = UrlRequest.getObject();
-        urlRequest.setContext(getApplicationContext());
-        urlRequest.setUrl("http://anilsahasrabuddhe.in/CRM/AnDe828500/LoginInfo.php?cCounselorID=" + counselorid);
-        Log.d("StatusCountUrl", "http://anilsahasrabuddhe.in/CRM/AnDe828500/LoginInfo.php?cCounselorID=" + counselorid);
-        urlRequest.getResponse(new ServerCallback() {
-            @Override
-            public void onSuccess(String response) throws JSONException {
-                if (dialog.isShowing()) {
-                    dialog.dismiss();
-                }
-                Log.d("LoginInfoResponse", response);
-
-            }
-        });
-    }
 
     public void lastLoginDetails() {
         //dialog = ProgressDialog.show(Home.this, "Loading", "Please wait.....", false, true);
@@ -321,8 +401,8 @@ public class Home extends AppCompatActivity
         arrayListTotal = new ArrayList<>();
         urlRequest = UrlRequest.getObject();
         urlRequest.setContext(getApplicationContext());
-        urlRequest.setUrl("http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=14&CounsellorId=" + counselorid);
-        Log.d("StatusCountUrl", "http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=14&CounsellorId=" + counselorid);
+        urlRequest.setUrl(clienturl+"?clientid=" + clientid + "&caseid=14&CounsellorId=" + counselorid);
+        Log.d("lastloginResponse", clienturl+"?clientid=" + clientid + "&caseid=14&CounsellorId=" + counselorid);
         urlRequest.getResponse(new ServerCallback() {
             @Override
             public void onSuccess(String response) throws JSONException {
@@ -344,7 +424,7 @@ public class Home extends AppCompatActivity
         });
     }
 
-    public void getStatusCount() {
+    /*public void getStatusCount() {
 
         arrayListTotal = new ArrayList<>();
         urlRequest = UrlRequest.getObject();
@@ -387,7 +467,7 @@ public class Home extends AppCompatActivity
             }
         });
     }
-
+*/
     public void getRefName() {
         // arrayListRefrences=new ArrayList<>();
         final ArrayList<String> arrayList1 = new ArrayList<>();
@@ -395,15 +475,15 @@ public class Home extends AppCompatActivity
         arrayList1.add(0, "All");
         urlRequest = UrlRequest.getObject();
         urlRequest.setContext(getApplicationContext());
-        urlRequest.setUrl("http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=11&CounsellorId=" + counselorid);
-        Log.d("StatusCountUrl", "http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=11&CounsellorId=" + counselorid);
+        urlRequest.setUrl(clienturl+"?clientid=" + clientid + "&caseid=11&CounsellorId=" + counselorid);
+        Log.d("RefNameUrl", clienturl+"?clientid=" + clientid + "&caseid=11&CounsellorId=" + counselorid);
         urlRequest.getResponse(new ServerCallback() {
             @Override
             public void onSuccess(String response) throws JSONException {
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
-                Log.d("StatusTotalResponse", response);
+                Log.d("RefNameUrl", response);
                 try {
 
                     JSONObject jsonObject = new JSONObject(response);
@@ -436,15 +516,16 @@ public class Home extends AppCompatActivity
     public void getAllRefName() {
         urlRequest = UrlRequest.getObject();
         urlRequest.setContext(getApplicationContext());
-        urlRequest.setUrl("http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=12&CounsellorId=" + counselorid);
-        Log.d("StatusCountUrl", "http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=12&CounsellorId=" + counselorid);
+        //String clienturl="http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php";
+        urlRequest.setUrl(clienturl+"?clientid=" + clientid + "&caseid=12&CounsellorId=" + counselorid);
+        Log.d("AllRefNameUrl", clienturl+"?clientid=" + clientid + "&caseid=12&CounsellorId=" + counselorid);
         urlRequest.getResponse(new ServerCallback() {
             @Override
             public void onSuccess(String response) throws JSONException {
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
-                Log.d("StatusTotalResponse", response);
+                Log.d("AllRefNameResponse", response);
                 try {
                     arrayListTotal.clear();
                     JSONObject jsonObject = new JSONObject(response);
@@ -479,15 +560,15 @@ public class Home extends AppCompatActivity
     public void getRestRefName() {
         urlRequest = UrlRequest.getObject();
         urlRequest.setContext(getApplicationContext());
-        urlRequest.setUrl("http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=13&CounsellorId=" + counselorid + "&DataFrom=" + dataFrom1);
-        Log.d("StatusCountUrl", "http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=13&CounsellorId=" + counselorid + "&DataFrom=" + dataFrom1);
+        urlRequest.setUrl(clienturl+"?clientid=" + clientid + "&caseid=13&CounsellorId=" + counselorid + "&DataFrom=" + dataFrom1);
+        Log.d("RestRefNameUrl", clienturl+"?clientid=" + clientid + "&caseid=13&CounsellorId=" + counselorid + "&DataFrom=" + dataFrom1);
         urlRequest.getResponse(new ServerCallback() {
             @Override
             public void onSuccess(String response) throws JSONException {
                 if (dialog.isShowing()) {
                     dialog.dismiss();
                 }
-                Log.d("StatusTotalResponse", response);
+                Log.d("RestRefNameResponse", response);
                 try {
                     arrayListTotal.clear();
                     JSONObject jsonObject = new JSONObject(response);
@@ -511,8 +592,39 @@ public class Home extends AppCompatActivity
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-            }
+                }
+        });
+    }
+    public void getPointCollection() {
+        urlRequest = UrlRequest.getObject();
+        urlRequest.setContext(getApplicationContext());
+        //String clienturl="http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php";
+        urlRequest.setUrl(clienturl+"?clientid=" + clientid + "&caseid=37&CounsellorId=" + counselorid);
+        Log.d("CojnUrl", clienturl+"?clientid=" + clientid + "&caseid=37&CounsellorId=" + counselorid);
+        urlRequest.getResponse(new ServerCallback() {
+            @Override
+            public void onSuccess(String response) throws JSONException {
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                Log.d("CoinResponse", response);
+                try {
+                    arrayListTotal.clear();
+                    JSONObject jsonObject = new JSONObject(response);
+                    // Log.d("Json",jsonObject.toString());
+                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                        String totalcoin = jsonObject1.getString("Total Coin");
+                        txtCoin.setText(totalcoin);
+                        editor = sp.edit();
+                        editor.putString("TotalCoin",totalcoin);
+                        editor.commit();
+                    }
+                    } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                }
         });
     }
 
@@ -584,19 +696,23 @@ public class Home extends AppCompatActivity
             intent.putExtra("ActivityName", "Home");
             startActivity(intent);
 
-        } else if (id == R.id.nav_template) {
+        }else if(id==R.id.nav_reminder)
+        {
+            startActivity(new Intent(Home.this,ReminderActivity.class));
+        }
+        else if (id == R.id.nav_template) {
             Intent intent = new Intent(Home.this, MessageTemplate.class);
             startActivity(intent);
         } else if (id == R.id.nav_totalCallMade) {
             Intent intent = new Intent(Home.this, TotalCallMade.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_browse) {
+        } /*else if (id == R.id.nav_browse) {
 
             Intent intent = new Intent(Home.this, BrowseActivity.class);
             startActivity(intent);
 
-        } /*else if (id == R.id.nav_send) {
+        }*/ /*else if (id == R.id.nav_send) {
 
         }*/ else if (id == R.id.nav_logout) {
             LayoutInflater li = LayoutInflater.from(getApplicationContext());
@@ -634,6 +750,22 @@ public class Home extends AppCompatActivity
                 }
             });
 
+        }else if(id==R.id.nav_search)
+        {
+            startActivity(new Intent(Home.this,SearchAllActivity.class));
+        }
+        else if(id==R.id.nav_report)
+        {
+            startActivity(new Intent(Home.this,ReportActivity.class));
+        }
+        else if (id == R.id.nav_bulksms) {
+
+            Intent intent = new Intent(Home.this, BulkSmsActivity.class);
+            startActivity(intent);
+        }
+        else if(id==R.id.nav_graphreport)
+        {
+            startActivity(new Intent(Home.this,GraphReport.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -790,4 +922,107 @@ public class Home extends AppCompatActivity
                 break;
         }
     }
+
+    private class success implements Response.Listener<JSONObject> {
+        @Override
+        public void onResponse(JSONObject response) {
+            Log.e("Success", String.valueOf(response));
+            try {
+                mArrayList = new ArrayList<>();
+                TotalReminderMatch = 0;
+                TotalReminderNotMatch = 0;
+                JSONArray jsonArray = response.getJSONArray("data");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                    String cId = jsonObject.getString("SR NO");
+                    String cName = jsonObject.getString("NAME");
+                    String cCourse = jsonObject.getString("COURSE");
+                    String cMobile1 = jsonObject.getString("MOBILE");
+                    String cMobile2 = jsonObject.getString("MOBILE2");
+                    String cRemarks = jsonObject.getString("REMARKS");
+
+                    JSONObject mjsonCallDate = jsonObject.getJSONObject("CALL DATE");
+                    String cDate = mjsonCallDate.getString("date");
+
+                    String cTime = jsonObject.getString("CALL TIME");
+                    String callId=jsonObject.getString("CallingId");
+
+                    dataReminder = new DataReminder(cId, cName, cCourse, cMobile1, cMobile2, cRemarks, cDate, cTime,callId);
+                    mArrayList.add(dataReminder);
+
+                    //   mtxtrecords.setText(mArrayList.size() + "");
+                   // progressDialog.dismiss();
+                }
+
+
+                int extramin = 30;
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.MINUTE, extramin);
+                String date1 = sdf.format(cal.getTime());
+
+                for (int i = 0; i < mArrayList.size(); i++) {
+                    String mdate = mArrayList.get(i).getmDate().substring(0, 10);
+                    String mtime = mArrayList.get(i).getmTime();
+
+                    if (mtime.length() == 9) {
+                        mtime = "0" + mtime.replace(".", "");
+                    } else {
+                        mtime = mtime.replace(".", "");
+                    }
+                    String DBDateFormat = mdate + " " + mtime;
+                    Log.d("DBDATE=====", DBDateFormat);
+                    Log.d("current date=====", date1);
+
+                    if (date1.compareTo(DBDateFormat) < 0) {
+                        TotalReminderMatch++;
+                        Log.d("match date========", TotalReminderMatch + "");
+                    } else {
+                        TotalReminderNotMatch++;
+                        Log.d("not match date========", TotalReminderNotMatch + "");
+                    }
+                }
+
+                notifyHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        final NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                        //Define sound URI
+                        final Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+                        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext())
+                                .setSmallIcon(R.mipmap.ic_launcher)
+                                .setContentTitle("Call Details")
+                                .setContentText("Calls Arriving / Pending => " + TotalReminderMatch + " / " + TotalReminderNotMatch)
+                                .setWhen(System.currentTimeMillis())
+                                .setSound(soundUri)
+                                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000}); //This sets the sound to play
+
+                        Intent intent = new Intent(Home.this, ReminderActivity.class);
+                        PendingIntent pendingIntent = PendingIntent.getActivity(Home.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        mBuilder.setContentIntent(pendingIntent);
+
+                        //Display notification
+                        notificationManager.notify(0, mBuilder.build());
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class fail implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.e("Fail", String.valueOf(error));
+        }
+    }
+
 }
+
+
+

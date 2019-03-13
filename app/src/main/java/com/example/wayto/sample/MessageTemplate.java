@@ -19,7 +19,8 @@ public class MessageTemplate extends AppCompatActivity {
     TextView edtMeggase;
     Button btnSubmit;
     SharedPreferences sp;
-    String counselorid, msg, clientid;
+    String counselorid, msg, clientid,clienturl;
+    long timeout;
     UrlRequest urlRequest;
     ProgressDialog dialog;
     int flag = 0;
@@ -34,7 +35,10 @@ public class MessageTemplate extends AppCompatActivity {
         imageBack = findViewById(R.id.img_back);
         sp = getSharedPreferences("Settings", Context.MODE_PRIVATE);
         counselorid = sp.getString("Id", null);
+        counselorid=counselorid.replaceAll(" ","");
         clientid = sp.getString("ClientId", null);
+        clienturl=sp.getString("ClientUrl",clienturl);
+        timeout=sp.getLong("TimeOut",0);
        /* SpannableString content = new SpannableString(mbl);
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         viewHolder.txtMobile.setText(content);*/
@@ -64,8 +68,8 @@ public class MessageTemplate extends AppCompatActivity {
         dialog = ProgressDialog.show(MessageTemplate.this, "Loading", "Please wait.....", false, true);
         urlRequest = UrlRequest.getObject();
         urlRequest.setContext(getApplicationContext());
-        urlRequest.setUrl("http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=8&cSmsText=" + msg + "&IsActive=1&nCounselorID=" + counselorid);
-        Log.d("Url11", "http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=8&cSmsText=" + msg + "&IsActive=1&nCounselorID=" + counselorid);
+        urlRequest.setUrl(clienturl+"?clientid=" + clientid + "&caseid=8&cSmsText=" + msg + "&IsActive=1&nCounselorID=" + counselorid);
+        Log.d("Url11", clienturl+"?clientid=" + clientid + "&caseid=8&cSmsText=" + msg + "&IsActive=1&nCounselorID=" + counselorid);
         urlRequest.getResponse(new ServerCallback() {
             @Override
             public void onSuccess(String response) throws JSONException {

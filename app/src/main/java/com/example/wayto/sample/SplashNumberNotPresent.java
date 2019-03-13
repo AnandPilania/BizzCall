@@ -51,7 +51,7 @@ public class SplashNumberNotPresent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_number_not_present);
-        // getStatus();
+         getStatus();
         sp = getSharedPreferences("Settings", Context.MODE_PRIVATE);
         upLoadServerUri = "http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?caseid=4";
         txtPhone = findViewById(R.id.txtPhone);
@@ -127,7 +127,7 @@ public class SplashNumberNotPresent extends AppCompatActivity {
                 status = (int) spinnerStatus.getSelectedItemId();
                 Log.d("statusid", String.valueOf(status));
                 remark = edtRemark.getText().toString();
-                putNewUser();
+               putNewUser();
             }
 
         });

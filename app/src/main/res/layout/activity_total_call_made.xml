@@ -23,7 +23,7 @@
                 android:id="@+id/img_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
+                android:layout_marginTop="7dp"
                 android:src="@drawable/leftarrow" />
 
             <TextView
@@ -31,10 +31,51 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
                 android:text="Total Call Made"
                 android:textColor="@color/white"
                 android:textSize="20dp"
-                android:textStyle="bold" />
+                />
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="100dp"
+                android:src="@drawable/dollar"
+                android:id="@+id/imgCoin"
+                android:paddingTop="10dp"
+                android:paddingBottom="15dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
+                android:paddingTop="13dp"
+                android:text="0"
+                android:paddingRight="3dp"
+                android:paddingLeft="0dp"
+                android:paddingBottom="5dp"
+                android:id="@+id/txtCoin"
+                android:textColor="@color/white"
+                android:layout_marginLeft="5dp"/>
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="15dp"
+                android:src="@drawable/diamond"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:visibility="gone"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:paddingTop="10dp"
+                android:text="0"
+                android:id="@+id/txtDiamond"
+                android:textColor="@color/white"
+                android:layout_marginLeft="3dp"
+                android:visibility="gone"/>
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
@@ -49,6 +90,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Total Call Count:"
+            android:textColor="@color/black"
             android:textSize="20dp" />
 
         <TextView
@@ -56,6 +98,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:textColor="@color/black"
             android:textSize="20dp" />
     </LinearLayout>
 
@@ -82,9 +125,10 @@
                     <TextView
                         android:layout_width="70dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/table_drawable"
+                        android:background="@drawable/border"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
+                        android:textColor="@color/black"
                         android:text="Sr.No."
                         android:textAlignment="center"
                         android:textSize="17dp"></TextView>
@@ -93,9 +137,10 @@
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
-                        android:background="@drawable/table_drawable"
+                        android:background="@drawable/border"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
+                        android:textColor="@color/black"
                         android:text="Call Duration"
                         android:textAlignment="center"
                         android:textSize="17dp"></TextView>
@@ -104,9 +149,10 @@
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
-                        android:background="@drawable/table_drawable"
+                        android:background="@drawable/border"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
+                        android:textColor="@color/black"
                         android:text="Call Date"
                         android:textAlignment="center"
                         android:textSize="17dp"></TextView>
@@ -115,9 +161,10 @@
                         android:layout_width="380dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
-                        android:background="@drawable/table_drawable"
+                        android:background="@drawable/border"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
+                        android:textColor="@color/black"
                         android:text="File Name"
                         android:textAlignment="center"
                         android:textSize="17dp"></TextView>

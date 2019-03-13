@@ -34,39 +34,59 @@
                 android:text="Counsellor Contact"
                 android:textColor="@color/white"
                 android:textSize="20dp"
-                android:textStyle="bold" />
+                />
 
-            <LinearLayout
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="60dp"
+                android:src="@drawable/dollar"
+                android:id="@+id/imgCoin"
+                android:paddingTop="10dp"
+                android:paddingBottom="15dp"
+                />
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:textSize="12dp"
+                android:paddingTop="13dp"
+                android:text="0"
+                android:paddingRight="3dp"
+                android:paddingLeft="0dp"
+                android:paddingBottom="5dp"
+                android:id="@+id/txtCoin"
+                android:textColor="@color/white"
+                android:layout_marginLeft="5dp"/>
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="15dp"
+                android:src="@drawable/diamond"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:visibility="gone"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:paddingTop="10dp"
+                android:text="0"
+                android:id="@+id/txtDiamond"
+                android:textColor="@color/white"
+                android:layout_marginLeft="3dp"
+                android:visibility="gone"/>
 
-                <TextView
-                    android:id="@+id/txtDataRef"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="7dp"
-                    android:textColor="@color/white"
-                    android:textSize="12dp" />
-
-                <TextView
-                    android:id="@+id/txtSlectedStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="7dp"
-                    android:textColor="@color/white"
-                    android:textSize="12dp" />
-            </LinearLayout>
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <android.support.v7.widget.CardView
@@ -83,53 +103,42 @@
                     android:layout_marginBottom="10dp"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/gray"
-                        android:text="Information:"
-                        android:textColor="@color/white"
-                        android:textSize="25dp" />
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="20dp"
                         android:orientation="horizontal">
 
-                        <LinearLayout
-                            android:id="@+id/linearCounselor"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="20dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/txtSrNo1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="0dp"
+                                android:text="Sr.No"
+                                android:textColor="@color/black"
+                                android:textSize="15sp"></TextView>
 
                             <TextView
                                 android:id="@+id/txtCandidateName1"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Candidate Name"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp"
+                                android:layout_marginLeft="30dp"
                                 android:textColor="@color/black"
                                 android:textSize="15sp"></TextView>
 
-                            <TextView
-                                android:id="@+id/txtSrNo1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:text="Sr.No"
-                                android:textColor="@color/black"
-                                android:textSize="15sp"></TextView>
-                        </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="15dp"
-                            android:layout_weight="1"
-                            android:orientation="horizontal">
-
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
                             <TextView
                                 android:id="@+id/txtCourse1"
                                 android:layout_width="wrap_content"
@@ -138,30 +147,24 @@
                                 android:textAlignment="center"
                                 android:textColor="@color/gray"
                                 android:textSize="15sp"></TextView>
-                        </LinearLayout>
-                    </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="5dp"
-                        android:orientation="horizontal">
 
-                        <TextView
+
+                     <!--   <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="10dp"
+                            android:layout_marginLeft="30dp"
+                            android:paddingLeft="0dp"
                             android:paddingRight="10dp"
                             android:text="Mobile No"
-                            android:textColor="@color/black" />
+                            android:textColor="@color/black" />-->
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginLeft="30dp"
                             android:layout_marginRight="0dp"
-                            android:background="@drawable/border"
+                            android:background="@drawable/round_edit_text"
                             android:paddingRight="10dp">
 
                             <Spinner
@@ -189,14 +192,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/gray"
-                        android:text="Contact:"
-                        android:textColor="@color/white"
-                        android:textSize="25dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -270,115 +265,143 @@
                 android:visibility="visible"
                 app:cardCornerRadius="3dp"
                 app:cardElevation="8dp">
-
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginBottom="10dp"
-                    android:gravity="center_horizontal"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="0dp"
                     android:orientation="vertical"
+                    android:paddingRight="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
                     android:visibility="visible">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/gray"
-                        android:text="Status:"
-                        android:textColor="@color/white"
-                        android:textSize="25dp" />
 
 
-                    <TableLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:isScrollContainer="true"
-                        android:paddingLeft="10dp"
-                        android:paddingTop="10dp"
-                        android:paddingRight="10dp"
-                        android:scrollbars="none">
-
-                        <TableRow
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:paddingLeft="0dp"
-                            android:paddingRight="7dp"
-                            android:paddingBottom="5dp">
-
-                            <TextView
+                <!--    <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="25dp"
+                                android:layout_marginLeft="0dp"
                                 android:paddingLeft="10dp"
                                 android:paddingRight="10dp"
                                 android:paddingBottom="5dp"
-                                android:text="Set Status:"
+                                android:text="Current Status:"
                                 android:textAlignment="center"
                                 android:textColor="@color/black"
-                                android:textSize="20dp" />
+                                android:textSize="12dp" />-->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="0dp"
+                            android:id="@+id/txtCurrentStatus"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingBottom="5dp"
+                            android:text="Current Status:"
+                            android:textAlignment="center"
+                            android:textColor="@color/red"
+                            android:textSize="12dp"
+                            />
+
 
                             <LinearLayout
-                                android:layout_marginLeft="10dp"
-                                android:layout_marginRight="5dp"
-                                android:background="@drawable/border"
+                                android:layout_height="wrap_content"
+                                android:layout_width="wrap_content"
+                                android:layout_marginTop="20dp"
+                                android:layout_marginLeft="0dp"
+                                android:layout_marginRight="0dp"
+                                android:background="@drawable/round_edit_text"
                                 android:paddingRight="5dp">
 
                                 <Spinner
                                     android:id="@+id/spinnerStatus11"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="10dp"
-                                    android:layout_marginRight="10dp"
+                                    android:layout_marginLeft="0dp"
+                                    android:layout_marginRight="0dp"
                                     android:paddingRight="10dp"></Spinner>
                             </LinearLayout>
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:descendantFocusability="beforeDescendants"
-                            android:focusableInTouchMode="true"
-                            android:paddingLeft="7dp"
-                            android:paddingRight="7dp">
-
-                            <TextView
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingRight="10dp"
+                    android:paddingLeft="10dp"
+                    android:descendantFocusability="beforeDescendants"
+                    android:focusableInTouchMode="true"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp">
+                           <!-- <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginRight="10dp"
-                                android:paddingTop="5dp"
+                                android:paddingTop="0dp"
                                 android:text="Remark:"
                                 android:textAlignment="center"
                                 android:textColor="@color/black"
-                                android:textSize="20dp" />
+                                android:textSize="12dp" />-->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="30dp"
+                            android:layout_marginRight="10dp"
+                            android:paddingTop="0dp"
+                            android:id="@+id/txtRemarks"
+                            android:text="Remark"
+                            android:textAlignment="center"
+                            android:textColor="@color/red"
+                            android:textSize="15dp" />
+
+                    </LinearLayout>
 
                             <EditText
                                 android:id="@+id/edtRemarks"
                                 android:layout_width="wrap_content"
-                                android:layout_height="60dp"
-                                android:layout_marginBottom="15dp"
-                                android:background="@drawable/border"
+                                android:layout_height="80dp"
+                                android:layout_marginBottom="5dp"
+                                android:background="@drawable/round_edit_text"
                                 android:hint="Enter remark here"
+                                android:layout_marginTop="5dp"
+                                android:maxLength="1500"
                                 android:paddingLeft="7dp"
                                 android:paddingRight="7dp"
                                 android:textAlignment="center"
                                 android:textColor="@color/black"
                                 android:textSize="20dp" />
-                        </TableRow>
-
-                    </TableLayout>
-
+                        </LinearLayout>
+            </LinearLayout>
                     <Button
                         android:id="@+id/btnUploadStatus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="60dp"
+                        android:layout_marginRight="60dp"
+                        android:layout_marginBottom="5dp"
                         android:layout_gravity="center"
                         android:background="@color/blue_text"
-                        android:text="Upload"
+                        android:text="update"
                         android:textColor="@color/white" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -400,30 +423,38 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/gray"
-                        android:text="Reminder:"
+                        android:background="@color/blue_text"
+                        android:text="Reminder"
+                        android:paddingRight="20dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:id="@+id/txtReminderTitle"
+                        android:drawableRight="@drawable/ic_arrow_drop_down_white_24dp"
+                       android:drawablePadding="20dp"
+                        android:gravity="center"
                         android:textColor="@color/white"
-                        android:textSize="25dp" />
+                        android:textSize="20dp" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="7dp"
                         android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:id="@+id/linearReminder"
                         android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Next Call Date:"
-                            android:textColor="@color/black"
-                            android:textSize="20dp" />
 
                         <LinearLayout
                             android:id="@+id/linearSelectDate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:paddingRight="5dp"
+                            android:background="@drawable/border">
 
                             <TextView
                                 android:id="@+id/txtSelectedDate"
@@ -431,7 +462,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="-Select date-"
                                 android:textColor="@color/black"
-                                android:textSize="20dp" />
+                                android:textSize="16dp" />
 
                             <ImageView
                                 android:id="@+id/imgCalender"
@@ -440,21 +471,18 @@
                                 android:layout_marginLeft="5dp"
                                 android:src="@drawable/calendar1"></ImageView>
                         </LinearLayout>
-                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Set Time"
-                            android:textColor="@color/black"
-                            android:textSize="20dp" />
+                        android:layout_marginLeft="7dp"
+                        android:layout_marginTop="0dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="5dp"
+                        android:orientation="horizontal"
+                        android:background="@drawable/border">
 
                         <LinearLayout
                             android:id="@+id/linearSelectTime"
@@ -466,10 +494,10 @@
                                 android:id="@+id/txtSelectTime"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="50dp"
+                                android:layout_marginLeft="0dp"
                                 android:text="-Select time-"
                                 android:textColor="@color/black"
-                                android:textSize="20dp" />
+                                android:textSize="16dp" />
 
                             <ImageView
                                 android:id="@+id/imgClock"
@@ -484,12 +512,15 @@
                         android:id="@+id/btnReminder"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="0dp"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="3dp"
                         android:layout_marginBottom="5dp"
                         android:background="@color/blue_text"
                         android:text="Reminder"
+                        android:textSize="12dp"
                         android:textColor="@color/white" />
+                </LinearLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
@@ -510,20 +541,29 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/gray"
+                        android:background="@color/blue_text"
                         android:text="Reallocation"
+                        android:id="@+id/txtReallocationTitle"
+                        android:drawableRight="@drawable/ic_arrow_drop_down_white_24dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="20dp"
+                        android:paddingBottom="5dp"
+                        android:gravity="center"
                         android:textColor="@color/white"
                         android:textSize="20dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:id="@+id/linearReallocation"
+                        android:visibility="gone">
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/recyclerCounselorDetails"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+                            android:layout_height="wrap_content"
+                            ></android.support.v7.widget.RecyclerView>
 
                         <LinearLayout
                             android:id="@+id/linearReallocateTo"
@@ -593,6 +633,54 @@
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardReport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:visibility="visible"
+                app:cardCornerRadius="3dp"
+                app:cardElevation="8dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/blue_text"
+                    android:text="Report"
+                    android:paddingRight="20dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:id="@+id/txtReportTitle"
+                    android:drawableRight="@drawable/ic_arrow_drop_down_white_24dp"
+                    android:drawablePadding="20dp"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="20dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/linearReport"
+                    android:visibility="gone">
+                    <android.support.design.widget.TabLayout
+                        android:id="@+id/tabs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/viewpager"
+                    app:layout_constraintTop_toBottomOf="@+id/tabs"
+                    android:layout_width="355dp"
+                    android:layout_height="500dp" />
+
+                </LinearLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
         </LinearLayout>

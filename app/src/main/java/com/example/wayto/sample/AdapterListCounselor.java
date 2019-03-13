@@ -49,7 +49,6 @@ public class AdapterListCounselor extends RecyclerView.Adapter<AdapterListCounse
                     CounselorContactActivity.linearReallocateTo.setVisibility(View.VISIBLE);
                 }
 
-
                 CounselorContactActivity.txtSelecteCId.setText(cid);
                 CounselorContactActivity.txtSelectedCname.setText(cname);
                 CounselorContactActivity.txtSelctedSrNo.setText(srno);

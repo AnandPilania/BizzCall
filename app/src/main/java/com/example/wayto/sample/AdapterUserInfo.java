@@ -29,9 +29,9 @@ public class AdapterUserInfo extends RecyclerView.Adapter<AdapterUserInfo.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         DataUser dataUser = arrayList.get(i);
-        viewHolder.txtId.setText(dataUser.getId());
+       /* viewHolder.txtId.setText(dataUser.getId());
         viewHolder.txtName.setText(dataUser.getName());
-        viewHolder.txtEmail.setText(dataUser.getEmail());
+        viewHolder.txtEmail.setText(dataUser.getEmail());*/
     }
 
     @Override

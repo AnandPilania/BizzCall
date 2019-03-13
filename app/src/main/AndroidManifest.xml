@@ -139,6 +139,34 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".CounselorContactActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SearchAllActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".BulkSmsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".NewActivity" />
+        <activity
+            android:name=".DetailsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".EditDetails"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ReminderActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PointCollectionDetails"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ReportActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".GraphReport"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".GraphDetails"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

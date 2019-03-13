@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/txtPointId"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="Point Id"
+                android:textColor="@color/black"
+                android:textAlignment="center"
+                android:textSize="17dp"></TextView>
+
+            <TextView
+                android:id="@+id/txtEvent"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:background="@drawable/border"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="vvcv"
+                android:textColor="@color/black"
+                android:textAlignment="center"
+                android:textSize="17dp"></TextView>
+
+            <TextView
+                android:id="@+id/txtPoint"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:background="@drawable/border"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="vfdvd"
+                android:textColor="@color/black"
+                android:textAlignment="center"
+                android:textSize="17dp"></TextView>
+
+            <TextView
+                android:id="@+id/txtValidFrom"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:background="@drawable/border"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:textColor="@color/black"
+                android:text="vvdvv"
+                android:textSize="17dp"></TextView>
+            <TextView
+                android:id="@+id/txtValidUpto"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:background="@drawable/border"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:textColor="@color/black"
+                android:text="vvdvv"
+                android:textSize="17dp"></TextView>
+
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>

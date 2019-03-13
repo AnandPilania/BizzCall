@@ -16,10 +16,12 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     AdapterUserInfo adapterUserInfo;
     ArrayList<DataUser> arrayList;
-    String url = "http://anilsahasrabuddhe.in/monalitesting/test3.php";
+    String url ="http://anilsahasrabuddhe.in/CRM/AnDe828500/youtube/sendtexturl.php?counsellorId=8&dataRefId=6";
+            //"http://anilsahasrabuddhe.in/monalitesting/test3.php";
     DataUser dataUser;
     UrlRequest urlRequest;
     String id, name, email;
+    int cnt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,20 +44,27 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(String response) throws JSONException {
                 try {
                     Log.d("Response****", response);
-                    JSONObject jsonObject = new JSONObject(String.valueOf(response));
+                    JSONObject jsonObject = new JSONObject((response));
                     JSONArray jsonArray = jsonObject.getJSONArray("data");
-                    for (int i = 0; i < jsonArray.length(); i++) {
+                    for (int i = 0; i <jsonArray.length()-1; i++) {
                         JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                        id = jsonObject1.getString("cCounselorID");
-                        name = jsonObject1.getString("UserName");
-                        email = jsonObject1.getString("cEmailAdd");
-                        dataUser = new DataUser(id, name, email);
-                        arrayList.add(dataUser);
+                        String status = jsonObject1.getString("status");
+                       /* name = jsonObject1.getString("UserName");
+                        email = jsonObject1.getString("cEmailAdd");*/
+                       if(status.contains("success"))
+                       {
+                           cnt++;
+                       }
+                            Log.d("Status**",status);
+                        Log.d("Count**", String.valueOf(cnt));
+                       dataUser = new DataUser(status);
+                       arrayList.add(dataUser);
                     }
                     Log.d("Arraylist", String.valueOf(arrayList.size()));
-                    adapterUserInfo = new AdapterUserInfo(MainActivity.this, arrayList);
-                    recyclerView.setAdapter(adapterUserInfo);
-                    adapterUserInfo.notifyDataSetChanged();
+
+                   // adapterUserInfo = new AdapterUserInfo(MainActivity.this, arrayList);
+                   // recyclerView.setAdapter(adapterUserInfo);
+                    //adapterUserInfo.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

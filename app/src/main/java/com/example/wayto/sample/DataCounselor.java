@@ -1,9 +1,9 @@
 package com.example.wayto.sample;
 
 public class DataCounselor {
-    String sr_no, cname, course, mobile, parentno, email, allocationdate, adrs, city, state1, pincode;
+    String sr_no, cname, course, mobile, parentno, email, allocationdate, adrs, city, state1, pincode,statusid,status1,remarks;
 
-    public DataCounselor(String sr_no, String cname, String course, String mobile, String parentno, String email, String allocationdate, String adrs, String city, String state1, String pincode) {
+    public DataCounselor(String sr_no, String cname, String course, String mobile, String parentno, String email, String allocationdate, String adrs, String city, String state1, String pincode,String statusid,String status1,String remarks) {
         this.sr_no = sr_no;
         this.cname = cname;
         this.course = course;
@@ -15,6 +15,9 @@ public class DataCounselor {
         this.city = city;
         this.state1 = state1;
         this.pincode = pincode;
+        this.status1=status1;
+        this.statusid=statusid;
+        this.remarks=remarks;
 
     }
 
@@ -36,6 +39,30 @@ public class DataCounselor {
 
     public String getState1() {
         return state1;
+    }
+
+    public String getStatusid() {
+        return statusid;
+    }
+
+    public void setStatusid(String statusid) {
+        this.statusid = statusid;
+    }
+
+    public String getStatus1() {
+        return status1;
+    }
+
+    public void setStatus1(String status1) {
+        this.status1 = status1;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 
     public void setState1(String state1) {

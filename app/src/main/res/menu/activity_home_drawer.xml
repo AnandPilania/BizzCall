@@ -13,6 +13,10 @@
             android:icon="@drawable/ic_file_upload_black_24dp"
             android:title="Upload file" />
         <item
+            android:id="@+id/nav_reminder"
+            android:icon="@drawable/reminder"
+            android:title="Reminder" />
+        <item
             android:id="@+id/nav_template"
             android:icon="@drawable/ic_message_black_24dp"
             android:title="SMS Template" />
@@ -20,30 +24,37 @@
             android:id="@+id/nav_totalCallMade"
             android:icon="@drawable/ic_call_24dp"
             android:title="Total Calls Made" />
-        <item
+        <!--<item
             android:id="@+id/nav_browse"
-            android:title="Browse File" />
+            android:title="Browse File"
+            android:icon="@drawable/file11"/>-->
+        <item
+            android:id="@+id/nav_search"
+            android:title="Search"
+            android:visible="false"
+            android:icon="@drawable/ic_search_black_24dp"/>
 
-        <!--  <item
-              android:id="@+id/nav_slideshow"
-              android:icon="@drawable/ic_menu_slideshow"
-              android:title="Slideshow" />
-          <item
-              android:id="@+id/nav_manage"
-              android:icon="@drawable/ic_menu_manage"
-              android:title="Tools" />-->
+         <item
+              android:id="@+id/nav_bulksms"
+              android:icon="@drawable/sms"
+              android:title="Send Bulk SMS" />
+        <!-- <item
+            android:id="@+id/nav_manage"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Tools" />-->
     </group>
 
     <item android:title="Communicate">
         <menu>
-            <!-- <item
-                 android:id="@+id/nav_share"
-                 android:icon="@drawable/ic_menu_share"
-                 android:title="Share" />
+
              <item
-                 android:id="@+id/nav_send"
-                 android:icon="@drawable/ic_menu_send"
-                 android:title="Send" />-->
+                 android:id="@+id/nav_report"
+                 android:icon="@drawable/report"
+                 android:title="Report" />
+            <item
+                android:id="@+id/nav_graphreport"
+                android:icon="@drawable/graphreport"
+                android:title="Graph Report" />
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_menu_send"

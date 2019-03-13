@@ -32,7 +32,7 @@
                 android:text="Counsellor Data"
                 android:textColor="@color/white"
                 android:textSize="20dp"
-                android:textStyle="bold" />
+                />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -63,15 +63,50 @@
         android:layout_height="wrap_content"
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true"
-        android:orientation="horizontal">
+        android:orientation="vertical">
+
+       <!-- <RadioGroup
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:id="@+id/radioGroupSearchSort"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="55dp"
+                android:text="Sort"
+                android:layout_marginLeft="20dp"
+                android:paddingRight="10dp"
+                android:id="@+id/radioSort"
+                android:checked="true"
+                android:textSize="17dp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Search"
+                android:layout_marginLeft="50dp"
+                android:id="@+id/radioSearch"
+                android:checked="false"
+                android:textSize="17dp"
+                android:layout_weight="0.13" />
+        </RadioGroup>-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true"
+            android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="0dp"
-            android:background="@drawable/border"
             android:orientation="horizontal">
 
             <Spinner
@@ -79,32 +114,72 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="0dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="0dp"
                 android:layout_marginRight="0dp"></Spinner>
         </LinearLayout>
+            <EditText
+                android:id="@+id/edtSearchtext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_marginTop="10dp"
+                android:hint="Search here "
+                android:paddingLeft="0dp"
+                android:paddingTop="5dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
+                android:textSize="15dp"
+                android:visibility="visible"/>
 
-        <TextView
-            android:id="@+id/edtSearchtext"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="24dp"
-            android:hint="Search here "
-            android:paddingLeft="5dp"
-            android:paddingTop="5dp"
-            android:paddingRight="10dp"
+            <ImageView
+                android:id="@+id/img_search"
+                android:layout_width="25dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="0dp"
+                android:paddingRight="5dp"
+                android:layout_marginTop="24dp"
+                android:visibility="gone"
+                android:src="@drawable/ic_search_black_24dp" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/linearOrder"
+                android:visibility="visible">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:id="@+id/txtAsc"
+                android:drawableLeft="@drawable/ic_arrow_drop_up_black_24dp"
+               />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingLeft="10dp"
+                    android:id="@+id/txtDesc"
+                    android:drawableLeft="@drawable/ic_arrow_drop_down_black_24dp"
+                    />
+            </LinearLayout>
+        </LinearLayout>
 
-            android:paddingBottom="5dp"
-            android:textSize="20dp" />
 
-        <ImageView
-            android:id="@+id/img_search"
-            android:layout_width="35dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="24dp"
-            android:src="@drawable/ic_search_black_24dp" />
     </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtNotFound1"
+        android:text="Not found"
+        android:textAlignment="center"
+        android:textColor="@color/red"
+        android:textSize="30dp"
+        android:visibility="gone"
+        android:layout_marginTop="20dp"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerCounselorData"

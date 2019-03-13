@@ -44,13 +44,14 @@ public class SelectedFileList extends AppCompatActivity {
     DataUploadedList dataUploadedList;
     ImageView imgBack;
     UrlRequest urlRequest;
-    String sr_no, mbl, duration1, callDate, id1;
+    String sr_no, mbl, duration1, callDate, id1,clienturl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sp = getSharedPreferences("Settings", Context.MODE_PRIVATE);
         clientid = sp.getString("ClientId", null);
+        clienturl=sp.getString("ClientUrl",null);
         setContentView(R.layout.layout_selectedfilelist);
         sr_no = sp.getString("SrNo", null);
         mbl = sp.getString("MobileNo1", null);
@@ -58,7 +59,7 @@ public class SelectedFileList extends AppCompatActivity {
         id1 = id1.replaceAll(" ", "");
         imgBack = findViewById(R.id.img_back);
         txtSlectedFile = findViewById(R.id.txtListSelectedFiles);
-        upLoadServerUri = "http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=4";
+        upLoadServerUri = clienturl+"?clientid=" + clientid + "&caseid=4";
         //"cases.php?caseid=4";
         // sr_no=sp.getString("SrNo")
         editor = sp.edit();
@@ -104,21 +105,21 @@ public class SelectedFileList extends AppCompatActivity {
                             callDate = callDate.substring(0, callDate.length() - 1);
                         }
 
-                     /*   new Thread(new Runnable() {
+                        new Thread(new Runnable() {
                             public void run() {
                                 runOnUiThread(new Runnable() {
                                     public void run() {
                                         Toast.makeText(SelectedFileList.this, "uploading started.....", Toast.LENGTH_SHORT).show();
                                     }
-                                });*/
+                                });
 
                         uploadFile(uploadFilePath + "" + uploadFileName);
                         insertCallInfo();
                         //uploadFile(path1);
                     }
-                      /*  }).start();
+                        }).start();
 
-                        }*/
+                        }
                 }
 
 

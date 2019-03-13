@@ -36,6 +36,8 @@ public class BrowseActivity extends AppCompatActivity {
     ImageView imgBack;
     SharedPreferences sp;
     String upLoadServerUri = null;
+    String clienturl;
+    Long timeout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +45,9 @@ public class BrowseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_browse);
         sp = getSharedPreferences("Settings", Context.MODE_PRIVATE);
         clientid = sp.getString("ClientId", null);
-        upLoadServerUri = "http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?clientid=" + clientid + "&caseid=4";
+        clienturl=sp.getString("ClientUrl",null);
+        timeout=sp.getLong("TimeOut",0);
+        upLoadServerUri = clienturl+"?clientid=" + clientid + "&caseid=4";
         btnBrowse = findViewById(R.id.btnBrowse);
         imgBack = findViewById(R.id.img_back);
         btnUpload = findViewById(R.id.btnUpload);

@@ -84,6 +84,9 @@
         <item><font size="17">Himachal Pradesh Board of School Education:(HPBOSE)</font></item>
         <item><font size="17">Indian Certificate of Secondary Education:(ICSE)</font></item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
 
 

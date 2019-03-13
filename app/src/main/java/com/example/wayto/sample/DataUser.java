@@ -1,15 +1,18 @@
 package com.example.wayto.sample;
 
 public class DataUser {
-    String id, name, email;
+    String status;
 
-    public DataUser(String id, String name, String email) {
+    public DataUser(String status) {
+        this.status = status;
+    }
+    /* public DataUser(String id, String name, String email) {
         this.id = id;
         this.name = name;
         this.email = email;
-    }
+    }*/
 
-    public String getId() {
+  /*  public String getId() {
         return id;
     }
 
@@ -31,5 +34,5 @@ public class DataUser {
 
     public void setEmail(String email) {
         this.email = email;
-    }
+    }*/
 }
