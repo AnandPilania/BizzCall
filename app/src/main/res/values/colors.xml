@@ -13,9 +13,19 @@
     <color name="antique">#faebd7</color>
     <color name="old_lace">#fdf5e6</color>
     <color name="light_gray">#D3D3D3</color>
+    <color name="cyan_text">#28718c</color>
+    <color name="activity_background">#00b8d7</color>
+    <color name="background_yellow">#ffc809</color>
 
+    <color name="off_white">#f2f2f2</color>
+    <color name="off_white1">#e6e7e9</color>
+
+    <color name="ocean_blue">#9cd7df</color>
     <color name="light_blue">#85cffa</color>
     <color name="blue_text">#171F4B</color>
+    <color name="dashboard_background">#00b7d7</color>
+    <color name="dashboard_spinner_yellow">#faca28</color>
+    <color name="toolbar_background">#0090bf</color>
 
     <color name="tiffin_content_txtcolor">#122</color>
 
@@ -25,6 +35,9 @@
 
     <color name="go_to_cart">#817e7d</color>
     <color name="navy_blue">#140033</color>
+
+    <color name="editdetails_textview">#d7eff1</color>
+    <color name="editdetails_edittext">#464978</color>
 
     <!--for welcome screen-->
 

@@ -8,18 +8,18 @@
     <TextView
         android:id="@+id/txtSelect"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="0dp"
         android:layout_marginBottom="5dp"
-        android:background="@color/blue_text"
+        android:background="@drawable/linerlayout_border_squre"
+        android:textColor="#00698c"
+        android:textSize="12dp"
         android:paddingLeft="5dp"
+        android:paddingBottom="5dp"
         android:paddingTop="5dp"
         android:paddingRight="5dp"
-        android:paddingBottom="5dp"
         android:text="select"
-        android:textColor="@color/white"
-        android:textSize="15dp" />
+        />
 
     <TextView
         android:id="@+id/txtCounselorId"
@@ -28,7 +28,7 @@
         android:layout_marginLeft="5dp"
         android:textColor="@color/black"
         android:text="CounselorId"
-        android:textSize="15dp" />
+        android:textSize="12dp" />
 
     <TextView
         android:id="@+id/txtCounselorName"
@@ -41,7 +41,7 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:text="CounselorName"
-        android:textSize="15dp" />
+        android:textSize="12dp" />
 
 
 </LinearLayout>

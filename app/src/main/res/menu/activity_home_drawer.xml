@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view">
+    tools:showIn="navigation_view"
+    >
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="all"
+        >
+        <item android:title="Lead Management">
+
+        <menu>
+            <item
+                android:id="@+id/nav_onlinelead"
+                android:icon="@drawable/dashboard"
+                android:title="Online Lead"
+                android:visible="true"/>
         <item
             android:id="@+id/nav_dashboard"
             android:icon="@drawable/dashboard"
             android:title="Dashboard" />
+            <item
+                android:id="@+id/nav_newlead"
+                android:icon="@drawable/newlead"
+                android:title="New Lead" />
         <item
             android:id="@+id/nav_upload"
             android:icon="@drawable/ic_file_upload_black_24dp"
@@ -31,30 +45,110 @@
         <item
             android:id="@+id/nav_search"
             android:title="Search"
-            android:visible="false"
+            android:visible="true"
             android:icon="@drawable/ic_search_black_24dp"/>
 
          <item
               android:id="@+id/nav_bulksms"
               android:icon="@drawable/sms"
+             android:visible="false"
               android:title="Send Bulk SMS" />
         <!-- <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
             android:title="Tools" />-->
+        </menu>
+        </item>
     </group>
-
-    <item android:title="Communicate">
+    <item android:title="Document Management"
+        android:visible="false">
         <menu>
 
-             <item
-                 android:id="@+id/nav_report"
-                 android:icon="@drawable/report"
-                 android:title="Report" />
+          <!--  <item
+                android:id="@+id/nav_newcliententry"
+                android:icon="@drawable/report"
+                android:title="New Client Entry" />-->
             <item
-                android:id="@+id/nav_graphreport"
+                android:id="@+id/nav_allrecords"
+                android:layout_height="match_parent"
                 android:icon="@drawable/graphreport"
-                android:title="Graph Report" />
+                android:title="All Records" />
+            <item
+                android:id="@+id/nav_documentmaster"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Document Master" />
+        </menu>
+    </item>
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_chat"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Chat" />
+
+            <item
+
+                android:id="@+id/nav_report"
+                android:icon="@drawable/report"
+                android:title="Report"
+                android:visible="true"/>
+
+            <group
+                android:id="@+id/group_report"
+                android:visible="true">
+            <item
+                android:id="@+id/nav_reallocationreport"
+                android:icon="@drawable/report"
+                android:title="Reallocation Report"
+                android:visible="false"
+                />
+            <item
+                android:id="@+id/nav_callreport"
+                android:icon="@drawable/report"
+                android:title="Call Report"
+                android:visible="false"/>
+            <item
+                android:id="@+id/nav_msgreport"
+                android:icon="@drawable/report"
+                android:title="Message Report"
+                android:visible="false"/>
+            <item
+                android:id="@+id/nav_statusreport"
+                android:icon="@drawable/report"
+                android:title="Status Report"
+                android:visible="false"/>
+            <item
+                android:id="@+id/nav_remarksreport"
+                android:icon="@drawable/report"
+                android:title="Remark Report"
+                android:visible="false"/>
+            <item
+                android:id="@+id/nav_pointreport"
+                android:icon="@drawable/report"
+                android:title="Point Report"
+                android:visible="false"/>
+            <item
+                android:id="@+id/nav_recordingreport"
+                android:icon="@drawable/report"
+                android:title="Call Recording"
+                android:visible="false"/>
+            <item
+                android:id="@+id/nav_logintimereport"
+                android:icon="@drawable/report"
+                android:title="Login Time Report"
+                android:visible="false"/>
+            <item
+                android:id="@+id/nav_editdetailsreport"
+                android:icon="@drawable/report"
+                android:title="Edit Details Report"
+                android:visible="false"/>
+            </group>
+
+           <!-- <item
+                android:id="@+id/nav_graphreport"
+                android:layout_height="match_parent"
+                android:icon="@drawable/graphreport"
+                android:title="Graph Report" />-->
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/ic_menu_send"

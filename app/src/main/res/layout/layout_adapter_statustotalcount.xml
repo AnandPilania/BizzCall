@@ -4,44 +4,93 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <android.support.v7.widget.CardView
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp">
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/linearStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:background="#00b7d7"
+            android:layout_gravity="center"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/txtStatusCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="0dp"
-                android:paddingLeft="15dp"
-                android:text="gegegeeev"
-                android:textAlignment="center"
-                android:textColor="@color/red"
-                android:textSize="15dp" />
 
             <ImageView
                 android:id="@+id/btnStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="20dp"
                 android:layout_marginTop="0dp"
-                android:textColor="@color/white" />
+                android:layout_marginRight="25dp"
+                android:textAlignment="center" />
 
-            <TextView
-                android:id="@+id/txtStatus"
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/blue_text"
-                android:textSize="15dp" />
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:orientation="horizontal">
 
+                <TextView
+                    android:id="@+id/txtStatusCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="0dp"
+                    android:background="@color/dashboard_background"
+                    android:gravity="center"
+                    android:paddingLeft="1dp"
+                    android:paddingRight="3dp"
+                    android:text="gegegeeev"
+                    android:textAlignment="center"
+                    android:textColor="@color/dashboard_spinner_yellow"
+                    android:textSize="12dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textColor="#fafafa"
+                    android:textSize="11dp" />
+
+                <!--<LinearLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:layout_marginLeft="7dp"-->
+                <!--android:paddingLeft="1dp"-->
+                <!--android:paddingRight="2dp"-->
+                <!--android:background="@drawable/linerlayout_border_squre"-->
+                <!--android:gravity="center"-->
+                <!--android:orientation="horizontal">-->
+
+                <!--<LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                   >
+
+
+                </LinearLayout>-->
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
