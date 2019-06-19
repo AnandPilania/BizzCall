@@ -270,7 +270,10 @@
         <activity
             android:name=".LeadCount"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MasterEntry"
+        <activity
+            android:name=".MasterEntry"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".MailActiivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

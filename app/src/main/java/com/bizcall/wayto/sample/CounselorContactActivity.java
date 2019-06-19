@@ -528,7 +528,9 @@ public class CounselorContactActivity extends FragmentActivity {
                 vibrator.vibrate(100);
                 eventid=4;
                 insertPointCollection(eventid);
-                Intent i = new Intent(Intent.ACTION_SEND);
+                Intent intent=new Intent(CounselorContactActivity.this,MailActiivity.class);
+                startActivity(intent);
+               /* Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("text/plain");
                 i.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
                 try {
@@ -536,7 +538,7 @@ public class CounselorContactActivity extends FragmentActivity {
                     startActivity(Intent.createChooser(i, "Send mail..."));
                 } catch (android.content.ActivityNotFoundException ex) {
                     Toast.makeText(CounselorContactActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
-                }
+                }*/
             }
         });
         btnDetails.setOnClickListener(new View.OnClickListener() {
