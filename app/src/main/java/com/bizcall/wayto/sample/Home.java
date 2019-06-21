@@ -415,7 +415,7 @@ public class Home extends AppCompatActivity
                     Intent intent;
                     switch (selected) {
 
-                        case "Online Lead":
+                        case "Online Leads":
                             // case "Submenu1":
                             intent = new Intent(Home.this, OnlineLead.class);
                             intent.putExtra("Activity", "OnlineLead");
@@ -1180,7 +1180,7 @@ public class Home extends AppCompatActivity
 
         // Adding data header
         listDataHeader.add("Lead Management");
-        listDataHeader.add("Document Management");
+        //listDataHeader.add("Document Management");
         listDataHeader.add("Reports");
         //listDataHeader.add("Logout");
 
@@ -1189,19 +1189,21 @@ public class Home extends AppCompatActivity
         // Adding child data
         List<String> heading1 = new ArrayList<String>();
 
-        heading1.add("Online Lead");
+        heading1.add("Online Leads");
         heading1.add("Dashboard");
         heading1.add("New Lead");
+        heading1.add("Open Leads");
         heading1.add("Reminder");
         heading1.add("SMS Template");
         heading1.add("Search");
         heading1.add("Chat");
-        heading1.add("Open Leads");
+
 
       //  heading1.add("Send Bulk SMS");
-       List<String> heading3 = new ArrayList<String>();
+      /* List<String> heading3 = new ArrayList<String>();
        heading3.add("New Client Entry");
-       heading3.add("Master Entry");
+       heading3.add("Master Entry");*/
+
         List<String> heading2 = new ArrayList<String>();
         heading2.add("Lead Count");
         heading2.add("Total Calls Made");
@@ -1219,8 +1221,8 @@ public class Home extends AppCompatActivity
         heading2.add("Upload File");
 
         listDataChild.put(listDataHeader.get(0), heading1);// Header, Child data
-        listDataChild.put(listDataHeader.get(1), heading3);
-        listDataChild.put(listDataHeader.get(2),heading2);
+        //listDataChild.put(listDataHeader.get(1), heading3);
+        listDataChild.put(listDataHeader.get(1),heading2);
 
         }
 

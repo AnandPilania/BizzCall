@@ -289,7 +289,7 @@ public class CounselorContactActivity extends FragmentActivity {
         editor = sp.edit();
             arrayListStatusId=new ArrayList<>();
             arrayListNotification=new ArrayList<>();
-            upLoadServerUri = clienturl+"?clientid=" + clientid + "&caseid=4";
+            upLoadServerUri =clienturl+"?clientid=" + clientid + "&caseid=4";
           //  imgNotification=findViewById(R.id.imgNotification);
 
         activityName = getIntent().getStringExtra("ActivityName");
@@ -526,8 +526,8 @@ public class CounselorContactActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 vibrator.vibrate(100);
-                eventid=4;
-                insertPointCollection(eventid);
+               // eventid=4;
+               // insertPointCollection(eventid);
                 Intent intent=new Intent(CounselorContactActivity.this,MailActiivity.class);
                 startActivity(intent);
                /* Intent i = new Intent(Intent.ACTION_SEND);
