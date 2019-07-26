@@ -66,8 +66,7 @@ public class AdapterTotalCallMade extends RecyclerView.Adapter<AdapterTotalCallM
         myHolder.txtFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-               url = url+myHolder.txtFile.getText().toString();
+                url = url+myHolder.txtFile.getText().toString();
                 Log.d("Downloadurl",url);
                 if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);

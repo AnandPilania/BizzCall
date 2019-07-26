@@ -166,9 +166,42 @@ public class SearchAllActivity extends AppCompatActivity {
                     searchbooltext=searchtext;
                     searchboolAs=searchAs;
                     orderboolAs=searchAs + " ASC";
-                    dialog=ProgressDialog.show(SearchAllActivity.this,"","Searching data",true);
-                    searchData(searchtext,searchAs, searchAs + " ASC",strMin,strMax);
+                    if(CheckInternetSpeed.checkInternet(SearchAllActivity.this).contains("0")) {
+                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(SearchAllActivity.this);
+                        alertDialogBuilder.setTitle("No Internet connection!!!")
+                                .setMessage("Can't do further process")
 
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                        dialog.dismiss();
+
+                                    }
+                                }).show();
+                    }
+                    else if(CheckInternetSpeed.checkInternet(SearchAllActivity.this).contains("1")) {
+                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(SearchAllActivity.this);
+                        alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                                .setMessage("Can't do further process")
+
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //insertIMEI();
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
+                    }
+                    else {
+                        dialog = ProgressDialog.show(SearchAllActivity.this, "", "Searching data", true);
+                        searchData(searchtext, searchAs, searchAs + " ASC", strMin, strMax);
+                    }
                 }
             }
                   });
@@ -224,8 +257,42 @@ public class SearchAllActivity extends AppCompatActivity {
                     searchbooltext=searchtext;
                     searchboolAs=searchAs;
                     orderboolAs=searchAs + " ASC";
-                    dialog=ProgressDialog.show(SearchAllActivity.this,"","Searching data",true);
-                    searchData(searchtext,searchAs, searchAs + " DESC",strMin,strMax);
+                    if(CheckInternetSpeed.checkInternet(SearchAllActivity.this).contains("0")) {
+                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(SearchAllActivity.this);
+                        alertDialogBuilder.setTitle("No Internet connection!!!")
+                                .setMessage("Can't do further process")
+
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                        dialog.dismiss();
+
+                                    }
+                                }).show();
+                    }
+                    else if(CheckInternetSpeed.checkInternet(SearchAllActivity.this).contains("1")) {
+                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(SearchAllActivity.this);
+                        alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                                .setMessage("Can't do further process")
+
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //insertIMEI();
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
+                    }
+                    else {
+                        dialog = ProgressDialog.show(SearchAllActivity.this, "", "Searching data", true);
+                        searchData(searchtext, searchAs, searchAs + " DESC", strMin, strMax);
+                    }
                    // refreshWhenLoading();
                         // getCounselor1(cid, statusid, datafrom);
                 }
@@ -264,8 +331,43 @@ public class SearchAllActivity extends AppCompatActivity {
                         orderboolAs=searchAs + " ASC";*/
 
                     txtDisplayInfo.setText("Displaying "+txtMin.getText().toString()+"-"+txtMax.getText().toString());
-                    dialog=ProgressDialog.show(SearchAllActivity.this,"","Searching data",true);
-                    searchData(searchbooltext,searchboolAs, orderboolAs ,txtMin.getText().toString(),txtMax.getText().toString());
+                    if(CheckInternetSpeed.checkInternet(SearchAllActivity.this).contains("0")) {
+                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(SearchAllActivity.this);
+                        alertDialogBuilder.setTitle("No Internet connection!!!")
+                                .setMessage("Can't do further process")
+
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                        dialog.dismiss();
+
+                                    }
+                                }).show();
+                    }
+                    else if(CheckInternetSpeed.checkInternet(SearchAllActivity.this).contains("1")) {
+                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(SearchAllActivity.this);
+                        alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                                .setMessage("Can't do further process")
+
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //insertIMEI();
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
+                    }
+                    else {
+
+                        dialog = ProgressDialog.show(SearchAllActivity.this, "", "Searching data", true);
+                        searchData(searchbooltext, searchboolAs, orderboolAs, txtMin.getText().toString(), txtMax.getText().toString());
+                    }
                  //   refreshWhenLoading();
                 }
             });
@@ -295,8 +397,7 @@ public class SearchAllActivity extends AppCompatActivity {
         url=clienturl+"?clientid="+clientid+"&caseid=105&AllocatedTo="+cid+"&FieldName="+searchAs+"&FieldVal="+searchVal+"&OrderVal="+orderval+"&MinVal="+strMin+"&MaxVal="+strMax;
         arraylistCounselor = new ArrayList<>();
         Log.d("SearchUrl",url);
-        if(CheckInternet.checkInternet(SearchAllActivity.this))
-        {
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -412,25 +513,7 @@ public class SearchAllActivity extends AppCompatActivity {
                     }
                 });
         requestQueue.add(stringRequest);
-    }else {
-        dialog.dismiss();
-        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(SearchAllActivity.this);
-        alertDialogBuilder.setTitle("No Internet connection!!!")
-                .setMessage("Can't do further process")
-
-                // Specifying a listener allows you to take an action before dismissing the dialog.
-                // The dialog is automatically dismissed when a dialog button is clicked.
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        dialog.dismiss();
-
-                    }
-                }).show();
-    }
-
-
-    }
+        }
 
     @Override
     public void onBackPressed() {

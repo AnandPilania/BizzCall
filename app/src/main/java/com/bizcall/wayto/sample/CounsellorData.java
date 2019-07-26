@@ -108,7 +108,7 @@ public class CounsellorData extends AppCompatActivity {
                     onBackPressed();
                 }
             });
-            dialog = ProgressDialog.show(CounsellorData.this, "", "Loading counselor data...", true);
+
             strActivity=getIntent().getStringExtra("Activity");
             imgRefresh.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -148,12 +148,45 @@ public class CounsellorData extends AppCompatActivity {
                 txtMin.setText(strMin);
                 txtMax.setText(strMax);
                 txtDisplayInfo.setText("Displaying "+txtMin.getText().toString()+"-"+txtMax.getText().toString()+" out of"+total);
+            if(CheckInternetSpeed.checkInternet(CounsellorData.this).contains("0")) {
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                alertDialogBuilder.setTitle("No Internet connection!!!")
+                        .setMessage("Can't do further process")
 
-            if (refname.contains("All"))
-            {
-                getCounselor(cid, statusid, "nSrNo", strMin, strMax);
-            } else {
-                getCounselor1(cid, statusid, datafrom, strMin, strMax);
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
+
+                            }
+                        }).show();
+            }
+            else if(CheckInternetSpeed.checkInternet(CounsellorData.this).contains("1")) {
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                        .setMessage("Can't do further process")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+            }
+            else {
+                dialog = ProgressDialog.show(CounsellorData.this, "", "Loading counselor data...", true);
+                if (refname.contains("All")) {
+                    getCounselor(cid, statusid, "nSrNo", strMin, strMax);
+                } else {
+                    getCounselor1(cid, statusid, datafrom, strMin, strMax);
+                }
             }
 
                 arrayListSearchAs = new ArrayList<>();
@@ -209,254 +242,539 @@ public class CounsellorData extends AppCompatActivity {
             }catch (Exception e)
             {
                 dialog.dismiss();
-                Toast.makeText(CounsellorData.this,"Volley error while loading counselor data",Toast.LENGTH_SHORT).show();
+                Toast.makeText(CounsellorData.this,"Errorcode-148 CounselorData oncreate "+e.toString(),Toast.LENGTH_SHORT).show();
                 Log.d("CounselorDataException", String.valueOf(e));
             }
     }//oncreate close
     public void searchAsItemSelected()
     {
-        searchAs = spinnerFilter.getSelectedItem().toString();
-        if(searchAs.contains("Serial No"))
+        try {
+            searchAs = spinnerFilter.getSelectedItem().toString();
+            if (searchAs.contains("Serial No")) {
+                searchAs = "nSrNo";
+            } else if (searchAs.contains("Candidate Name")) {
+                searchAs = "cCandidateName";
+            } else if (searchAs.contains("Course")) {
+                searchAs = "cCourse";
+            } else if (searchAs.contains("Mobile")) {
+                searchAs = "cMobile";
+            } else if (searchAs.contains("Email")) {
+                searchAs = "cEmail ";
+            } else if (searchAs.contains("Parent No")) {
+                searchAs = "cParantNo ";
+            } else if (searchAs.contains("Allocation Date")) {
+                searchAs = "AllocationDate";
+            }
+        }catch (Exception e)
         {
-            searchAs="nSrNo";
-        }
-        else if (searchAs.contains("Candidate Name"))
-        {
-            searchAs="cCandidateName";
-        }
-        else if(searchAs.contains("Course"))
-        {
-            searchAs="cCourse";
-        }
-        else if(searchAs.contains("Mobile"))
-        {
-            searchAs="cMobile";
-        }
-        else if(searchAs.contains("Email"))
-        {
-            searchAs="cEmail ";
-        }
-        else if(searchAs.contains("Parent No"))
-        {
-            searchAs="cParantNo ";
-        }
-        else if(searchAs.contains("Allocation Date"))
-        {
-            searchAs="AllocationDate";
+            Toast.makeText(CounsellorData.this,"Errorcode-149 CounselorData spinnerSearchAs clicked "+e.toString(),Toast.LENGTH_SHORT).show();
         }
     }
     public void btnPreviousClick()
     {
+        try {
+            strMin = String.valueOf(Integer.parseInt(txtMin.getText().toString()) - 25);
+            strMax = String.valueOf(Integer.parseInt(txtMax.getText().toString()) - 25);
+            txtMin.setText(strMin);
+            txtMax.setText(strMax);
+            txtDisplayInfo.setText("Displaying " + txtMin.getText().toString() + "-" + txtMax.getText().toString() + " out of" + total);
+            if (searchbool == 1) {
+                if (CheckInternetSpeed.checkInternet(CounsellorData.this).contains("0")) {
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                    alertDialogBuilder.setTitle("No Internet connection!!!")
+                            .setMessage("Can't do further process")
 
-        strMin= String.valueOf(Integer.parseInt(txtMin.getText().toString())-25);
-        strMax= String.valueOf(Integer.parseInt(txtMax.getText().toString())-25);
-        txtMin.setText(strMin);
-        txtMax.setText(strMax);
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                    dialog.dismiss();
 
-        txtDisplayInfo.setText("Displaying "+txtMin.getText().toString()+"-"+txtMax.getText().toString()+" out of"+total);
-        if(searchbool==1)
-        {
-            dialog = ProgressDialog.show(CounsellorData.this, "", "Searching data", true);
-            searchDataForAll(searchbooltext,searchboolAs, orderboolAs,txtMin.getText().toString(),txtMax.getText().toString());
-            //  refreshWhenLoading();
-        }
-        else if(searchbool==2)
-        {
-            dialog = ProgressDialog.show(CounsellorData.this, "", "Searching data", true);
-            searchData(searchbooltext,searchboolAs, orderboolAs,txtMin.getText().toString(),txtMax.getText().toString());
+                                }
+                            }).show();
+                } else if (CheckInternetSpeed.checkInternet(CounsellorData.this).contains("1")) {
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                    alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                            .setMessage("Can't do further process")
 
-        }
-        else {
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                } else {
+                    dialog = ProgressDialog.show(CounsellorData.this, "", "Searching data", true);
+                    searchDataForAll(searchbooltext, searchboolAs, orderboolAs, txtMin.getText().toString(), txtMax.getText().toString());
+                }
+                //  refreshWhenLoading();
+            } else if (searchbool == 2) {
+                if (CheckInternetSpeed.checkInternet(CounsellorData.this).contains("0")) {
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                    alertDialogBuilder.setTitle("No Internet connection!!!")
+                            .setMessage("Can't do further process")
 
-            dialog = ProgressDialog.show(CounsellorData.this, "", "Loading counselor data", true);
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                    dialog.dismiss();
 
-            if (refname.contains("All")) {
-                getCounselor(cid, statusid,"nSrNo",strMin,strMax);
+                                }
+                            }).show();
+                } else if (CheckInternetSpeed.checkInternet(CounsellorData.this).contains("1")) {
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                    alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                            .setMessage("Can't do further process")
+
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                } else {
+                    dialog = ProgressDialog.show(CounsellorData.this, "", "Searching data", true);
+                    searchData(searchbooltext, searchboolAs, orderboolAs, txtMin.getText().toString(), txtMax.getText().toString());
+                }
+
             } else {
-                getCounselor1(cid, statusid, datafrom,strMin,strMax);
+                if (CheckInternetSpeed.checkInternet(CounsellorData.this).contains("0")) {
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                    alertDialogBuilder.setTitle("No Internet connection!!!")
+                            .setMessage("Can't do further process")
+
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                    dialog.dismiss();
+
+                                }
+                            }).show();
+                } else if (CheckInternetSpeed.checkInternet(CounsellorData.this).contains("1")) {
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                    alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                            .setMessage("Can't do further process")
+
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                } else {
+                    dialog = ProgressDialog.show(CounsellorData.this, "", "Loading counselor data...", true);
+                    if (refname.contains("All")) {
+                        getCounselor(cid, statusid, "nSrNo", strMin, strMax);
+                    } else {
+                        getCounselor1(cid, statusid, datafrom, strMin, strMax);
+                    }
+                }
             }
+        }catch (Exception e)
+        {
+            Toast.makeText(CounsellorData.this,"Errorcode-150 CounselorData BtnPrevious Clicked "+e.toString(),Toast.LENGTH_SHORT).show();
         }
     }
     public void btnNextClick()
     {
-        strMin = String.valueOf(Integer.parseInt(txtMin.getText().toString()) + 25);
-        strMax = String.valueOf(Integer.parseInt(txtMax.getText().toString()) + 25);
-        txtMin.setText(strMin);
-        txtMax.setText(strMax);
-        if(searchbool==1)
-        {
-            dialog = ProgressDialog.show(CounsellorData.this, "", "Searching data", true);
-            searchDataForAll(searchbooltext,searchboolAs, orderboolAs,txtMin.getText().toString(),txtMax.getText().toString());
-            //  refreshWhenLoading();
-        }
-        else if(searchbool==2)
-        {
-            dialog = ProgressDialog.show(CounsellorData.this, "", "Searching data", true);
-            searchData(searchbooltext,searchboolAs, orderboolAs,txtMin.getText().toString(),txtMax.getText().toString());
-            //refreshWhenLoading();
-        }
-        else {
-            dialog = ProgressDialog.show(CounsellorData.this, "", "Loading counselor data", true);
-            if (refname.contains("All")) {
-                getCounselor(cid, statusid,"nSrNo",strMin,strMax);
-            } else {
-                getCounselor1(cid, statusid, datafrom,strMin,strMax);
-            }
-            //  refreshWhenLoading();
-            // dialog = ProgressDialog.show(CounsellorData.this, "", "Loading", true);
-            // getCounselor(cid, statusid, "nSrNo", strMin, strMax);
-        }
-        txtDisplayInfo.setText("Displaying " + txtMin.getText().toString() + "-" + txtMax.getText().toString() + " out of" + total);
+        try {
+            strMin = String.valueOf(Integer.parseInt(txtMin.getText().toString()) + 25);
+            strMax = String.valueOf(Integer.parseInt(txtMax.getText().toString()) + 25);
+            txtMin.setText(strMin);
+            txtMax.setText(strMax);
+            if (searchbool == 1) {
+                if (CheckInternetSpeed.checkInternet(CounsellorData.this).contains("0")) {
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                    alertDialogBuilder.setTitle("No Internet connection!!!")
+                            .setMessage("Can't do further process")
 
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                    dialog.dismiss();
+
+                                }
+                            }).show();
+                } else if (CheckInternetSpeed.checkInternet(CounsellorData.this).contains("1")) {
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                    alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                            .setMessage("Can't do further process")
+
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                } else {
+                    dialog = ProgressDialog.show(CounsellorData.this, "", "Searching data", true);
+                    searchDataForAll(searchbooltext, searchboolAs, orderboolAs, txtMin.getText().toString(), txtMax.getText().toString());
+                }
+                //  refreshWhenLoading();
+            } else if (searchbool == 2) {
+                if (CheckInternetSpeed.checkInternet(CounsellorData.this).contains("0")) {
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                    alertDialogBuilder.setTitle("No Internet connection!!!")
+                            .setMessage("Can't do further process")
+
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                    dialog.dismiss();
+
+                                }
+                            }).show();
+                } else if (CheckInternetSpeed.checkInternet(CounsellorData.this).contains("1")) {
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                    alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                            .setMessage("Can't do further process")
+
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                } else {
+                    dialog = ProgressDialog.show(CounsellorData.this, "", "Searching data", true);
+                    searchData(searchbooltext, searchboolAs, orderboolAs, txtMin.getText().toString(), txtMax.getText().toString());
+                }
+                //refreshWhenLoading();
+            } else {
+                if (CheckInternetSpeed.checkInternet(CounsellorData.this).contains("0")) {
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                    alertDialogBuilder.setTitle("No Internet connection!!!")
+                            .setMessage("Can't do further process")
+
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                    dialog.dismiss();
+
+                                }
+                            }).show();
+                } else if (CheckInternetSpeed.checkInternet(CounsellorData.this).contains("1")) {
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                    alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                            .setMessage("Can't do further process")
+
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                } else {
+                    dialog = ProgressDialog.show(CounsellorData.this, "", "Loading counselor data...", true);
+                    if (refname.contains("All")) {
+                        getCounselor(cid, statusid, "nSrNo", strMin, strMax);
+                    } else {
+                        getCounselor1(cid, statusid, datafrom, strMin, strMax);
+                    }
+                }
+            }
+            txtDisplayInfo.setText("Displaying " + txtMin.getText().toString() + "-" + txtMax.getText().toString() + " out of" + total);
+        }catch (Exception e)
+        {
+            Toast.makeText(CounsellorData.this,"Errorcode-151 CounselorData BtnNext clicked "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void searchAscClick()
     {
-        txtMin.setText("1");
-        txtMax.setText("25");
-        txtDisplayInfo.setText("Displaying " + txtMin.getText().toString() + "-" + txtMax.getText().toString() + " out of" + total);
+        try {
+            txtMin.setText("1");
+            txtMax.setText("25");
+            txtDisplayInfo.setText("Displaying " + txtMin.getText().toString() + "-" + txtMax.getText().toString() + " out of" + total);
 
-        searchAs = spinnerFilter.getSelectedItem().toString();
-        searchtext=edtSearchText.getText().toString().trim();
-        searchtext=searchtext.replaceAll("'","").trim();
-        if(searchAs.contains("Serial No"))
-        {
-            searchAs="nSrNo";
-        }
-        else if (searchAs.contains("Candidate Name"))
-        {
-            searchAs="cCandidateName";
-        }
-        else if(searchAs.contains("Course"))
-        {
-            searchAs="cCourse";
-        }
-        else if(searchAs.contains("Mobile"))
-        {
-            searchAs="cMobile";
-        }
-        else if(searchAs.contains("Email"))
-        {
-            searchAs="cEmail ";
-        }
-        else if(searchAs.contains("Parent No"))
-        {
-            searchAs="cParantNo ";
-        }
-        else if(searchAs.contains("Allocation Date"))
-        {
-            searchAs="AllocationDate";
-        }
-
-        // searchCondition="and "+searchAs+" like '%"+searchtext+"%' ";
-        if(searchtext==""||searchtext==null)
-        {
-            edtSearchText.setError("Please insert text");
-        }
-        else {
-
-            if (refname.contains("All"))
-            {
-                strMin=txtMin.getText().toString();
-                strMax=txtMax.getText().toString();
-                // searchCondition = "and " + searchAs + " like '%" + searchtext + "%' ";
-                // dialog=ProgressDialog.show(CounsellorData.this,"","Loading",true);
-                searchbool=1;
-                searchbooltext=searchtext;
-                searchboolAs=searchAs;
-                orderboolAs=searchAs + " ASC";
-                dialog = ProgressDialog.show(CounsellorData.this, "", "Searching data", true);
-                searchDataForAll(searchtext,searchAs, searchAs + " ASC",strMin,strMax);
-                // refreshWhenLoading();
-                //getCounselor(cid, statusid,searchAs+" "+"DESC");
-            } else {
-                strMin=txtMin.getText().toString();
-                strMax=txtMax.getText().toString();
-                //  dialog=ProgressDialog.show(CounsellorData.this,"","Loading",true);
-                searchbool=2;
-                searchbooltext=searchtext;
-                searchboolAs=searchAs;
-                orderboolAs=searchAs + " ASC";
-                dialog = ProgressDialog.show(CounsellorData.this, "", "Searching data", true);
-                searchData(searchtext,searchAs, searchAs + " ASC",strMin,strMax);
-                // refreshWhenLoading();
-                // getCounselor1(cid, statusid, datafrom);
+            searchAs = spinnerFilter.getSelectedItem().toString();
+            searchtext = edtSearchText.getText().toString().trim();
+            searchtext = searchtext.replaceAll("'", "").trim();
+            if (searchAs.contains("Serial No")) {
+                searchAs = "nSrNo";
+            } else if (searchAs.contains("Candidate Name")) {
+                searchAs = "cCandidateName";
+            } else if (searchAs.contains("Course")) {
+                searchAs = "cCourse";
+            } else if (searchAs.contains("Mobile")) {
+                searchAs = "cMobile";
+            } else if (searchAs.contains("Email")) {
+                searchAs = "cEmail ";
+            } else if (searchAs.contains("Parent No")) {
+                searchAs = "cParantNo ";
+            } else if (searchAs.contains("Allocation Date")) {
+                searchAs = "AllocationDate";
             }
+
+            // searchCondition="and "+searchAs+" like '%"+searchtext+"%' ";
+            if (searchtext == "" || searchtext == null) {
+                edtSearchText.setError("Please insert text");
+            } else {
+
+                if (refname.contains("All")) {
+                    strMin = txtMin.getText().toString();
+                    strMax = txtMax.getText().toString();
+                    // searchCondition = "and " + searchAs + " like '%" + searchtext + "%' ";
+                    // dialog=ProgressDialog.show(CounsellorData.this,"","Loading",true);
+                    searchbool = 1;
+                    searchbooltext = searchtext;
+                    searchboolAs = searchAs;
+                    orderboolAs = searchAs + " ASC";
+                    if (CheckInternetSpeed.checkInternet(CounsellorData.this).contains("0")) {
+                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                        alertDialogBuilder.setTitle("No Internet connection!!!")
+                                .setMessage("Can't do further process")
+
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                        dialog.dismiss();
+
+                                    }
+                                }).show();
+                    } else if (CheckInternetSpeed.checkInternet(CounsellorData.this).contains("1")) {
+                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                        alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                                .setMessage("Can't do further process")
+
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //insertIMEI();
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
+                    } else {
+                        dialog = ProgressDialog.show(CounsellorData.this, "", "Searching data", true);
+                        searchDataForAll(searchtext, searchAs, searchAs + " ASC", strMin, strMax);
+                    }
+                    // refreshWhenLoading();
+                    //getCounselor(cid, statusid,searchAs+" "+"DESC");
+                } else {
+                    strMin = txtMin.getText().toString();
+                    strMax = txtMax.getText().toString();
+                    //  dialog=ProgressDialog.show(CounsellorData.this,"","Loading",true);
+                    searchbool = 2;
+                    searchbooltext = searchtext;
+                    searchboolAs = searchAs;
+                    orderboolAs = searchAs + " ASC";
+                    if (CheckInternetSpeed.checkInternet(CounsellorData.this).contains("0")) {
+                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                        alertDialogBuilder.setTitle("No Internet connection!!!")
+                                .setMessage("Can't do further process")
+
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                        dialog.dismiss();
+
+                                    }
+                                }).show();
+                    } else if (CheckInternetSpeed.checkInternet(CounsellorData.this).contains("1")) {
+                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                        alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                                .setMessage("Can't do further process")
+
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //insertIMEI();
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
+                    } else {
+
+                        dialog = ProgressDialog.show(CounsellorData.this, "", "Searching data", true);
+                        searchData(searchtext, searchAs, searchAs + " ASC", strMin, strMax);
+                    }
+                    // refreshWhenLoading();
+                    // getCounselor1(cid, statusid, datafrom);
+                }
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(CounsellorData.this,"Errorcode-152 CounselorData searchASC clicked "+e.toString(),Toast.LENGTH_SHORT).show();
         }
     }
 
     public void searchDescClick()
     {
-        txtMin.setText("1");
-        txtMax.setText("25");
-        txtDisplayInfo.setText("Displaying " + txtMin.getText().toString() + "-" + txtMax.getText().toString() + " out of" + total);
+        try {
+            txtMin.setText("1");
+            txtMax.setText("25");
+            txtDisplayInfo.setText("Displaying " + txtMin.getText().toString() + "-" + txtMax.getText().toString() + " out of" + total);
 
-        searchAs = spinnerFilter.getSelectedItem().toString();
-        searchtext = edtSearchText.getText().toString().trim();
-        searchtext=searchtext.replaceAll("'","").trim();
-        Log.d("Searchtext",searchtext);
-        if(searchAs.contains("Serial No"))
-        {
-            searchAs="nSrNo";
-        }
-        else if (searchAs.contains("Candidate Name"))
-        {
-            searchAs="cCandidateName";
-        }
-        else if(searchAs.contains("Course"))
-        {
-            searchAs="cCourse";
-        }
-        else if(searchAs.contains("Mobile"))
-        {
-            searchAs="cMobile";
-        }
-        else if(searchAs.contains("Email"))
-        {
-            searchAs="cEmail ";
-        }
-        else if(searchAs.contains("Parent No"))
-        {
-            searchAs="cParantNo ";
-        }
-        else if(searchAs.contains("Allocation Date"))
-        {
-            searchAs="AllocationDate";
-        }
+            searchAs = spinnerFilter.getSelectedItem().toString();
+            searchtext = edtSearchText.getText().toString().trim();
+            searchtext = searchtext.replaceAll("'", "").trim();
+            Log.d("Searchtext", searchtext);
+            if (searchAs.contains("Serial No")) {
+                searchAs = "nSrNo";
+            } else if (searchAs.contains("Candidate Name")) {
+                searchAs = "cCandidateName";
+            } else if (searchAs.contains("Course")) {
+                searchAs = "cCourse";
+            } else if (searchAs.contains("Mobile")) {
+                searchAs = "cMobile";
+            } else if (searchAs.contains("Email")) {
+                searchAs = "cEmail ";
+            } else if (searchAs.contains("Parent No")) {
+                searchAs = "cParantNo ";
+            } else if (searchAs.contains("Allocation Date")) {
+                searchAs = "AllocationDate";
+            }
               /*  String searchCondition="and "+searchAs+" like '%"+searchtext+"%' ";
                 Log.d("SearchText",searchtext);*/
-        if(searchtext==""||searchtext==null)
-        {
-            edtSearchText.setError("Please insert text");
-
-        }
-        else {
-            if (refname.contains("All"))
-            {
-                strMin=txtMin.getText().toString();
-                strMax=txtMax.getText().toString();
-                // searchCondition = "and " + searchAs + " like '%" + searchtext + "%' ";
-                // dialog=ProgressDialog.show(CounsellorData.this,"","Loading",true);
-                searchbool=1;
-                searchbooltext=searchtext;
-                searchboolAs=searchAs;
-                orderboolAs=searchAs + " DESC";
-                dialog = ProgressDialog.show(CounsellorData.this, "", "Searching data", true);
-                searchDataForAll(searchtext,searchAs, searchAs + " DESC",strMin,strMax);
+            if (searchtext == "" || searchtext == null) {
+                edtSearchText.setError("Please insert text");
 
             } else {
-                strMin=txtMin.getText().toString();
-                strMax=txtMax.getText().toString();
-                //  dialog=ProgressDialog.show(CounsellorData.this,"","Loading",true);
-                searchbool=2;
-                searchbooltext=searchtext;
-                searchboolAs=searchAs;
-                orderboolAs=searchAs + " DESC";
-                dialog = ProgressDialog.show(CounsellorData.this, "", "Searching data", true);
-                searchData(searchtext,searchAs, searchAs + " DESC",strMin,strMax);
-                //refreshWhenLoading();
-                // getCounselor1(cid, statusid, datafrom);
+                if (refname.contains("All")) {
+                    strMin = txtMin.getText().toString();
+                    strMax = txtMax.getText().toString();
+                    // searchCondition = "and " + searchAs + " like '%" + searchtext + "%' ";
+                    // dialog=ProgressDialog.show(CounsellorData.this,"","Loading",true);
+                    searchbool = 1;
+                    searchbooltext = searchtext;
+                    searchboolAs = searchAs;
+                    orderboolAs = searchAs + " DESC";
+                    if (CheckInternetSpeed.checkInternet(CounsellorData.this).contains("0")) {
+                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                        alertDialogBuilder.setTitle("No Internet connection!!!")
+                                .setMessage("Can't do further process")
+
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                        dialog.dismiss();
+
+                                    }
+                                }).show();
+                    } else if (CheckInternetSpeed.checkInternet(CounsellorData.this).contains("1")) {
+                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                        alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                                .setMessage("Can't do further process")
+
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //insertIMEI();
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
+                    } else {
+                        dialog = ProgressDialog.show(CounsellorData.this, "", "Searching data", true);
+                        searchDataForAll(searchtext, searchAs, searchAs + " DESC", strMin, strMax);
+                    }
+
+                } else {
+                    strMin = txtMin.getText().toString();
+                    strMax = txtMax.getText().toString();
+                    //  dialog=ProgressDialog.show(CounsellorData.this,"","Loading",true);
+                    searchbool = 2;
+                    searchbooltext = searchtext;
+                    searchboolAs = searchAs;
+                    orderboolAs = searchAs + " DESC";
+                    if (CheckInternetSpeed.checkInternet(CounsellorData.this).contains("0")) {
+                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                        alertDialogBuilder.setTitle("No Internet connection!!!")
+                                .setMessage("Can't do further process")
+
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                        dialog.dismiss();
+
+                                    }
+                                }).show();
+                    } else if (CheckInternetSpeed.checkInternet(CounsellorData.this).contains("1")) {
+                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                        alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                                .setMessage("Can't do further process")
+
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //insertIMEI();
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
+                    } else {
+                        dialog = ProgressDialog.show(CounsellorData.this, "", "Searching data", true);
+                        searchData(searchtext, searchAs, searchAs + " DESC", strMin, strMax);
+                    }
+                    //refreshWhenLoading();
+                    // getCounselor1(cid, statusid, datafrom);
+                }
             }
+        }catch (Exception e)
+        {
+            Toast.makeText(CounsellorData.this,"Errorcode-153 CounselorData searchDESC clicked "+e.toString(),Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -490,575 +808,557 @@ public class CounsellorData extends AppCompatActivity {
         super.onBackPressed();
         }catch (Exception e)
         {
-            Log.d("Exception", String.valueOf(e));
-        }
+            Toast.makeText(CounsellorData.this,"Errorcode-154 CounselorData onBackPressed "+e.toString(),Toast.LENGTH_SHORT).show();        }
     }
     public void getCounselor(String cid, String sid, String search1, final String strMin, String strMax) {
-        //dialog = ProgressDialog.show(CounsellorData.this, "Loading", "Please wait.....", false, true);
-        arraylistCounselor = new ArrayList<>();
-        url=clienturl+"?clientid=" + clientid + "&caseid=101&CounselorId=" + cid + "&statusid=" + sid+"&Sortby="+search1+"&MinVal="+strMin+"&MaxVal="+strMax;
-        if(CheckInternet.checkInternet(CounsellorData.this))
-        {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (dialog.isShowing()) {
-                            dialog.dismiss();
-                        }
+        try {
+            if(CheckServer.isServerReachable(CounsellorData.this)) {
+                //dialog = ProgressDialog.show(CounsellorData.this, "Loading", "Please wait.....", false, true);
+                arraylistCounselor = new ArrayList<>();
+                url = clienturl + "?clientid=" + clientid + "&caseid=101&CounselorId=" + cid + "&statusid=" + sid + "&Sortby=" + search1 + "&MinVal=" + strMin + "&MaxVal=" + strMax;
 
-
-                        //  TableLayout tableLayout=findViewById(R.id.tblCounselorData);
-                        //  tableLayout.setVisibility(View.VISIBLE);
-
-                        Log.d("CounselorResponse", response);
-                        try {
-                            arraylistCounselor.clear();
-                            JSONObject jsonObject = new JSONObject(response);
-                            // Log.d("Json",jsonObject.toString());
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                strSNO=jsonObject1.getString("SNO");
-                                String srno = jsonObject1.getString("nSrNo");
-                                String cname = jsonObject1.getString("cCandidateName");
-                                String course = jsonObject1.getString("cCourse");
-                                String mobile = jsonObject1.getString("cMobile");
-                                String parentno = jsonObject1.getString("cParantNo");
-                                String email = jsonObject1.getString("cEmail");
-                                String allocationDate = jsonObject1.getString("AllocationDate");
-                                String adrs = jsonObject1.getString("cAddressLine");
-                                String city = jsonObject1.getString("cCity");
-                                String state = jsonObject1.getString("cState");
-                                String pincode = jsonObject1.getString("cPinCode");
-                                String statusId=jsonObject1.getString("nStatusID");
-                                String statusStr=jsonObject1.getString("cStatus");
-                                String remarks=jsonObject1.getString("cRemarks");
-                                //String datafrom=jsonObject1.getString("cDataFrom");
-
-                                Log.d("Status11", srno);
-                                DataCounselor dataCounselor = new DataCounselor(strSNO,srno, cname, course, mobile, parentno, email, allocationDate, adrs, city, state, pincode,statusId,statusStr,remarks);
-                                arraylistCounselor.add(dataCounselor);
-                            }
-
-                            adapterCounselorData = new AdapterCounselorData(CounsellorData.this, arraylistCounselor);
-                            recyclerViewCounselor = findViewById(R.id.recyclerCounselorData);
-                            LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-                            layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                            recyclerViewCounselor.setLayoutManager(layoutManager);
-                            recyclerViewCounselor.setAdapter(adapterCounselorData);
-                            adapterCounselorData.notifyDataSetChanged();
-                            int mval= Integer.parseInt(txtMax.getText().toString());
-                            if(txtMin.getText().toString().equals("1")) {
-                                btnPrevious.setVisibility(View.GONE);
-                                if (Integer.parseInt(txtMax.getText().toString()) <= Integer.parseInt(total)) {
-                                    btnNext.setVisibility(View.VISIBLE);
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                if (dialog.isShowing()) {
+                                    dialog.dismiss();
                                 }
-                                else
-                                {
-                                    btnNext.setVisibility(View.GONE);
-                                }
-                            }
-                            else if(mval>Integer.parseInt(total))
-                            {
-                                btnPrevious.setVisibility(View.VISIBLE);
-                                btnNext.setVisibility(View.GONE);
-                            }
-                            else
-                            {
-                                btnNext.setVisibility(View.VISIBLE);
-                                btnPrevious.setVisibility(View.VISIBLE);
-                            }
-
-                            //Log.d("Size**", String.valueOf(arrayList.size()));
-                        } catch (JSONException e) {
-                            Toast.makeText(CounsellorData.this,"Volley error while loading all counselor data ",Toast.LENGTH_SHORT).show();
-                            Log.d("AllCounselorException", String.valueOf(e));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
 
 
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
+                                //  TableLayout tableLayout=findViewById(R.id.tblCounselorData);
+                                //  tableLayout.setVisibility(View.VISIBLE);
 
-                                            dialog.dismiss();
+                                Log.d("CounselorResponse", response);
+                                try {
+                                    arraylistCounselor.clear();
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    // Log.d("Json",jsonObject.toString());
+                                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                        strSNO = jsonObject1.getString("SNO");
+                                        String srno = jsonObject1.getString("nSrNo");
+                                        String cname = jsonObject1.getString("cCandidateName");
+                                        String course = jsonObject1.getString("cCourse");
+                                        String mobile = jsonObject1.getString("cMobile");
+                                        String parentno = jsonObject1.getString("cParantNo");
+                                        String email = jsonObject1.getString("cEmail");
+                                        String allocationDate = jsonObject1.getString("AllocationDate");
+                                        String adrs = jsonObject1.getString("cAddressLine");
+                                        String city = jsonObject1.getString("cCity");
+                                        String state = jsonObject1.getString("cState");
+                                        String pincode = jsonObject1.getString("cPinCode");
+                                        String statusId = jsonObject1.getString("nStatusID");
+                                        String statusStr = jsonObject1.getString("cStatus");
+                                        String remarks = jsonObject1.getString("cRemarks");
+                                        //String datafrom=jsonObject1.getString("cDataFrom");
+
+                                        Log.d("Status11", srno);
+                                        DataCounselor dataCounselor = new DataCounselor(strSNO, srno, cname, course, mobile, parentno, email, allocationDate, adrs, city, state, pincode, statusId, statusStr, remarks);
+                                        arraylistCounselor.add(dataCounselor);
+                                    }
+
+                                    adapterCounselorData = new AdapterCounselorData(CounsellorData.this, arraylistCounselor);
+                                    recyclerViewCounselor = findViewById(R.id.recyclerCounselorData);
+                                    LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+                                    layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                                    recyclerViewCounselor.setLayoutManager(layoutManager);
+                                    recyclerViewCounselor.setAdapter(adapterCounselorData);
+                                    adapterCounselorData.notifyDataSetChanged();
+                                    int mval = Integer.parseInt(txtMax.getText().toString());
+                                    if (txtMin.getText().toString().equals("1")) {
+                                        btnPrevious.setVisibility(View.GONE);
+                                        if (Integer.parseInt(txtMax.getText().toString()) <= Integer.parseInt(total)) {
+                                            btnNext.setVisibility(View.VISIBLE);
+                                        } else {
+                                            btnNext.setVisibility(View.GONE);
                                         }
-                                    }).show();
-                            //   dialog.dismiss();
-                            Toast.makeText(CounsellorData.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
+                                    } else if (mval > Integer.parseInt(total)) {
+                                        btnPrevious.setVisibility(View.VISIBLE);
+                                        btnNext.setVisibility(View.GONE);
+                                    } else {
+                                        btnNext.setVisibility(View.VISIBLE);
+                                        btnPrevious.setVisibility(View.VISIBLE);
+                                    }
 
-                    }
-                });
-        requestQueue.add(stringRequest);
-        }else
-        {
-            dialog.dismiss();
-            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
-            alertDialogBuilder.setTitle("No Internet connection!!!")
-                    .setMessage("Can't do further process")
+                                    //Log.d("Size**", String.valueOf(arrayList.size()));
+                                } catch (JSONException e) {
+                                    Toast.makeText(CounsellorData.this, "Errorcode-156 CounselorData getCounselorResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                    Log.d("AllCounselorException", String.valueOf(e));
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
 
-                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                    // The dialog is automatically dismissed when a dialog button is clicked.
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            //insertIMEI();
+                                if (error == null || error.networkResponse == null)
+                                    return;
+                                final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                //get response body and parse with appropriate encoding
+                                if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                                    alertDialogBuilder.setTitle("Server Error!!!")
+
+
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                    //   dialog.dismiss();
+                                    Toast.makeText(CounsellorData.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    // showCustomPopupMenu();
+                                    Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                }
+
+                            }
+                        });
+                requestQueue.add(stringRequest);
+            }else {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
                                         /*edtName.setText("");
                                         edtPassword.setText("");*/
-                            dialog.dismiss();
+                                dialog.dismiss();
 
-                        }
-                    }).show();
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(CounsellorData.this,"Errorcode-155 CounselorData getCounselor "+e.toString(),Toast.LENGTH_SHORT).show();
         }
+
     }
 
     public void getCounselor1(String cid, String sid, String datafrom1, final String strMin, String strMax) {
-        //dialog = ProgressDialog.show(CounsellorData.this, "Loading", "Please wait.....", false, true);
-        url=clienturl+"?clientid=" + clientid + "&caseid=102&CounselorId=" + cid + "&statusid=" + sid + "&DataFrom=" + datafrom1+"&MinVal="+strMin+"&MaxVal="+strMax;
-        Log.d("CounselorUrl",url);
-        arraylistCounselor = new ArrayList<>();
-       if(CheckInternet.checkInternet(CounsellorData.this))
-       {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
+        try {
+            if(CheckServer.isServerReachable(CounsellorData.this)) {
+                //dialog = ProgressDialog.show(CounsellorData.this, "Loading", "Please wait.....", false, true);
+                url = clienturl + "?clientid=" + clientid + "&caseid=102&CounselorId=" + cid + "&statusid=" + sid + "&DataFrom=" + datafrom1 + "&MinVal=" + strMin + "&MaxVal=" + strMax;
+                Log.d("CounselorUrl", url);
+                arraylistCounselor = new ArrayList<>();
 
-                        dialog.dismiss();
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
 
-                        Log.d("CounselorResponse", response);
-                        try {
-                            arraylistCounselor.clear();
-                            JSONObject jsonObject = new JSONObject(response);
-                            // Log.d("Json",jsonObject.toString());
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                strSNO=jsonObject1.getString("SNO");
-                                srno = jsonObject1.getString("nSrNo");
-                                cname = jsonObject1.getString("cCandidateName");
-                                course = jsonObject1.getString("cCourse");
-                                parentno = jsonObject1.getString("cParantNo");
-                                mobile = jsonObject1.getString("cMobile");
-                                email = jsonObject1.getString("cEmail");
-                                String allocationdate1 = jsonObject1.getString("AllocationDate");
+                                dialog.dismiss();
 
-                                String adrs = jsonObject1.getString("cAddressLine");
-                                String city = jsonObject1.getString("cCity");
-                                String state = jsonObject1.getString("cState");
-                                String pincode = jsonObject1.getString("cPinCode");
-                                String statusId=jsonObject1.getString("nStatusID");
-                                String statusStr=jsonObject1.getString("cStatus");
-                                String remarks=jsonObject1.getString("cRemarks");
-                                //String datafrom=jsonObject1.getString("cDataFrom");
+                                Log.d("CounselorResponse", response);
+                                try {
+                                    arraylistCounselor.clear();
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    // Log.d("Json",jsonObject.toString());
+                                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                        strSNO = jsonObject1.getString("SNO");
+                                        srno = jsonObject1.getString("nSrNo");
+                                        cname = jsonObject1.getString("cCandidateName");
+                                        course = jsonObject1.getString("cCourse");
+                                        parentno = jsonObject1.getString("cParantNo");
+                                        mobile = jsonObject1.getString("cMobile");
+                                        email = jsonObject1.getString("cEmail");
+                                        String allocationdate1 = jsonObject1.getString("AllocationDate");
 
-                                Log.d("Status11", srno);
-                                DataCounselor dataCounselor = new DataCounselor(strSNO,srno, cname, course, mobile, parentno, email, allocationdate1, adrs, city, state, pincode,statusId,statusStr,remarks);
-                                arraylistCounselor.add(dataCounselor);
-                            }
-                            editor.putString("SrNo", srno);
-                            editor.putString("MobileNo1", mobile);
-                            editor.commit();
+                                        String adrs = jsonObject1.getString("cAddressLine");
+                                        String city = jsonObject1.getString("cCity");
+                                        String state = jsonObject1.getString("cState");
+                                        String pincode = jsonObject1.getString("cPinCode");
+                                        String statusId = jsonObject1.getString("nStatusID");
+                                        String statusStr = jsonObject1.getString("cStatus");
+                                        String remarks = jsonObject1.getString("cRemarks");
+                                        //String datafrom=jsonObject1.getString("cDataFrom");
 
-                            adapterCounselorData = new AdapterCounselorData(CounsellorData.this, arraylistCounselor);
-                            recyclerViewCounselor = findViewById(R.id.recyclerCounselorData);
-                            LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-                            layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                            recyclerViewCounselor.setLayoutManager(layoutManager);
-                            recyclerViewCounselor.setAdapter(adapterCounselorData);
-                            adapterCounselorData.notifyDataSetChanged();
-                            recyclerViewCounselor.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v)
-                                {
-                                    Log.d("SelectedRecycler:", String.valueOf(recyclerViewCounselor.getChildAdapterPosition(v)));
-                                }
-                            });
-                            int mval= Integer.parseInt(txtMax.getText().toString());
-                            if(txtMin.getText().toString().equals("1")) {
-                                btnPrevious.setVisibility(View.GONE);
-                                if (Integer.parseInt(txtMax.getText().toString()) <=arraylistCounselor.size()) {
-                                    btnNext.setVisibility(View.VISIBLE);
-                                }
-                                else
-                                {
-                                    btnNext.setVisibility(View.GONE);
-                                }
-                            }
-                            else if(mval>arraylistCounselor.size())
-                            {
-                                btnPrevious.setVisibility(View.VISIBLE);
-                                btnNext.setVisibility(View.GONE);
-                            }
-                            else
-                            {
-                                btnNext.setVisibility(View.VISIBLE);
-                                btnPrevious.setVisibility(View.VISIBLE);
-                            }
-                            //Log.d("Size**", String.valueOf(arrayList.size()));
-                        } catch (JSONException e) {
-                            dialog.dismiss();
-                            Toast.makeText(CounsellorData.this,"Volley error while loading counselor data Refwise",Toast.LENGTH_SHORT).show();
-                            Log.d("CRefwiseException", String.valueOf(e));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                                        Log.d("Status11", srno);
+                                        DataCounselor dataCounselor = new DataCounselor(strSNO, srno, cname, course, mobile, parentno, email, allocationdate1, adrs, city, state, pincode, statusId, statusStr, remarks);
+                                        arraylistCounselor.add(dataCounselor);
+                                    }
+                                    editor.putString("SrNo", srno);
+                                    editor.putString("MobileNo1", mobile);
+                                    editor.commit();
 
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            //responsecode1="ServerError";
-                              dialog.dismiss();
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
-
-
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                            dialog.dismiss();
+                                    adapterCounselorData = new AdapterCounselorData(CounsellorData.this, arraylistCounselor);
+                                    recyclerViewCounselor = findViewById(R.id.recyclerCounselorData);
+                                    LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+                                    layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                                    recyclerViewCounselor.setLayoutManager(layoutManager);
+                                    recyclerViewCounselor.setAdapter(adapterCounselorData);
+                                    adapterCounselorData.notifyDataSetChanged();
+                                    recyclerViewCounselor.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Log.d("SelectedRecycler:", String.valueOf(recyclerViewCounselor.getChildAdapterPosition(v)));
                                         }
-                                    }).show();
-                            Toast.makeText(CounsellorData.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
+                                    });
+                                    int mval = Integer.parseInt(txtMax.getText().toString());
+                                    if (txtMin.getText().toString().equals("1")) {
+                                        btnPrevious.setVisibility(View.GONE);
+                                        if (Integer.parseInt(txtMax.getText().toString()) <= arraylistCounselor.size()) {
+                                            btnNext.setVisibility(View.VISIBLE);
+                                        } else {
+                                            btnNext.setVisibility(View.GONE);
+                                        }
+                                    } else if (mval > arraylistCounselor.size()) {
+                                        btnPrevious.setVisibility(View.VISIBLE);
+                                        btnNext.setVisibility(View.GONE);
+                                    } else {
+                                        btnNext.setVisibility(View.VISIBLE);
+                                        btnPrevious.setVisibility(View.VISIBLE);
+                                    }
+                                    //Log.d("Size**", String.valueOf(arrayList.size()));
+                                } catch (JSONException e) {
+                                    dialog.dismiss();
+                                    Toast.makeText(CounsellorData.this, "Errorcode-158 CounselorData getCounselor1Response " + e.toString(), Toast.LENGTH_SHORT).show();
+                                    Log.d("CRefwiseException", String.valueOf(e));
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
 
-                    }
-                });
-        requestQueue.add(stringRequest);
-       }else
-       {
-           dialog.dismiss();
-           android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
-           alertDialogBuilder.setTitle("No Internet connection!!!")
-                   .setMessage("Can't do further process")
+                                if (error == null || error.networkResponse == null)
+                                    return;
+                                final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                //get response body and parse with appropriate encoding
+                                if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                    //responsecode1="ServerError";
+                                    dialog.dismiss();
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                                    alertDialogBuilder.setTitle("Server Error!!!")
 
-                   // Specifying a listener allows you to take an action before dismissing the dialog.
-                   // The dialog is automatically dismissed when a dialog button is clicked.
-                   .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                       public void onClick(DialogInterface dialog, int which) {
-                           //insertIMEI();
+
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                    Toast.makeText(CounsellorData.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    // showCustomPopupMenu();
+                                    Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                }
+
+                            }
+                        });
+                requestQueue.add(stringRequest);
+            }else {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
                                         /*edtName.setText("");
                                         edtPassword.setText("");*/
-                           dialog.dismiss();
+                                dialog.dismiss();
 
-                       }
-                   }).show();
-       }
-    }
-    public void searchData(String searchVal,String searchAs,String orderval,String strMin,String strMax) {
-       // refname = refname.replaceAll(" ", "");
-        //String url=clienturl+"?clientid="+clientid+"&caseid=24&cDataFrom="+datafrom+"&AllocatedTo="+cid+"&CurrentStatus="+statusid+"&FieldName="+searchAs+"&FieldVal="+searchVal+"&OrderVal="+orderval+"";
-        String url=clienturl+"?clientid="+clientid+"&caseid=103&cDataFrom="+datafrom+"&AllocatedTo="+cid+"&CurrentStatus="+statusid+"&FieldName="+searchAs+"&FieldVal="+searchVal+"&OrderVal="+orderval+"&MinVal="+strMin+"&MaxVal="+strMax;
-
-        arraylistCounselor = new ArrayList<>();
-        if(CheckInternet.checkInternet(CounsellorData.this))
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
         {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                        dialog.dismiss();
-
-                        int mval=Integer.parseInt(txtMax.getText().toString());
-                        if(response.contains("[]"))
-                        {
-                            Log.d("ABCD","ABCD");
-                            txtNotFound.setVisibility(View.VISIBLE);
-
-                            //btnNext.setVisibility(View.GONE);
-                        }
-                        else
-                        {
-                            txtNotFound.setVisibility(View.GONE);
-
-                        }
-                        Log.d("SearchResponse", response);
-                        try {
-
-                            JSONObject jsonObject = new JSONObject(response);
-                            // Log.d("Json",jsonObject.toString());
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                strSNO=jsonObject1.getString("SNO");
-                                String srno = jsonObject1.getString("nSrNo");
-                                String cname = jsonObject1.getString("cCandidateName");
-                                String course = jsonObject1.getString("cCourse");
-                                String parentno = jsonObject1.getString("cParantNo");
-                                String mobile = jsonObject1.getString("cMobile");
-                                String email = jsonObject1.getString("cEmail");
-                                String allocationdate1 = jsonObject1.getString("AllocationDate");
-                                String adrs = jsonObject1.getString("cAddressLine");
-                                String city = jsonObject1.getString("cCity");
-                                String state = jsonObject1.getString("cState");
-                                String pincode = jsonObject1.getString("cPinCode");
-                                String statusId=jsonObject1.getString("CurrentStatus");
-                                String statusStr=jsonObject1.getString("cStatus");
-                                String remarks=jsonObject1.getString("cRemarks");
-                                //String datafrom=jsonObject1.getString("cDataFrom");
-
-                                Log.d("Status11", srno);
-                                DataCounselor dataCounselor = new DataCounselor(strSNO,srno, cname, course, mobile, parentno, email, allocationdate1, adrs, city, state, pincode,statusId,statusStr,remarks);
-                                arraylistCounselor.add(dataCounselor);
-                            }
-                            adapterCounselorData = new AdapterCounselorData(CounsellorData.this, arraylistCounselor);
-                            recyclerViewCounselor = findViewById(R.id.recyclerCounselorData);
-                            LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-                            layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                            recyclerViewCounselor.setLayoutManager(layoutManager);
-                            recyclerViewCounselor.setAdapter(adapterCounselorData);
-                            adapterCounselorData.notifyDataSetChanged();
-
-                            if(txtMin.getText().toString().equals("1")) {
-                                btnPrevious.setVisibility(View.GONE);
-                                btnNext.setVisibility(View.GONE);
-                                if (Integer.parseInt(txtMax.getText().toString()) <= arraylistCounselor.size()) {
-                                    btnNext.setVisibility(View.VISIBLE);
-                                }
-                                else
-                                {
-                                    btnNext.setVisibility(View.GONE);
-                                }
-                            }
-                            else if(mval>arraylistCounselor.size())
-                            {
-                                btnPrevious.setVisibility(View.VISIBLE);
-                                btnNext.setVisibility(View.GONE);
-                            }
-                            else
-                            {
-                                btnNext.setVisibility(View.VISIBLE);
-                                btnPrevious.setVisibility(View.VISIBLE);
-                            }
-
-                        } catch (JSONException e) {
-                            dialog.dismiss();
-                            Toast.makeText(CounsellorData.this,"Volley error while searching data",Toast.LENGTH_SHORT).show();
-                            Log.d("SearchException", String.valueOf(e));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            //responsecode1="ServerError";
-                               dialog.dismiss();
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
-
-
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                            dialog.dismiss();
-                                        }
-                                    }).show();
-                            Toast.makeText(CounsellorData.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
-
-                    }
-                });
-        requestQueue.add(stringRequest);
-        }else
-        {
-            dialog.dismiss();
-            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
-            alertDialogBuilder.setTitle("No Internet connection!!!")
-                    .setMessage("Can't do further process")
-
-                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                    // The dialog is automatically dismissed when a dialog button is clicked.
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            //insertIMEI();
-                                        /*edtName.setText("");
-                                        edtPassword.setText("");*/
-                            dialog.dismiss();
-
-                        }
-                    }).show();
+            Toast.makeText(CounsellorData.this,"Errorcode-157 CounselorData getCounselor1 "+e.toString(),Toast.LENGTH_SHORT).show();
         }
 
+    }
+    public void searchData(String searchVal,String searchAs,String orderval,String strMin,String strMax) {
+        //refname = refname.replaceAll(" ", "");
+        //String url=clienturl+"?clientid="+clientid+"&caseid=24&cDataFrom="+datafrom+"&AllocatedTo="+cid+"&CurrentStatus="+statusid+"&FieldName="+searchAs+"&FieldVal="+searchVal+"&OrderVal="+orderval+"";
+       try {
+           if(CheckServer.isServerReachable(CounsellorData.this)) {
+               String url = clienturl + "?clientid=" + clientid + "&caseid=103&cDataFrom=" + datafrom + "&AllocatedTo=" + cid + "&CurrentStatus=" + statusid + "&FieldName=" + searchAs + "&FieldVal=" + searchVal + "&OrderVal=" + orderval + "&MinVal=" + strMin + "&MaxVal=" + strMax;
 
+               arraylistCounselor = new ArrayList<>();
+
+               StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                       new Response.Listener<String>() {
+                           @Override
+                           public void onResponse(String response) {
+
+                               dialog.dismiss();
+
+                               int mval = Integer.parseInt(txtMax.getText().toString());
+                               if (response.contains("[]")) {
+                                   Log.d("ABCD", "ABCD");
+                                   txtNotFound.setVisibility(View.VISIBLE);
+
+                                   //btnNext.setVisibility(View.GONE);
+                               } else {
+                                   txtNotFound.setVisibility(View.GONE);
+
+                               }
+                               Log.d("SearchResponse", response);
+                               try {
+
+                                   JSONObject jsonObject = new JSONObject(response);
+                                   // Log.d("Json",jsonObject.toString());
+                                   JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                   for (int i = 0; i < jsonArray.length(); i++) {
+                                       JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                       strSNO = jsonObject1.getString("SNO");
+                                       String srno = jsonObject1.getString("nSrNo");
+                                       String cname = jsonObject1.getString("cCandidateName");
+                                       String course = jsonObject1.getString("cCourse");
+                                       String parentno = jsonObject1.getString("cParantNo");
+                                       String mobile = jsonObject1.getString("cMobile");
+                                       String email = jsonObject1.getString("cEmail");
+                                       String allocationdate1 = jsonObject1.getString("AllocationDate");
+                                       String adrs = jsonObject1.getString("cAddressLine");
+                                       String city = jsonObject1.getString("cCity");
+                                       String state = jsonObject1.getString("cState");
+                                       String pincode = jsonObject1.getString("cPinCode");
+                                       String statusId = jsonObject1.getString("CurrentStatus");
+                                       String statusStr = jsonObject1.getString("cStatus");
+                                       String remarks = jsonObject1.getString("cRemarks");
+                                       //String datafrom=jsonObject1.getString("cDataFrom");
+
+                                       Log.d("Status11", srno);
+                                       DataCounselor dataCounselor = new DataCounselor(strSNO, srno, cname, course, mobile, parentno, email, allocationdate1, adrs, city, state, pincode, statusId, statusStr, remarks);
+                                       arraylistCounselor.add(dataCounselor);
+                                   }
+                                   adapterCounselorData = new AdapterCounselorData(CounsellorData.this, arraylistCounselor);
+                                   recyclerViewCounselor = findViewById(R.id.recyclerCounselorData);
+                                   LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+                                   layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                                   recyclerViewCounselor.setLayoutManager(layoutManager);
+                                   recyclerViewCounselor.setAdapter(adapterCounselorData);
+                                   adapterCounselorData.notifyDataSetChanged();
+
+                                   if (txtMin.getText().toString().equals("1")) {
+                                       btnPrevious.setVisibility(View.GONE);
+                                       btnNext.setVisibility(View.GONE);
+                                       if (Integer.parseInt(txtMax.getText().toString()) <= arraylistCounselor.size()) {
+                                           btnNext.setVisibility(View.VISIBLE);
+                                       } else {
+                                           btnNext.setVisibility(View.GONE);
+                                       }
+                                   } else if (mval > arraylistCounselor.size()) {
+                                       btnPrevious.setVisibility(View.VISIBLE);
+                                       btnNext.setVisibility(View.GONE);
+                                   } else {
+                                       btnNext.setVisibility(View.VISIBLE);
+                                       btnPrevious.setVisibility(View.VISIBLE);
+                                   }
+
+                               } catch (JSONException e) {
+                                   dialog.dismiss();
+                                   Toast.makeText(CounsellorData.this, "Errorcode-160 CounselorData searchDataResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                   Log.d("SearchException", String.valueOf(e));
+                               }
+                           }
+                       },
+                       new Response.ErrorListener() {
+                           @Override
+                           public void onErrorResponse(VolleyError error) {
+
+                               if (error == null || error.networkResponse == null)
+                                   return;
+                               final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                               //get response body and parse with appropriate encoding
+                               if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                   //responsecode1="ServerError";
+                                   dialog.dismiss();
+                                   android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                                   alertDialogBuilder.setTitle("Server Error!!!")
+
+
+                                           // Specifying a listener allows you to take an action before dismissing the dialog.
+                                           // The dialog is automatically dismissed when a dialog button is clicked.
+                                           .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                               public void onClick(DialogInterface dialog, int which) {
+
+                                                   dialog.dismiss();
+                                               }
+                                           }).show();
+                                   Toast.makeText(CounsellorData.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                   // showCustomPopupMenu();
+                                   Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                               }
+
+                           }
+                       });
+               requestQueue.add(stringRequest);
+           }else {
+               dialog.dismiss();
+               android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+               alertDialogBuilder.setTitle("Server Down!!!!")
+                       .setMessage("Try after some time!")
+
+                       // Specifying a listener allows you to take an action before dismissing the dialog.
+                       // The dialog is automatically dismissed when a dialog button is clicked.
+                       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                           public void onClick(DialogInterface dialog, int which) {
+                               //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                               dialog.dismiss();
+
+                           }
+                       }).show();
+           }
+       }catch (Exception e)
+       {
+           Toast.makeText(CounsellorData.this,"Errorcode-159 CounselorData searchData "+e.toString(),Toast.LENGTH_SHORT).show();
+       }
     }
     public void searchDataForAll(String searchVal,String searchAs,String orderval,String strMin,String strMax) {
         // refname = refname.replaceAll(" ", "");
         //String url=clienturl+"?clientid="+clientid+"&caseid=25&AllocatedTo="+cid+"&CurrentStatus="+statusid+"&FieldName="+searchtext+" &OrderVal="+orderval+"";
-        url=clienturl+"?clientid="+clientid+"&caseid=104&AllocatedTo="+cid+"&CurrentStatus="+statusid+"&FieldName="+searchAs+"&FieldVal="+searchVal+"&OrderVal="+orderval+"&MinVal="+strMin+"&MaxVal="+strMax;
-            arraylistCounselor = new ArrayList<>();
-        Log.d("SearchUrl", url);
-        if(CheckInternet.checkInternet(CounsellorData.this))
-        {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        dialog.dismiss();
-                        int mval=Integer.parseInt(txtMax.getText().toString());
-                        if(response.contains("[]"))
-                        {
-                            Log.d("ABCD","ABCD");
-                            txtNotFound.setVisibility(View.VISIBLE);
+        try {
+            if(CheckServer.isServerReachable(CounsellorData.this)) {
+                url = clienturl + "?clientid=" + clientid + "&caseid=104&AllocatedTo=" + cid + "&CurrentStatus=" + statusid + "&FieldName=" + searchAs + "&FieldVal=" + searchVal + "&OrderVal=" + orderval + "&MinVal=" + strMin + "&MaxVal=" + strMax;
+                arraylistCounselor = new ArrayList<>();
+                Log.d("SearchUrl", url);
 
-                        }
-                        else
-                        {
-                            txtNotFound.setVisibility(View.GONE);
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                dialog.dismiss();
+                                int mval = Integer.parseInt(txtMax.getText().toString());
+                                if (response.contains("[]")) {
+                                    Log.d("ABCD", "ABCD");
+                                    txtNotFound.setVisibility(View.VISIBLE);
 
-                        }
+                                } else {
+                                    txtNotFound.setVisibility(View.GONE);
 
-                        Log.d("SearchResponse", response);
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            // Log.d("Json",jsonObject.toString());
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                strSNO=jsonObject1.optString("SNO");
-                                String srno = jsonObject1.getString("nSrNo");
-                                String cname = jsonObject1.getString("cCandidateName");
-                                String course = jsonObject1.getString("cCourse");
-                                String parentno = jsonObject1.getString("cParantNo");
-                                String mobile = jsonObject1.getString("cMobile");
-                                String email = jsonObject1.getString("cEmail");
-                                String allocationdate1 = jsonObject1.getString("AllocationDate");
-                                String adrs = jsonObject1.getString("cAddressLine");
-                                String city = jsonObject1.getString("cCity");
-                                String state = jsonObject1.getString("cState");
-                                String pincode = jsonObject1.getString("cPinCode");
-                                String statusId=jsonObject1.getString("CurrentStatus");
-                                String statusStr=jsonObject1.getString("cStatus");
-                                String remarks=jsonObject1.getString("cRemarks");
-                                //String datafrom=jsonObject1.getString("cDataFrom");
-
-                                Log.d("Status11", statusStr);
-                                DataCounselor dataCounselor = new DataCounselor(strSNO,srno,cname, course, mobile, parentno, email, allocationdate1, adrs, city, state, pincode,statusId,statusStr,remarks);
-                                arraylistCounselor.add(dataCounselor);
-                            }
-                            adapterCounselorData = new AdapterCounselorData(CounsellorData.this, arraylistCounselor);
-                            recyclerViewCounselor = findViewById(R.id.recyclerCounselorData);
-                            LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-                            layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                            recyclerViewCounselor.setLayoutManager(layoutManager);
-                            recyclerViewCounselor.setAdapter(adapterCounselorData);
-                            adapterCounselorData.notifyDataSetChanged();
-                            // int mval= Integer.parseInt(txtMax.getText().toString());
-                            if(txtMin.getText().toString().equals("1")) {
-                                btnPrevious.setVisibility(View.GONE);
-                                if (Integer.parseInt(txtMax.getText().toString()) <= arraylistCounselor.size()) {
-                                    btnNext.setVisibility(View.VISIBLE);
                                 }
-                                else
-                                {
-                                    btnNext.setVisibility(View.GONE);
-                                }
-                            }
-                            else if(mval>arraylistCounselor.size())
-                            {
-                                btnPrevious.setVisibility(View.VISIBLE);
-                                btnNext.setVisibility(View.GONE);
-                            }
-                            else
-                            {
-                                btnNext.setVisibility(View.VISIBLE);
-                                btnPrevious.setVisibility(View.VISIBLE);
-                            }
-                        } catch (JSONException e) {
-                            dialog.dismiss();
-                            Toast.makeText(CounsellorData.this,"Got exception while searching all data",Toast.LENGTH_SHORT).show();
-                            Log.d("SearchAllException", String.valueOf(e));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
 
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            //responsecode1="ServerError";
+                                Log.d("SearchResponse", response);
+                                try {
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    // Log.d("Json",jsonObject.toString());
+                                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                        strSNO = jsonObject1.optString("SNO");
+                                        String srno = jsonObject1.getString("nSrNo");
+                                        String cname = jsonObject1.getString("cCandidateName");
+                                        String course = jsonObject1.getString("cCourse");
+                                        String parentno = jsonObject1.getString("cParantNo");
+                                        String mobile = jsonObject1.getString("cMobile");
+                                        String email = jsonObject1.getString("cEmail");
+                                        String allocationdate1 = jsonObject1.getString("AllocationDate");
+                                        String adrs = jsonObject1.getString("cAddressLine");
+                                        String city = jsonObject1.getString("cCity");
+                                        String state = jsonObject1.getString("cState");
+                                        String pincode = jsonObject1.getString("cPinCode");
+                                        String statusId = jsonObject1.getString("CurrentStatus");
+                                        String statusStr = jsonObject1.getString("cStatus");
+                                        String remarks = jsonObject1.getString("cRemarks");
+                                        //String datafrom=jsonObject1.getString("cDataFrom");
 
-                              dialog.dismiss();
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
-
-
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                            dialog.dismiss();
+                                        Log.d("Status11", statusStr);
+                                        DataCounselor dataCounselor = new DataCounselor(strSNO, srno, cname, course, mobile, parentno, email, allocationdate1, adrs, city, state, pincode, statusId, statusStr, remarks);
+                                        arraylistCounselor.add(dataCounselor);
+                                    }
+                                    adapterCounselorData = new AdapterCounselorData(CounsellorData.this, arraylistCounselor);
+                                    recyclerViewCounselor = findViewById(R.id.recyclerCounselorData);
+                                    LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+                                    layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                                    recyclerViewCounselor.setLayoutManager(layoutManager);
+                                    recyclerViewCounselor.setAdapter(adapterCounselorData);
+                                    adapterCounselorData.notifyDataSetChanged();
+                                    // int mval= Integer.parseInt(txtMax.getText().toString());
+                                    if (txtMin.getText().toString().equals("1")) {
+                                        btnPrevious.setVisibility(View.GONE);
+                                        if (Integer.parseInt(txtMax.getText().toString()) <= arraylistCounselor.size()) {
+                                            btnNext.setVisibility(View.VISIBLE);
+                                        } else {
+                                            btnNext.setVisibility(View.GONE);
                                         }
-                                    }).show();
-                            Toast.makeText(CounsellorData.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
+                                    } else if (mval > arraylistCounselor.size()) {
+                                        btnPrevious.setVisibility(View.VISIBLE);
+                                        btnNext.setVisibility(View.GONE);
+                                    } else {
+                                        btnNext.setVisibility(View.VISIBLE);
+                                        btnPrevious.setVisibility(View.VISIBLE);
+                                    }
+                                } catch (JSONException e) {
+                                    dialog.dismiss();
+                                    Toast.makeText(CounsellorData.this, "Errorcode-162 CounselorData searchAllDataResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                    Log.d("SearchAllException", String.valueOf(e));
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
 
-                    }
-                });
-        requestQueue.add(stringRequest);
-        }else
-        {
-            dialog.dismiss();
-            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
-            alertDialogBuilder.setTitle("No Internet connection!!!")
-                    .setMessage("Can't do further process")
+                                if (error == null || error.networkResponse == null)
+                                    return;
+                                final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                //get response body and parse with appropriate encoding
+                                if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                    //responsecode1="ServerError";
 
-                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                    // The dialog is automatically dismissed when a dialog button is clicked.
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            //insertIMEI();
+                                    dialog.dismiss();
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                                    alertDialogBuilder.setTitle("Server Error!!!")
+
+
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                    Toast.makeText(CounsellorData.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    // showCustomPopupMenu();
+                                    Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                }
+
+                            }
+                        });
+                requestQueue.add(stringRequest);
+            }else {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounsellorData.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
                                         /*edtName.setText("");
                                         edtPassword.setText("");*/
-                            dialog.dismiss();
+                                dialog.dismiss();
 
-                        }
-                    }).show();
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(CounsellorData.this,"Errorcode-161 CounselorData searchAllData "+e.toString(),Toast.LENGTH_SHORT).show();
         }
-
-
     }
 }
 

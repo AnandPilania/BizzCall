@@ -80,7 +80,6 @@ public class PhoneStateReceiver extends BroadcastReceiver {
 
                     Log.d("PieincomingNumber : ",incomingNumber);
 
-
                     if (state==1) {
                         Log.d(TAG1, " Inside " + state);
                   /*  int j=pref.getInt("numOfCalls",0);
@@ -114,16 +113,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                                 editor.commit();
                             }
                         }
-                       /* else
-                        {
-
-                            phoneNumber=incomingNumber;
-                            Log.d("OMG","This is action call on pie"+phoneNumber);
-                            editor.putString("StateNumber",phoneNumber);
-                            editor.commit();
-                        }*/
-
-                        if (pref.getInt("numOfCalls", 1) == 1)
+                      if (pref.getInt("numOfCalls", 1) == 1)
                         {
 
                             Intent reivToServ = new Intent(context, RecordService.class);
@@ -137,14 +127,8 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                             {
                                 reivToServ.putExtra("CNumber",phoneNumber);
                             }
-                            // Intent reivToServ = new Intent(context, RecordService.class);
-                          /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                context.startForegroundService(reivToServ);
 
-                            }
-                            else
-                            {*/
-                                recordService.startRecord();
+                            recordService.startRecord();
                                // context.startService(reivToServ);
                                                  //}
 
@@ -162,6 +146,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
 
                         }
                     } else if (state==0) {
+
                         int k = pref.getInt("numOfCalls", 1);
                         pref.edit().putInt("numOfCalls", --k).apply();
                         int l = pref.getInt("numOfCalls", 0);
@@ -175,16 +160,6 @@ public class PhoneStateReceiver extends BroadcastReceiver {
 
                                 pref.edit().putBoolean("recordStarted", false).apply();
 
-                           /* Intent intent1 = new Intent(context, CounselorContactActivity.class);
-                            intent1.putExtra("ActivityName","ServiceRecord");
-
-                         //   editor.commit();
-
-                            intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(intent1);*/
-                               /* Intent intent1 = new Intent(context, CounselorContactActivity.class);
-                                intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                context.startActivity(intent1);*/
 
                            // new RecordService().stopSelf();
                             Toast.makeText(context, "Call detected(Incoming/Outgoing) " + state, Toast.LENGTH_SHORT).show();
@@ -194,25 +169,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                 }
             },PhoneStateListener.LISTEN_CALL_STATE);
 
-
-            // boolean callWait=pref.getBoolean("recordStarted",false);
-            //  Bundle extras = intent.getExtras();
-            //  String state = extras.getString(TelephonyManager.EXTRA_STATE);
-            //   Log.d(TAG, " onReceive: " + state);
-           /* if(Build.VERSION.SDK_INT >= 26 && intent!=null && intent.getExtras() !=null
-                    && TextUtils.isEmpty(intent.getExtras().getString("incoming_number"))){
-                return;
-            }*/
-            //   Toast.makeText(context, "Call detected(Incoming/Outgoing) " + state, Toast.LENGTH_SHORT).show();
-               /* WakeLocker.acquire(context);
-                // do something
-                WakeLocker.release();*/
-
-            // if (extras != null)
-           /* if(Build.VERSION.SDK_INT >= 26 && extras!=null && intent.getExtras() !=null
-                    && TextUtils.isEmpty(intent.getExtras().getString("incoming_number"))){
-*/
-        } catch (Exception e) {
+   } catch (Exception e) {
             Log.d("Exception", String.valueOf(e));
         }
     }

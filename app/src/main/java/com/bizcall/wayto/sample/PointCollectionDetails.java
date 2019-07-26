@@ -72,9 +72,44 @@ public class PointCollectionDetails extends AppCompatActivity {
             counselorid = sp.getString("Id", null);
             totalcoins = sp.getString("TotalCoin", null);
             counselorid = counselorid.replace(" ", "");
-            dialog = ProgressDialog.show(PointCollectionDetails.this, "", "Loading point collection details...", true);
-            getPointCollection();
-            txtCoin.setText(totalcoins);
+            if(CheckInternetSpeed.checkInternet(PointCollectionDetails.this).contains("0")) {
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(PointCollectionDetails.this);
+                alertDialogBuilder.setTitle("No Internet connection!!!")
+                        .setMessage("Can't do further process")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
+
+                            }
+                        }).show();
+            }
+            else if(CheckInternetSpeed.checkInternet(PointCollectionDetails.this).contains("1")) {
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(PointCollectionDetails.this);
+                alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                        .setMessage("Can't do further process")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+            }
+            else {
+
+                dialog = ProgressDialog.show(PointCollectionDetails.this, "", "Loading point collection details...", true);
+                getPointCollection();
+                txtCoin.setText(totalcoins);
+            }
             // refreshWhenLoading();
 
             imgBack.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +143,7 @@ public class PointCollectionDetails extends AppCompatActivity {
 
     public void getPointCollection() {
         url = clienturl + "?clientid=" + clientid + "&caseid=38&CounsellorId=" + counselorid;
-        if (CheckInternet.checkInternet(PointCollectionDetails.this)) {
+
             StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                     new Response.Listener<String>() {
                         @Override
@@ -179,22 +214,6 @@ public class PointCollectionDetails extends AppCompatActivity {
                         }
                     });
             requestQueue.add(stringRequest);
-        } else {
-            dialog.dismiss();
-            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(PointCollectionDetails.this);
-            alertDialogBuilder.setTitle("No Internet connection!!!")
-                    .setMessage("Can't do further process")
-
-                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                    // The dialog is automatically dismissed when a dialog button is clicked.
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            dialog.dismiss();
-
-                        }
-                    }).show();
-        }
     }
 }
 

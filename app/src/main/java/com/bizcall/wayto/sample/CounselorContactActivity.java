@@ -98,6 +98,7 @@ public class CounselorContactActivity extends FragmentActivity {
     int flag=0,flag1=0,flag2=0,call1,call2;
     long timeout,dsec;
     Date dt1;
+
     String clienturl,totalcount,phone1,phone2,clickedButton;
     ArrayList<String> arrayListStatusId;
     public static TextView txtSelectedCname, txtSelecteCId, txtSelctedSrNo;
@@ -126,12 +127,11 @@ public class CounselorContactActivity extends FragmentActivity {
     int serverResponseCode = 0;
     RequestQueue requestQueue;
 
-
-
+    String id,formno,firstname,lastname,fathername,mothername,dob,passport,mobile,addrs,paddresss,tate,permanentcity,permanentstate,permanentpin,parentmobile,college,schoolboard,tenthpercentage,tenthyear,tenthmarks,tenthoutof,twelthpercentage,twelthyear,twelthmarks,twelthoutof,neetyear,neetmarks,physics,chemistry,biology,pcb,aggregate,dtcreateddate,cWebsite;
     ProgressDialog dialog, dialog1;
     AlertDialog alertDialog,alertDialog1;
-    TextView txtName, txtCloseWindow, txtTime, txtSelect,txtReallocationTitle,txtReportTitle,txtClientEntry;
-    LinearLayout linearReport;
+    TextView txtName, txtCloseWindow, txtTime, txtSelect,txtReallocationTitle,txtReportTitle,txtClientEntry,txtOnlineFormTitle;
+    LinearLayout linearReport,linearUrl;
     EditText edtMessage, edtMobile;
     Spinner spinnerTemplate;
     ImageView imgCloseWindow, imgClearText;
@@ -158,7 +158,7 @@ public class CounselorContactActivity extends FragmentActivity {
     private int hour;
     private int minute;
     Date dt22,dt33;
-    LinearLayout linearReminder,linearCallDetails,linearConfirmCall,linearCallDuration,linearCall;
+    LinearLayout linearOnlineForm,linearReminder,linearCallDetails,linearConfirmCall,linearCallDuration,linearCall;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     Vibrator vibrator;
@@ -168,15 +168,18 @@ public class CounselorContactActivity extends FragmentActivity {
     public static Button btnGetDetails;
     ArrayList<DataCallDetails> arrayListCallDetails;
     DataCallDetails dataCallDetails;
-    String newDTime;
+    String newDTime,refname,datafrom;
     Handler mHandler;
     View confirmCall;
     WifiManager wifiManager;
     NetworkInfo info;
-    ImageView imgRefresh;
+    ImageView imgRefresh,imgDone;
     int clickedButtonCount=0;
     LinearLayout linearViewDetails,linearContactDetails;
     EditText edtRemark;
+    RecyclerView recyclerOnlineFormDetails;
+    ArrayList<DataOnlineFormDetails> arrayListOnlineForm;
+    AdapterOnlineFormDetails adapterOnlineFormDetails;
     private TimePickerDialog.OnTimeSetListener timePickerListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minutes) {
@@ -200,9 +203,7 @@ public class CounselorContactActivity extends FragmentActivity {
                     SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.FRANCE);
 
                     txtDateView.setText(sdf.format(myCalendar.getTime()));
-
                     day = arg1;
-
                     month = arg2;
                     year = arg3;
                     showDate(day, month + 1, year);
@@ -263,9 +264,12 @@ public class CounselorContactActivity extends FragmentActivity {
             btnupdateRemarks=findViewById(R.id.btnUpdateRemark);
             imgAddContact=findViewById(R.id.imgAddContact);
             imgRefresh=findViewById(R.id.imgRefresh);
-
+            imgDone=findViewById(R.id.imgDone);
             arrayList1 = new ArrayList<>();
             recyclerCounselorDetails = findViewById(R.id.recyclerCounselorDetails);
+            linearOnlineForm=findViewById(R.id.linearOnlineForm);
+            txtOnlineFormTitle=findViewById(R.id.txtOnlineFormTitle);
+            recyclerOnlineFormDetails=findViewById(R.id.recyclerOnlineFormDetails);
             arrayListCounselorDetails = new ArrayList<>();
             dt1=new Date();
 
@@ -285,6 +289,9 @@ public class CounselorContactActivity extends FragmentActivity {
         counselorname=sp.getString("Name",null);
         timeout=sp.getLong("TimeOut",0);
         Log.d("ClientId", clientid);
+
+
+
         totalcoins=sp.getString("TotalCoin",null);
         editor = sp.edit();
             arrayListStatusId=new ArrayList<>();
@@ -304,12 +311,86 @@ public class CounselorContactActivity extends FragmentActivity {
                 public void onClick(View v) {
                     clickedButtonCount++;
                     if(clickedButtonCount==1) {
-                        dialog = ProgressDialog.show(CounselorContactActivity.this, "", "Inserting View Details", true);
-                        insertViewDetails();
+                        if(CheckInternetSpeed.checkInternet(CounselorContactActivity.this).contains("0")) {
+                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                            alertDialogBuilder.setTitle("No Internet connection!!!")
+                                    .setMessage("Can't do further process")
+
+                                    // Specifying a listener allows you to take an action before dismissing the dialog.
+                                    // The dialog is automatically dismissed when a dialog button is clicked.
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                            dialog.dismiss();
+
+                                        }
+                                    }).show();
+                        }
+                        else if(CheckInternetSpeed.checkInternet(CounselorContactActivity.this).contains("1")) {
+                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                            alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                                    .setMessage("Can't do further process")
+
+                                    // Specifying a listener allows you to take an action before dismissing the dialog.
+                                    // The dialog is automatically dismissed when a dialog button is clicked.
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //insertIMEI();
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .show();
+                        }
+                        else {
+                            dialog = ProgressDialog.show(CounselorContactActivity.this, "", "Inserting View Details", true);
+                            insertViewDetails();
+                        }
                     }
                 }
             });
+            imgDone.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(CheckInternetSpeed.checkInternet(CounselorContactActivity.this).contains("0")) {
+                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                        alertDialogBuilder.setTitle("No Internet connection!!!")
+                                .setMessage("Can't do further process")
 
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                        dialog.dismiss();
+
+                                    }
+                                }).show();
+                    }
+                    else if(CheckInternetSpeed.checkInternet(CounselorContactActivity.this).contains("1")) {
+                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                        alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                                .setMessage("Can't do further process")
+
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //insertIMEI();
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
+                    }
+                    else {
+                        dialog=ProgressDialog.show(CounselorContactActivity.this,"","Checking SrNo exist in DocumentMaster or not",false,true);
+                        checkIfExistInDocMaster(sr_no);
+                    }
+                }
+            });
             imgRefresh.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -354,6 +435,21 @@ public class CounselorContactActivity extends FragmentActivity {
             @Override
             public void onTabReselected(TabLayout.Tab tab)
             {
+
+            }
+        });
+        txtOnlineFormTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                vibrator.vibrate(100);
+                if(linearOnlineForm.getVisibility()==View.GONE)
+                {
+                    linearOnlineForm.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    linearOnlineForm.setVisibility(View.GONE);
+                }
 
             }
         });
@@ -482,9 +578,41 @@ public class CounselorContactActivity extends FragmentActivity {
             public void onClick(View v) {
                 //getStatus1();
                 vibrator.vibrate(100);
-                dialog = ProgressDialog.show(CounselorContactActivity.this, "", "Updating status...", true);
+                if (CheckInternetSpeed.checkInternet(CounselorContactActivity.this).contains("0")) {
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                    alertDialogBuilder.setTitle("No Internet connection!!!")
+                            .setMessage("Can't do further process")
+
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                    dialog.dismiss();
+
+                                }
+                            }).show();
+                } else if (CheckInternetSpeed.checkInternet(CounselorContactActivity.this).contains("1")) {
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                    alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                            .setMessage("Can't do further process")
+
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                } else {
+                    dialog = ProgressDialog.show(CounselorContactActivity.this, "", "Updating status...", true);
                     statusBackup();
                 }
+            }
         });
         btnupdateRemarks.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -499,7 +627,41 @@ public class CounselorContactActivity extends FragmentActivity {
                 else
                 {
                    // dialog = ProgressDialog.show(CounselorContactActivity.this, "", "Updating remark...", true);
-                    remarkBackup(sr_no,id1,enteredRemark);
+                    if(CheckInternetSpeed.checkInternet(CounselorContactActivity.this).contains("0")) {
+                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                        alertDialogBuilder.setTitle("No Internet connection!!!")
+                                .setMessage("Can't do further process")
+
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                        dialog.dismiss();
+
+                                    }
+                                }).show();
+                    }
+                    else if(CheckInternetSpeed.checkInternet(CounselorContactActivity.this).contains("1")) {
+                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                        alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                                .setMessage("Can't do further process")
+
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //insertIMEI();
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
+                    }
+                    else {
+                        remarkBackup(sr_no, id1, enteredRemark);
+                    }
                 }
 
             }
@@ -519,7 +681,9 @@ public class CounselorContactActivity extends FragmentActivity {
                 editor.putString("CName", name);
                 editor.putString("SelectedMobile", selectedmbl);
                 editor.commit();
-                startActivity(new Intent(CounselorContactActivity.this,MessageActivity.class));
+               Intent intent1= new Intent(CounselorContactActivity.this,MessageActivity.class);
+               intent1.putExtra("Activity","CounselorContact");
+                startActivity(intent1);
                  }
         });
         btnMail.setOnClickListener(new View.OnClickListener() {
@@ -529,6 +693,7 @@ public class CounselorContactActivity extends FragmentActivity {
                // eventid=4;
                // insertPointCollection(eventid);
                 Intent intent=new Intent(CounselorContactActivity.this,MailActiivity.class);
+                intent.putExtra("Email",email);
                 startActivity(intent);
                /* Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("text/plain");
@@ -564,46 +729,177 @@ public class CounselorContactActivity extends FragmentActivity {
 
         }catch (Exception e)
         {
-            dialog.dismiss();
-            Toast.makeText(CounselorContactActivity.this,"Got exception can't load",Toast.LENGTH_SHORT).show();
+          // dialog.dismiss();
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-163 CounselorCountact onCreate "+e.toString(),Toast.LENGTH_SHORT).show();
+
             Log.d("Exception", String.valueOf(e));
         }
     }//onCreate
+    public void checkIfExistInDocMaster(final String srno) {
+        try {
+
+            url = clienturl + "?clientid=" + clientid + "&caseid=80&SrNo=" + srno + "&CounselorId=" + id1;
+            Log.d("CheckDocMAsterUrl", url);
+
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            if (dialog.isShowing()) {
+                                dialog.dismiss();
+                            }
+                            Log.d("CheckSrNoResponse", response);
+                            try {
+                                // arrayListTotal.clear();
+                                JSONObject jsonObject = new JSONObject(response);
+                                // Log.d("Json",jsonObject.toString());
+                                JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                    totalcount = jsonObject1.getString("total");
+                                }
+                                if (totalcount.equals("0")) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                                    alertDialogBuilder.setTitle("Is this client confirmed?")
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    Intent intent = new Intent(CounselorContactActivity.this, NewClientEntry.class);
+                                                    if (activityName.equals("FormFilled")) {
+                                                        intent.putExtra("Activity", "FormFilled");
+                                                    } else {
+                                                        intent.putExtra("Activity", "Contact");
+                                                    }
+
+                                                    intent.putExtra("SrNo", srno);
+                                                    startActivity(intent);
+                                                    dialog.dismiss();
+                                                }
+                                            })
+                                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            })
+                                            .show();
+                                } else {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                                    alertDialogBuilder.setTitle(srno + " is already exist in DocumentMaster")
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            })
+                                            .show();
+                                }
+
+
+                            } catch (JSONException e) {
+                                Toast.makeText(CounselorContactActivity.this,"Errorcode-165 CounselorContact checkIfExistInDocMasterResponse "+e.toString(),Toast.LENGTH_SHORT).show();                                dialog.dismiss();
+                                Log.d("CheckPhoneException", String.valueOf(e));
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                            if (error == null || error.networkResponse == null)
+                                return;
+                            final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                            //get response body and parse with appropriate encoding
+                            if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                                alertDialogBuilder.setTitle("Server Error!!!")
+
+
+                                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                                        // The dialog is automatically dismissed when a dialog button is clicked.
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                                dialog.dismiss();
+                                            }
+                                        }).show();
+                                dialog.dismiss();
+                                Toast.makeText(CounselorContactActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                // showCustomPopupMenu();
+                                Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                            }
+                        }
+                    });
+            requestQueue.add(stringRequest);
+        }catch (Exception e)
+        {
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-164 CounselorContact checkIfExistInDocMaster "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
+    }
     public void onBtnCallClicked()
     {
-        clickedButton="Call";
-        vibrator.vibrate(100);
-        editor.putString("Sr.No", sr_no);
-        editor.putString("CName", name);
-        editor.putString("SelectedMobile", selectedmbl);
-        editor.commit();
-        // Toast.makeText(context,"SrNo:"+dataCounselor1.getSr_no(),Toast.LENGTH_SHORT).show();
-        LayoutInflater li = LayoutInflater.from(CounselorContactActivity.this);
-        //Creating a view to get the dialog box
-        confirmCall = li.inflate(R.layout.layout_confirm_call, null);
+        try {
+            clickedButton = "Call";
+            vibrator.vibrate(100);
+            editor.putString("Sr.No", sr_no);
+            editor.putString("CName", name);
+            editor.putString("SelectedMobile", selectedmbl);
+            editor.commit();
+            // Toast.makeText(context,"SrNo:"+dataCounselor1.getSr_no(),Toast.LENGTH_SHORT).show();
+            LayoutInflater li = LayoutInflater.from(CounselorContactActivity.this);
+            //Creating a view to get the dialog box
+            confirmCall = li.inflate(R.layout.layout_confirm_call, null);
+            //confirmCall.setClipToOutline(true);
+            final EditText edtCalledNumber = confirmCall.findViewById(R.id.edtCallNumber);
+            linearCall = confirmCall.findViewById(R.id.linearCall1);
+            linearUrl = confirmCall.findViewById(R.id.linearUrl);
+            TextView txtYes = (TextView) confirmCall.findViewById(R.id.txtYes);
+            TextView txtNo = (TextView) confirmCall.findViewById(R.id.txtNo);
+            txtCalledNumber = confirmCall.findViewById(R.id.txtCallingNumber);
+            txtDateTime = confirmCall.findViewById(R.id.txtDateTime);
+            txtDuration = confirmCall.findViewById(R.id.txtDuration);
+            linearCallDetails = confirmCall.findViewById(R.id.linearCallDetails);
+            linearConfirmCall = confirmCall.findViewById(R.id.linearConfirmCall);
+            btnGetDetails = confirmCall.findViewById(R.id.btnGetDetails);
+            btnOk = confirmCall.findViewById(R.id.btnOk);
+            linearCallDuration = confirmCall.findViewById(R.id.linearCallDuration);
+            txtNoCallDetails = confirmCall.findViewById(R.id.txtNoCallMade);
+            TextView txtSrno = confirmCall.findViewById(R.id.txtSrno);
+            TextView txtName = confirmCall.findViewById(R.id.txtName);
+            final TextView txtUrl = confirmCall.findViewById(R.id.txtUrl);
+            // TextView txtRefname=confirmCall.findViewById(R.id.txtRefNo);
+            TextView txtActivityName = confirmCall.findViewById(R.id.txtActivity);
+            // LinearLayout linearRefName=confirmCall.findViewById(R.id.linearRefNo);
+            // edtRemark=confirmCall.findViewById(R.id.edtRemarks);
+            if (activityName.equals("FormFilled")) {
+                txtUrl.setText("https://bizcallcrm.com/admission/studentdetails.php?id=" + sr_no);
+                linearUrl.setVisibility(View.VISIBLE);
+            } else {
+                linearUrl.setVisibility(View.GONE);
+            }
+            if (activityName.contains("OpenLeads") || activityName.contains("CounselorData")) {
+                if (refname.equals("Admission form")) {
+                    txtUrl.setText("https://bizcallcrm.com/admission/studentdetails.php?id=" + datafrom);
+                    linearUrl.setVisibility(View.VISIBLE);
+                }
+            } else {
+                linearUrl.setVisibility(View.GONE);
+            }
+            txtUrl.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-        //confirmCall.setClipToOutline(true);
-        final EditText edtCalledNumber=confirmCall.findViewById(R.id.edtCallNumber);
-        linearCall=confirmCall.findViewById(R.id.linearCall1);
-        TextView txtYes = (TextView) confirmCall.findViewById(R.id.txtYes);
-        TextView txtNo = (TextView) confirmCall.findViewById(R.id.txtNo);
-        txtCalledNumber=confirmCall.findViewById(R.id.txtCallingNumber);
-        txtDateTime=confirmCall.findViewById(R.id.txtDateTime);
-        txtDuration=confirmCall.findViewById(R.id.txtDuration);
-        linearCallDetails=confirmCall.findViewById(R.id.linearCallDetails);
-        linearConfirmCall=confirmCall.findViewById(R.id.linearConfirmCall);
-        btnGetDetails=confirmCall.findViewById(R.id.btnGetDetails);
-        btnOk=confirmCall.findViewById(R.id.btnOk);
-        linearCallDuration=confirmCall.findViewById(R.id.linearCallDuration);
-        txtNoCallDetails=confirmCall.findViewById(R.id.txtNoCallMade);
-        TextView txtSrno=confirmCall.findViewById(R.id.txtSrno);
-        TextView txtName=confirmCall.findViewById(R.id.txtName);
-        TextView txtActivityName=confirmCall.findViewById(R.id.txtActivity);
-        edtRemark=confirmCall.findViewById(R.id.edtRemarks);
-        txtSrno.setText(sr_no);
-        txtName.setText(name);
-        txtActivityName.setText(activityName);
-        edtRemark.addTextChangedListener(new TextWatcher() {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(txtUrl.getText().toString()));
+                    startActivity(browserIntent);
+                }
+            });
+
+            txtSrno.setText(sr_no);
+            txtName.setText(txtCName.getText().toString());
+            txtActivityName.setText(activityName);
+      /*  edtRemark.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -619,127 +915,165 @@ public class CounselorContactActivity extends FragmentActivity {
             public void afterTextChanged(Editable s) {
 
             }
-        });
+        });*/
+      final AlertDialog.Builder alert = new AlertDialog.Builder(CounselorContactActivity.this);
+            //Adding our dialog box to the view of alert dialog
+            alert.setView(confirmCall);
+            //Creating an alert dialog
+            alertDialog1 = alert.create();
+            alertDialog1.show();
+            alertDialog1.setCancelable(false);
+            edtCalledNumber.setText("+91" + selectedmbl + "");
+            txtYes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    clickedButton = "Confirm";
+                    vibrator.vibrate(100);
+                    phone1 = edtCalledNumber.getText().toString().trim();
+                    phone1 = phone1.replaceAll(" ", "");
+                   // Log.d("Phone1", phone1);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        getConnectionQuality(clickedButton);
+                    }
+                }
+            });
+            txtNo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    vibrator.vibrate(100);
+                    alertDialog1.dismiss();
+                }
+            });
 
-        final AlertDialog.Builder alert = new AlertDialog.Builder(CounselorContactActivity.this);
-        //Adding our dialog box to the view of alert dialog
-        alert.setView(confirmCall);
-        //Creating an alert dialog
-        alertDialog1 = alert.create();
-        alertDialog1.show();
-        alertDialog1.setCancelable(false);
-        edtCalledNumber.setText("+91" + selectedmbl + "");
-        txtYes.setOnClickListener(new View.OnClickListener()
+            btnGetDetails.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBtntnGetDetailsClicked();
+                }
+            });
+        }catch (Exception e)
         {
-            @Override
-            public void onClick(View view) {
-                clickedButton="Confirm";
-                vibrator.vibrate(100);
-                phone1=  edtCalledNumber.getText().toString().trim();
-                phone1=phone1.replaceAll(" ","");
-                Log.d("Phone1",phone1);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    getConnectionQuality(clickedButton);
-                }
-            }
-        });
-
-        txtNo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                vibrator.vibrate(100);
-                alertDialog1.dismiss();
-            }
-        });
-
-        btnGetDetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               onBtntnGetDetailsClicked();
-                }
-    });
-
+            Log.d("ExcGetDetails",e.toString());
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-165 CounselorContact BtnCallClicked "+e.toString(),Toast.LENGTH_SHORT).show();        }
     }
+
     public void onBtntnGetDetailsClicked()
     {
-        Calendar calendar1=Calendar.getInstance();
-        dt33=new Date();
-        dt33=calendar1.getTime();
-        clickedcount++;
-        long diffInMs = dt33.getTime()-dt22.getTime();
-
-        long diffInSec1 = TimeUnit.MILLISECONDS.toSeconds(diffInMs);
-        Log.d("TImeDiff", String.valueOf(diffInSec1));
-
-        if(diffInSec1<=1)
-        {
-            clickedcount=0;
-        }
-        Log.d("ClickedCount", String.valueOf(clickedcount));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            AudioManager manager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-            if (manager.getMode() == AudioManager.MODE_IN_CALL) {
-                clickedcount=0;
-                // linearCall.setVisibility(View.GONE);
-                Toast.makeText(CounselorContactActivity.this, "Can't get call details while on call", Toast.LENGTH_SHORT).show();
-            } else {
-                if(clickedcount==1) {
-                    //linearCall.setVisibility(View.VISIBLE);
-                    clickedButton="GetDetails";
-                    getConnectionQuality(clickedButton);
-                    // refreshWhenLoading();
+        try {
+            Calendar calendar1 = Calendar.getInstance();
+            dt33 = new Date();
+            dt33 = calendar1.getTime();
+            long diffInMs = dt33.getTime() - dt22.getTime();
+            long diffInSec1 = TimeUnit.MILLISECONDS.toSeconds(diffInMs);
+            Log.d("TImeDiff", String.valueOf(diffInSec1));
+            if (diffInSec1 <= 1) {
+                clickedcount = 0;
+            }
+            Log.d("ClickedCount", String.valueOf(clickedcount));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                AudioManager manager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                if (manager.getMode() == AudioManager.MODE_IN_CALL) {
+                    clickedcount = 0;
+                    // linearCall.setVisibility(View.GONE);
+                    Toast.makeText(CounselorContactActivity.this, "Can't get call details while on call", Toast.LENGTH_SHORT).show();
+                } else {
+                    clickedcount++;
+                    if (clickedcount == 1) {
+                        //linearCall.setVisibility(View.VISIBLE);
+                        clickedButton = "GetDetails";
+                        getConnectionQuality(clickedButton);
+                        // refreshWhenLoading();
+                    }
                 }
             }
+        }catch (Exception e){
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-166 CounselorContact BtnGetDetails clicked "+e.toString(),Toast.LENGTH_SHORT).show();
         }
     }
-    public void onBtnReminderClicked()
-    {
-        vibrator.vibrate(100);
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
-
-        String time1 = txtTime.getText().toString();
-        dateReminder = txtDateView.getText().toString();
+    public void onBtnReminderClicked() {
         try {
-            dt1=simpleDateFormat.parse(dateReminder);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        String date12 = dateReminder + " " + "00:00:00.000000";
-        try {
-            date11 = URLEncoder.encode(date12, "UTF-8");
-            time11 = URLEncoder.encode(time1, "UTF-8");
-            Log.d("EncodedDate", date11);
+            vibrator.vibrate(100);
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+
+            String time1 = txtTime.getText().toString();
+            dateReminder = txtDateView.getText().toString();
+            try {
+                dt1 = simpleDateFormat.parse(dateReminder);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            String date12 = dateReminder + " " + "00:00:00.000000";
+            try {
+                date11 = URLEncoder.encode(date12, "UTF-8");
+                time11 = URLEncoder.encode(time1, "UTF-8");
+                Log.d("EncodedDate", date11);
 
 
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-        alertDialogBuilder.setTitle("This will clear all previous reminder  ")
-                .setMessage("Do you want to set new reminder?")
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+            alertDialogBuilder.setTitle("This will clear all previous reminder  ")
+                    .setMessage("Do you want to set new reminder?")
 
-                // Specifying a listener allows you to take an action before dismissing the dialog.
-                // The dialog is automatically dismissed when a dialog button is clicked.
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        //insertIMEI();
+                    // Specifying a listener allows you to take an action before dismissing the dialog.
+                    // The dialog is automatically dismissed when a dialog button is clicked.
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //insertIMEI();
                                         /*edtName.setText("");
                                         edtPassword.setText("");*/
-                        dialog.dismiss();
-                        setReminder0ifAny();
-                    }
-                })
+                            dialog.dismiss();
+                            if (CheckInternetSpeed.checkInternet(CounselorContactActivity.this).contains("0")) {
+                                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                                alertDialogBuilder.setTitle("No Internet connection!!!")
+                                        .setMessage("Can't do further process")
 
-                // A null listener allows the button to dismiss the dialog and take no further action.
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
+                                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                                        // The dialog is automatically dismissed when a dialog button is clicked.
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                                dialog.dismiss();
 
-                    }
-                })
-                .show();
+                                            }
+                                        }).show();
+                            } else if (CheckInternetSpeed.checkInternet(CounselorContactActivity.this).contains("1")) {
+                                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                                alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                                        .setMessage("Can't do further process")
+
+                                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                                        // The dialog is automatically dismissed when a dialog button is clicked.
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                //insertIMEI();
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                        .show();
+                            } else {
+                                setReminder0ifAny();
+                            }
+                        }
+                    })
+
+                    // A null listener allows the button to dismiss the dialog and take no further action.
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+
+                        }
+                    })
+                    .show();
+        }catch (Exception e)
+        {
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-167 CounselorContact BtnReminder clicked "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void onImgCreateContactClicked()
@@ -833,115 +1167,130 @@ public class CounselorContactActivity extends FragmentActivity {
             //  Toast.makeText(CounselorContactActivity.this, "Contact Created Successfully", Toast.LENGTH_SHORT).show();
         }catch (Exception e)
         {
-            Toast.makeText(CounselorContactActivity.this,"Exception in showing alertdialog",Toast.LENGTH_SHORT).show();
-        }
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-168 CounselorContact CreateContact clicked "+e.toString(),Toast.LENGTH_SHORT).show();        }
     }
 
     public void insertViewDetails()
     {
         // String callId=sp.getString("SelectedCallingId",null);
-        url=clienturl+"?clientid=" + clientid + "&caseid=73&CounselorId=" + id1 + "&SrNo="+sr_no+"&ActivityName="+activityName;
-        Log.d("ViewDetailsUrl", url);
-        if(CheckInternet.checkInternet(CounselorContactActivity.this))
-        {
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            try{
-                                Log.d("ViewDetailsResponse", response);
-                                if (response.contains("Data inserted successfully")) {
-                                    dialog.dismiss();
-                                    Toast.makeText(CounselorContactActivity.this, "Details inserted successfully", Toast.LENGTH_SHORT).show();
-                                        edtRemarks.setText(sp.getString("RemarkOnCall",null));
-                                    linearContactDetails.setVisibility(View.VISIBLE);
-                                    linearViewDetails.setVisibility(View.GONE);
-                                    dialog=ProgressDialog.show(CounselorContactActivity.this,"","Getting Counselor Details",true);
-                                    if(activityName.equals("OnlineLead"))
-                                    {
-                                        // if (activityName.contains("AdapterOnlineLead")) {
-                                        Log.d("SerialNo",sr_no);
-                                        //dialog=ProgressDialog.show(CounselorContactActivity.this,"","Getting Counselor Details",true);
-                                        getOnlineLeadRefno(sr_no);
-                                        // }
-                                    }
-                                    else if(activityName.equals("OpenLeads")) {
-                                        // if (activityName.contains("AdapterOnlineLead")) {
-                                        Log.d("SerialNo",sr_no);
-                                        //dialog=ProgressDialog.show(CounselorContactActivity.this,"","Getting Counselor Details",true);
-                                        getOpenLeadRefNo(sr_no);
-                                        // }
-                                    }
-                                    else {
-                                        // dialog=ProgressDialog.show(CounselorContactActivity.this,"","Getting Counselor Details",true);
-                                        getCounselorData(sr_no, id1);
-                                    }
-
-                                } else {
-                                    linearContactDetails.setVisibility(View.GONE);
-                                    linearViewDetails.setVisibility(View.VISIBLE);
-                                    Toast.makeText(CounselorContactActivity.this, "Details not inserted", Toast.LENGTH_SHORT).show();
-                                }
-                                //   Log.d("Size**", String.valueOf(arrayList.size()));
-
-                            }catch (Exception e)
-                            {
-                                Toast.makeText(CounselorContactActivity.this,"Volley error while inserting point",Toast.LENGTH_SHORT);
-                                dialog.dismiss();
-                                Log.d("Exception", String.valueOf(e));
-                            }
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-
-                            if (error == null || error.networkResponse == null)
-                                return;
-                            final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                            //get response body and parse with appropriate encoding
-                            if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-                                alertDialogBuilder.setTitle("Server Error!!!")
-
-
-                                        // Specifying a listener allows you to take an action before dismissing the dialog.
-                                        // The dialog is automatically dismissed when a dialog button is clicked.
-                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-
-                                                dialog.dismiss();
+        try {
+            if (CheckServer.isServerReachable(CounselorContactActivity.this)) {
+                url = clienturl + "?clientid=" + clientid + "&caseid=73&CounselorId=" + id1 + "&SrNo=" + sr_no + "&ActivityName=" + activityName;
+                Log.d("ViewDetailsUrl", url);
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    Log.d("ViewDetailsResponse", response);
+                                    if (response.contains("Data inserted successfully")) {
+                                        dialog.dismiss();
+                                        Toast.makeText(CounselorContactActivity.this, "Details inserted successfully", Toast.LENGTH_SHORT).show();
+                                        //  edtRemarks.setText(sp.getString("RemarkOnCall",null));
+                                        linearContactDetails.setVisibility(View.VISIBLE);
+                                        linearViewDetails.setVisibility(View.GONE);
+                                        dialog = ProgressDialog.show(CounselorContactActivity.this, "", "Getting Counselor Details", true);
+                                        if (activityName.contains("OnlineLead") || activityName.contains("RefreshOnlineLead") || activityName.contains("ContactOnlineLead")) {
+                                            // if (activityName.contains("AdapterOnlineLead")) {
+                                            Log.d("SerialNo", sr_no);
+                                            //dialog=ProgressDialog.show(CounselorContactActivity.this,"","Getting Counselor Details",true);
+                                            getOnlineLeadRefno(sr_no);
+                                            // }
+                                        } else if (activityName.contains("OpenLeads")) {
+                                            // if (activityName.contains("AdapterOnlineLead")) {
+                                            Log.d("SerialNo", sr_no);
+                                            //datafrom = sp.getString("DtaFrom", null);
+                                            refname = sp.getString("DataRefName", null);
+                                            //dialog=ProgressDialog.show(CounselorContactActivity.this,"","Getting Counselor Details",true);
+                                            getOpenLeadRefNo(sr_no);
+                                            // }
+                                        } else if (activityName.contains("FormFilled")) {
+                                            getSrDetailsOnlineForm(sr_no);
+                                            if (txtOnlineFormTitle.getVisibility() == View.GONE) {
+                                                txtOnlineFormTitle.setVisibility(View.VISIBLE);
+                                            } else {
+                                                txtOnlineFormTitle.setVisibility(View.GONE);
                                             }
-                                        }).show();
-                                dialog.dismiss();
-                                Toast.makeText(CounselorContactActivity.this,"Server Error",Toast.LENGTH_SHORT).show();
-                                // showCustomPopupMenu();
-                                Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                            spinnerStatus.setVisibility(View.GONE);
+                                            btnUpdateStatus.setVisibility(View.GONE);
+                                            edtRemarks.setVisibility(View.GONE);
+                                            btnupdateRemarks.setVisibility(View.GONE);
+                                            btnDetails.setVisibility(View.GONE);
+                                            txtCurrentStatus.setVisibility(View.GONE);
+                                            txtRemark.setVisibility(View.GONE);
+                                            txtReallocationTitle.setVisibility(View.GONE);
+                                        } else {
+                                            // datafrom = sp.getString("DtaFrom", null);
+                                            refname = sp.getString("DataRefName", null);
+                                            // dialog=ProgressDialog.show(CounselorContactActivity.this,"","Getting Counselor Details",true);
+                                            getCounselorData(sr_no, id1);
+                                        }
+
+                                    } else {
+                                        linearContactDetails.setVisibility(View.GONE);
+                                        linearViewDetails.setVisibility(View.VISIBLE);
+                                        Toast.makeText(CounselorContactActivity.this, "Details not inserted", Toast.LENGTH_SHORT).show();
+                                    }
+                                    //   Log.d("Size**", String.valueOf(arrayList.size()));
+
+                                } catch (Exception e) {
+                                    Toast.makeText(CounselorContactActivity.this, "Errorcode-170 CounselorContact insertViewDetailsResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+                                    Log.d("Exception", String.valueOf(e));
+                                }
                             }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
 
-                        }
-                    });
-            requestQueue.add(stringRequest);
-        }else {
-            dialog.dismiss();
-            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-            alertDialogBuilder.setTitle("No Internet connection!!!")
-                    .setMessage("Can't do further process")
+                                if (error == null || error.networkResponse == null)
+                                    return;
+                                final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                //get response body and parse with appropriate encoding
+                                if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                                    alertDialogBuilder.setTitle("Server Error!!!")
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                    dialog.dismiss();
+                                    Toast.makeText(CounselorContactActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    // showCustomPopupMenu();
+                                    Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                }
+                            }
+                        });
+                requestQueue.add(stringRequest);
+            } else {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
 
-                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                    // The dialog is automatically dismissed when a dialog button is clicked.
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            //insertIMEI();
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
                                         /*edtName.setText("");
                                         edtPassword.setText("");*/
-                            dialog.dismiss();
+                                dialog.dismiss();
 
-                        }
-                    }).show();
+                            }
+                        }).show();
+            }
         }
-
-    }
+        catch (Exception e)
+        {
+            Log.d("ExcInsertViewDetails",e.toString());
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-169 CounselorContact insertViewDetails "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
+       }
 
 
     /*  public void refreshWhenLoading()
@@ -1012,19 +1361,19 @@ public class CounselorContactActivity extends FragmentActivity {
         else if(act1.contains("OLActivity"))
         {
             intent = new Intent(CounselorContactActivity.this, OnlineLead.class);
-            intent.putExtra("Activity","OnlineLead");
+            intent.putExtra("ActivityLeads","ContactOnlineLead");
             startActivity(intent);
         }
         else if(act1.contains("OpenLeads"))
         {
             intent = new Intent(CounselorContactActivity.this, OpenLeads.class);
-            intent.putExtra("Activity","OpenLeads");
+            intent.putExtra("Activity","ContactOpenLeads");
             startActivity(intent);
         }
         else if(act1.contains("ConvertedOnlineLead"))
         {
             intent = new Intent(CounselorContactActivity.this, OnlineLead.class);
-            intent.putExtra("Activity","ConvertedOnlineLead");
+            intent.putExtra("ActivityLeads","ContactConvertedOnlineLead");
             startActivity(intent);
         }
         else if(act1.contains("ReportDetails"))
@@ -1079,27 +1428,35 @@ public class CounselorContactActivity extends FragmentActivity {
             });
 
             }
-            else if(act1.contains("OnlineLead"))
+            else if(activityName.contains("OnlineLead"))
             {
             intent = new Intent(CounselorContactActivity.this, OnlineLead.class);
-            intent.putExtra("Activity","OnlineLead");
+            intent.putExtra("ActivityLeads","ContactOnlineLead");
             startActivity(intent);
          }
-        else {
+            else if(activityName.contains("FormFilled"))
+            {
+                Intent intent=new Intent(CounselorContactActivity.this,FormFilled.class);
+               // intent.putExtra("Activity","CounsellorContact");
+                startActivity(intent);
+            }
+
+            else {
             intent = new Intent(CounselorContactActivity.this, CounsellorData.class);
             intent.putExtra("Activity","CounselorData");
             startActivity(intent);
         }
         }catch (Exception e)
         {
-            Log.d("Exception", String.valueOf(e));
+            Log.d("ExcOBackpress", String.valueOf(e));
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-171 CounselorContact onBackpressed "+e.toString(),Toast.LENGTH_SHORT).show();
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public String getConnectionQuality(String clkButton) {
-
-        if (!CheckInternet.checkInternet(CounselorContactActivity.this)) {
+        try {
+            if (!CheckInternet.checkInternet(CounselorContactActivity.this)) {
             clickedcount=0;
             android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
             alertDialogBuilder.setTitle("No Internet connection!!!")
@@ -1195,7 +1552,13 @@ public class CounselorContactActivity extends FragmentActivity {
                 //  Toast.makeText(context, "Mobile Data GOOD", Toast.LENGTH_SHORT).show();
             }
         }
+        }catch (Exception e)
+        {
+            Log.d("ExcConnectionQuality", String.valueOf(e));
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-172 CounselorContact getConnectionQuality "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
         return "UNKNOWN";
+
     }
 
     public NetworkInfo getInfo(Context context) {
@@ -1248,14 +1611,15 @@ public class CounselorContactActivity extends FragmentActivity {
     }
     public void callProcess()
     {
-        if(clickedButton.contains("Confirm"))
+        try {
+            if(clickedButton.contains("Confirm"))
         {
             //int pos = viewHolder.getAdapterPosition();
             // DataCounselor dataCounselor1 = arrayList.get(pos);
                 makeCall();
         }
         else {
-            if(act1.equals("OnlineLead"))
+            if(act1.contains("OnlineLead")||act1.contains("RefreshOnlineLead")||act1.contains("ContactOnlineLead"))
             {
                 checkNumber="GetDetails";
                 checkPhoneNumber(phone2);
@@ -1267,61 +1631,72 @@ public class CounselorContactActivity extends FragmentActivity {
                 }
             }
         }
+        }catch (Exception e)
+        {
+            Log.d("ExcCallProcess", String.valueOf(e));
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-173 CounselorContact callProcess "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void makeCall(){
-        phone2=phone1.substring((phone1.length())-10);
-        phone2=phone2.replaceAll(" ","");
-        Log.d("Nmber",phone2);
-        if (act1.equals("OnlineLead")) {
+        try {
 
-            checkNumber="ConfirmCall";
-            dialog = ProgressDialog.show(CounselorContactActivity.this, "", "Checking number in database", true);
-            checkPhoneNumber(phone2);
-            //  refreshWhenLoading();
-        }
-        else
-        {
-            eventid=2;
+            phone2 = phone1.substring((phone1.length()) - 10);
+            phone2 = phone2.replaceAll(" ", "");
+            Log.d("Nmber", phone2);
+            if (act1.equals("OnlineLead")) {
 
-            // dialog=ProgressDialog.show(CounselorContactActivity.this,"","Loading",true);
-            insertPointCollection(eventid);
-            intent = new Intent(Intent.ACTION_CALL);
-            intent.setData(Uri.parse("tel:"+phone1));
-            // call=call+2;
-
-            //Toast.makeText(CounselorContactActivity.this,"Call"+String.valueOf(call),Toast.LENGTH_SHORT).show();
-
-            //intent.setAction("android.intent.action.CALL");
-            if (ContextCompat.checkSelfPermission(CounselorContactActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions((Activity) CounselorContactActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 1);
+                checkNumber = "ConfirmCall";
+                dialog = ProgressDialog.show(CounselorContactActivity.this, "", "Checking number in database", true);
+                checkPhoneNumber(phone2);
+                //  refreshWhenLoading();
             } else {
-                clickedcount=0;
-                calendar = Calendar.getInstance();
-                linearConfirmCall.setVisibility(View.GONE);
-                linearCallDetails.setVisibility(View.VISIBLE);
-                SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                dt22=new Date();
-                dt22=calendar.getTime();
-                // txtAppNo.setText(edtCallNo.getText().toString());
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-                // SimpleDateFormat sdf1=new SimpleDateFormat("yyyy/MM/dd HH:mm");
-                String dtime = calendar.getTime() + "";
-                Log.d("DTime", dtime);
-                // newDTime=sdf.format(dtime);
-                Date date = calendar.getTime();
-                newDTime = sdf.format(date);
-                txtDateTime.setText(newDTime);
-                txtCalledNumber.setText(phone2);
-                Log.d("apptime", phone2 + "/" + newDTime);
-                startActivity(intent);
+                eventid = 2;
+
+                // dialog=ProgressDialog.show(CounselorContactActivity.this,"","Loading",true);
+                insertPointCollection(eventid);
+                intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:" + phone1));
+                // call=call+2;
+
+                //Toast.makeText(CounselorContactActivity.this,"Call"+String.valueOf(call),Toast.LENGTH_SHORT).show();
+
+                //intent.setAction("android.intent.action.CALL");
+                if (ContextCompat.checkSelfPermission(CounselorContactActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions((Activity) CounselorContactActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 1);
+                } else {
+                    clickedcount = 0;
+                    calendar = Calendar.getInstance();
+                    linearConfirmCall.setVisibility(View.GONE);
+                    linearCallDetails.setVisibility(View.VISIBLE);
+                    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                    dt22 = new Date();
+                    dt22 = calendar.getTime();
+                    // txtAppNo.setText(edtCallNo.getText().toString());
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+                    // SimpleDateFormat sdf1=new SimpleDateFormat("yyyy/MM/dd HH:mm");
+                    String dtime = calendar.getTime() + "";
+                    Log.d("DTime", dtime);
+                    // newDTime=sdf.format(dtime);
+                    Date date = calendar.getTime();
+                    newDTime = sdf.format(date);
+                    txtDateTime.setText(newDTime);
+                    txtCalledNumber.setText(phone2);
+                    Log.d("apptime", phone2 + "/" + newDTime);
+                    startActivity(intent);
                 }
+            }
+        }catch (Exception e)
+        {
+            Log.d("ExcMakeCall", String.valueOf(e));
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-174 CounselorContact makeCall "+e.toString(),Toast.LENGTH_SHORT).show();
         }
     }
 
     public void clearReminder()
     {
-       String callId=sp.getString("SelectedCallingId",null);
+        try {
+            String callId=sp.getString("SelectedCallingId",null);
             url=clienturl+"?clientid=" + clientid + "&caseid=35&cUpdatedBy=" +id1+"&nSrNo=" + sr_no+"&nCallingId="+callId;
         Log.d("ClearReminderUrl", url);
             if(CheckInternet.checkInternet(CounselorContactActivity.this))
@@ -1347,8 +1722,7 @@ public class CounselorContactActivity extends FragmentActivity {
                               }
                           }catch (Exception e)
                           {
-                              Toast.makeText(CounselorContactActivity.this,"Volley error while clearing reminder",Toast.LENGTH_SHORT);
-                              dialog.dismiss();
+                              Toast.makeText(CounselorContactActivity.this,"Errorcode-176 CounselorContact clearReminderResponse "+e.toString(),Toast.LENGTH_SHORT).show();                              dialog.dismiss();
                               Log.d("ClearReminderException", String.valueOf(e));
                           }
 
@@ -1402,6 +1776,11 @@ public class CounselorContactActivity extends FragmentActivity {
                     }
                 }).show();
     }
+        }catch (Exception e)
+        {
+            Log.d("ExcClearReminder", String.valueOf(e));
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-175 CounselorContact clearReminder "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -1434,8 +1813,7 @@ try{
         txtTime.setText(aTime);
 }catch (Exception e)
 {
-    Log.d("Exception", String.valueOf(e));
-}
+    Toast.makeText(CounselorContactActivity.this,"Errorcode-177 CounselorContact updateTime "+e.toString(),Toast.LENGTH_SHORT).show();}
     }
 
     @SuppressWarnings("deprecation")
@@ -1448,7 +1826,8 @@ try{
                 .show();
         }catch (Exception e)
         {
-            Log.d("Exception", String.valueOf(e));
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-178 CounselorContact setDate "+e.toString(),Toast.LENGTH_SHORT).show();
+            Log.d("ExcSetDate", String.valueOf(e));
         }
     }
 
@@ -1473,9 +1852,9 @@ try{
             }
         }catch (Exception e)
         {
-            Log.d("Exception", String.valueOf(e));
+            Log.d("ExcCreateDialog", String.valueOf(e));
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-179 CounselorContact createDialog "+e.toString(),Toast.LENGTH_SHORT).show();
         }
-
         return null;
     }
 
@@ -1485,13 +1864,14 @@ try{
                 .append(month).append("-").append(day));
         }catch (Exception e)
         {
-            Log.d("Exception", String.valueOf(e));
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-180 CounselorContact showDate "+e.toString(),Toast.LENGTH_SHORT).show();                Log.d("ExcShowDate", String.valueOf(e));
         }
     }
 
 
     public void insertPointCollection(int eid)
     {
+        try {
        // String callId=sp.getString("SelectedCallingId",null);
         url=clienturl+"?clientid=" + clientid + "&caseid=36&nCounsellorId=" + id1 + "&nEventId="+eid;
         Log.d("PointCollectionUrl", url);
@@ -1514,8 +1894,7 @@ try{
 
                         }catch (Exception e)
                         {
-                            Toast.makeText(CounselorContactActivity.this,"Volley error while inserting point",Toast.LENGTH_SHORT);
-                            dialog.dismiss();
+                            Toast.makeText(CounselorContactActivity.this,"Errorcode-182 CounselorContact PointCollectionResponse "+e.toString(),Toast.LENGTH_SHORT).show();                            dialog.dismiss();
                             Log.d("Exception", String.valueOf(e));
                         }
                     }
@@ -1550,6 +1929,7 @@ try{
                     }
                 });
         requestQueue.add(stringRequest);
+
     }else {
         dialog.dismiss();
         android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
@@ -1567,154 +1947,181 @@ try{
 
                     }
                 }).show();
-    }
+    } }catch (Exception e)
+        {
+            Log.d("ExcInsertPoint", String.valueOf(e));
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-181 CounselorContact insertPointCollection "+e.toString(),Toast.LENGTH_SHORT).show();        }
 
     }
 
     public void checkPhoneNumber(final String number) {
-
-        url=clienturl+"?clientid=" + clientid + "&caseid=70&CounselorID=" + id1+"&PhoneNumber="+number;
-        Log.d("CheckNumberUrl", url);
-        if(CheckInternet.checkInternet(CounselorContactActivity.this)){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (dialog.isShowing()) {
-                            dialog.dismiss();
-                        }
-                        Log.d("CheckNumberResponse", response);
-                        try {
-                            // arrayListTotal.clear();
-                            JSONObject jsonObject = new JSONObject(response);
-                            // Log.d("Json",jsonObject.toString());
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                totalcount = jsonObject1.getString("mobilecount");
-                            }
-                            if(totalcount.equals("0"))
-                            {
-                                if(checkNumber.equals("GetDetails"))
-                                {
-                                    dialog = ProgressDialog.show(CounselorContactActivity.this, "", "Loading call details", true);
-
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                        getCallLogDetails();
+        try {
+            if (CheckServer.isServerReachable(CounselorContactActivity.this)) {
+                url = clienturl + "?clientid=" + clientid + "&caseid=70&CounselorID=" + id1 + "&PhoneNumber=" + number;
+                Log.d("CheckNumberUrl", url);
+                if (CheckInternet.checkInternet(CounselorContactActivity.this)) {
+                    StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    if (dialog.isShowing()) {
+                                        dialog.dismiss();
                                     }
-                                }
-                                else {
-                                    eventid=2;
-                                    insertPointCollection(eventid);
-                                    intent = new Intent(Intent.ACTION_CALL);
-                                    intent.setData(Uri.parse("tel:"+phone1));
-                                    // call=call+2;
-
-                                    //Toast.makeText(CounselorContactActivity.this,"Call"+String.valueOf(call),Toast.LENGTH_SHORT).show();
-
-                                    //intent.setAction("android.intent.action.CALL");
-                                    if (ContextCompat.checkSelfPermission(CounselorContactActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                                        ActivityCompat.requestPermissions((Activity) CounselorContactActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 1);
-                                    } else {
-                                        calendar = Calendar.getInstance();
-                                        clickedcount = 0;
-
-                                        linearConfirmCall.setVisibility(View.GONE);
-                                        linearCallDetails.setVisibility(View.VISIBLE);
-
-                                        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                                        dt22 = new Date();
-                                        dt22 = calendar.getTime();
-                                        // txtAppNo.setText(edtCallNo.getText().toString());
-                                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-                                        // SimpleDateFormat sdf1=new SimpleDateFormat("yyyy/MM/dd HH:mm");
-                                        String dtime = calendar.getTime() + "";
-                                        Log.d("DTime", dtime);
-                                        // newDTime=sdf.format(dtime);
-                                        Date date = calendar.getTime();
-                                        newDTime = sdf.format(date);
-                                        txtDateTime.setText(newDTime);
-                                        txtCalledNumber.setText(phone2);
-                                        Log.d("apptime", phone2 + "/" + newDTime);
-                                        startActivity(intent);
-
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-                                alertDialogBuilder.setTitle("This number is allocated to someone else")
-                                        .setMessage("You cannot make a call")
-
-                                        // Specifying a listener allows you to take an action before dismissing the dialog.
-                                        // The dialog is automatically dismissed when a dialog button is clicked.
-                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                            }
-                                        })
-                                        .show();
-                            }
-                        } catch (JSONException e) {
-                            Toast.makeText(CounselorContactActivity.this,"Volley error while checking phone in database",Toast.LENGTH_SHORT);
-                            dialog.dismiss();
-                            Log.d("CheckPhoneException", String.valueOf(e));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
-
-
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                            dialog.dismiss();
+                                    Log.d("CheckNumberResponse", response);
+                                    try {
+                                        // arrayListTotal.clear();
+                                        JSONObject jsonObject = new JSONObject(response);
+                                        // Log.d("Json",jsonObject.toString());
+                                        JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                        for (int i = 0; i < jsonArray.length(); i++) {
+                                            JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                            totalcount = jsonObject1.getString("mobilecount");
                                         }
-                                    }).show();
-                            dialog.dismiss();
-                            Toast.makeText(CounselorContactActivity.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
+                                        if (totalcount.equals("0")) {
+                                            if (checkNumber.equals("GetDetails")) {
+                                                dialog = ProgressDialog.show(CounselorContactActivity.this, "", "Loading call details", true);
 
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                                    getCallLogDetails();
+                                                }
+                                            } else {
+                                                eventid = 2;
+                                                insertPointCollection(eventid);
+                                                intent = new Intent(Intent.ACTION_CALL);
+                                                intent.setData(Uri.parse("tel:" + phone1));
+                                                // call=call+2;
+
+                                                //Toast.makeText(CounselorContactActivity.this,"Call"+String.valueOf(call),Toast.LENGTH_SHORT).show();
+
+                                                //intent.setAction("android.intent.action.CALL");
+                                                if (ContextCompat.checkSelfPermission(CounselorContactActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                                                    ActivityCompat.requestPermissions((Activity) CounselorContactActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 1);
+                                                } else {
+                                                    calendar = Calendar.getInstance();
+                                                    clickedcount = 0;
+
+                                                    linearConfirmCall.setVisibility(View.GONE);
+                                                    linearCallDetails.setVisibility(View.VISIBLE);
+
+                                                    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                                                    dt22 = new Date();
+                                                    dt22 = calendar.getTime();
+                                                    // txtAppNo.setText(edtCallNo.getText().toString());
+                                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+                                                    // SimpleDateFormat sdf1=new SimpleDateFormat("yyyy/MM/dd HH:mm");
+                                                    String dtime = calendar.getTime() + "";
+                                                    Log.d("DTime", dtime);
+                                                    // newDTime=sdf.format(dtime);
+                                                    Date date = calendar.getTime();
+                                                    newDTime = sdf.format(date);
+                                                    txtDateTime.setText(newDTime);
+                                                    txtCalledNumber.setText(phone2);
+                                                    Log.d("apptime", phone2 + "/" + newDTime);
+                                                    startActivity(intent);
+
+                                                }
+                                            }
+                                        } else {
+                                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                                            alertDialogBuilder.setTitle("This number is allocated to someone else")
+                                                    .setMessage("You cannot make a call")
+
+                                                    // Specifying a listener allows you to take an action before dismissing the dialog.
+                                                    // The dialog is automatically dismissed when a dialog button is clicked.
+                                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            dialog.dismiss();
+                                                        }
+                                                    })
+                                                    .show();
+                                        }
+                                    } catch (JSONException e) {
+                                        Toast.makeText(CounselorContactActivity.this, "Errorcode-184 CounselorContact checkPhoneResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                        Log.d("CheckPhoneException", String.valueOf(e));
+                                    }
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+
+                                    if (error == null || error.networkResponse == null)
+                                        return;
+                                    final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                    //get response body and parse with appropriate encoding
+                                    if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                                        alertDialogBuilder.setTitle("Server Error!!!")
+
+
+                                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                        dialog.dismiss();
+                                                    }
+                                                }).show();
+                                        dialog.dismiss();
+                                        Toast.makeText(CounselorContactActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                        // showCustomPopupMenu();
+                                        Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                    }
+
+                                }
+                            });
+                    requestQueue.add(stringRequest);
+                } else {
+                    if(dialog.isShowing()) {
+                        dialog.dismiss();
                     }
-                });
-        requestQueue.add(stringRequest);
-    }else {
-        dialog.dismiss();
-        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-        alertDialogBuilder.setTitle("No Internet connection!!!")
-                .setMessage("Can't do further process")
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                    alertDialogBuilder.setTitle("No Internet connection!!!")
+                            .setMessage("Can't do further process")
 
-                // Specifying a listener allows you to take an action before dismissing the dialog.
-                // The dialog is automatically dismissed when a dialog button is clicked.
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        //insertIMEI();
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
                                         /*edtName.setText("");
                                         edtPassword.setText("");*/
-                        dialog.dismiss();
+                                    dialog.dismiss();
 
-                    }
-                }).show();
-    }
+                                }
+                            }).show();
+                }
+            }else {
+                if(dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
+
+                            }
+                        }).show();
+            }
+        }
+    catch (Exception e)
+        {
+            Log.d("ExcCheckPhone", String.valueOf(e));
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-183 CounselorContact checkPhone "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
     }
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void getCallLogDetails() {
-        //dialog=ProgressDialog.show(CounselorContactActivity.this,"","Loading",true);
+        try {
+            //dialog=ProgressDialog.show(CounselorContactActivity.this,"","Loading",true);
         Cursor managedCursor = managedQuery(CallLog.Calls.CONTENT_URI, null,
                 null, null, null);
         int number = managedCursor.getColumnIndex(CallLog.Calls.NUMBER);
@@ -1758,7 +2165,8 @@ try{
         }
         Log.d("callarraysize", arrayListCallDetails.size() + "");
 
-        for (int i = 0; i < arrayListCallDetails.size(); i++) {
+        for (int i = 0; i < arrayListCallDetails.size(); i++)
+        {
             String clno = arrayListCallDetails.get(i).getmCallMobileNo();
             String cltype = arrayListCallDetails.get(i).getmCallType();
             final String cldate = arrayListCallDetails.get(i).getmCallDate();
@@ -1799,8 +2207,12 @@ try{
                 }
             }
         }
+        }catch (Exception e)
+        {
+            Log.d("ExcCallLogDetails", String.valueOf(e));
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-185 CounselorContact callLogDetails "+e.toString(),Toast.LENGTH_SHORT).show();        }
     }
-                public void callUploadFile(){
+        public void callUploadFile(){
                     try {
 
                         new Thread(new Runnable() {
@@ -1808,7 +2220,6 @@ try{
                                 runOnUiThread(new Runnable() {
                                     public void run() {
                                         dialog.dismiss();
-
                                     }
                                 });
                                 uploadFile(uploadFilePath + "" + uploadFileName);
@@ -1817,164 +2228,200 @@ try{
                     }
                     catch (Exception e)
                     {
-                        Toast.makeText(CounselorContactActivity.this,"Got exception ,File not uploaded",Toast.LENGTH_SHORT).show();
-                        Log.d("UplaodException", String.valueOf(e));
+                        Toast.makeText(CounselorContactActivity.this,"Errorcode-186 CounselorContact uploadFile "+e.toString(),Toast.LENGTH_SHORT).show();                        Log.d("UplaodException", String.valueOf(e));
                     }
                 }
 
 
     public void getPointCollection() {
-
-        url=clienturl+"?clientid=" + clientid + "&caseid=37&nCounsellorId=" + id1;
+        try {
+            url=clienturl+"?clientid=" + clientid + "&caseid=37&nCounsellorId=" + id1;
         Log.d("CoinUrl", url);
-        if(CheckInternet.checkInternet(CounselorContactActivity.this))
-        {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try{
+        if(CheckInternet.checkInternet(CounselorContactActivity.this)) {
+            if (CheckServer.isServerReachable(CounselorContactActivity.this)) {
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
                       /*  if (dialog.isShowing()) {
                             dialog.dismiss();
                         }*/
-                        Log.d("CoinResponse", response);
+                                    Log.d("CoinResponse", response);
 
-                            // arrayListTotal.clear();
-                            JSONObject jsonObject = new JSONObject(response);
-                            // Log.d("Json",jsonObject.toString());
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                String totalcoin = jsonObject1.getString("Total Coin");
-                                txtCoin.setText(totalcoin);
-                                editor = sp.edit();
-                                editor.putString("TotalCoin",totalcoin);
-                                editor.commit();
-                                txtCoin.setText(totalcoin);
+                                    // arrayListTotal.clear();
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    // Log.d("Json",jsonObject.toString());
+                                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                        String totalcoin = jsonObject1.getString("Total Coin");
+                                        txtCoin.setText(totalcoin);
+                                        editor = sp.edit();
+                                        editor.putString("TotalCoin", totalcoin);
+                                        editor.commit();
+                                        txtCoin.setText(totalcoin);
+                                    }
+                                } catch (JSONException e) {
+                                    Toast.makeText(CounselorContactActivity.this, "Errorcode-187 CounselorContact checkIfExistInDocMaster " + e.toString(), Toast.LENGTH_SHORT).show();                            //dialog.dismiss();
+                                    Log.d("PointCollectException", String.valueOf(e));
+                                }
                             }
-                        } catch (JSONException e) {
-                            Toast.makeText(CounselorContactActivity.this,"Volley error while getting point collection",Toast.LENGTH_SHORT);
-                            //dialog.dismiss();
-                            Log.d("PointCollectException", String.valueOf(e));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
 
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
+                                if (error == null || error.networkResponse == null)
+                                    return;
+                                final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                //get response body and parse with appropriate encoding
+                                if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                                    alertDialogBuilder.setTitle("Server Error!!!")
 
 
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
 
-                                            dialog.dismiss();
-                                        }
-                                    }).show();
-                          //  dialog.dismiss();
-                            Toast.makeText(CounselorContactActivity.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                    //  dialog.dismiss();
+                                    Toast.makeText(CounselorContactActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    // showCustomPopupMenu();
+                                    Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                }
 
-                    }
-                });
-        requestQueue.add(stringRequest);
-    }else {
-       // dialog.dismiss();
-        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-        alertDialogBuilder.setTitle("No Internet connection!!!")
-                .setMessage("Can't do further process")
+                            }
+                        });
+                requestQueue.add(stringRequest);
+            } else {
+                // dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                alertDialogBuilder.setTitle("No Internet connection!!!")
+                        .setMessage("Can't do further process")
 
-                // Specifying a listener allows you to take an action before dismissing the dialog.
-                // The dialog is automatically dismissed when a dialog button is clicked.
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        //insertIMEI();
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
                                         /*edtName.setText("");
                                         edtPassword.setText("");*/
-                        dialog.dismiss();
+                                dialog.dismiss();
 
-                    }
-                }).show();
-    }
+                            }
+                        }).show();
+            }
+        }else {
+            dialog.dismiss();
+            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+            alertDialogBuilder.setTitle("Server Down!!!!")
+                    .setMessage("Try after some time!")
+
+                    // Specifying a listener allows you to take an action before dismissing the dialog.
+                    // The dialog is automatically dismissed when a dialog button is clicked.
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                            dialog.dismiss();
+
+                        }
+                    }).show();
+        }
+        }catch (Exception e)
+        {
+            Log.d("ExcGetPoint", String.valueOf(e));
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-186 CounselorContact getPointCollection "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
 
 }
 
     public void getCounselorDetails() {
-        url=clienturl+"?clientid=" + clientid + "&caseid=30";
+        try {
+            url=clienturl+"?clientid=" + clientid + "&caseid=30";
         Log.d("CounselorUrl", url);
         if(CheckInternet.checkInternet(CounselorContactActivity.this))
         {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        dialog.dismiss();
-                        Log.d("CounselorResponse1", response);
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            Log.d("Json", jsonObject.toString());
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                String id = String.valueOf(jsonObject1.getInt("cCounselorID"));
-                                String name = jsonObject1.getString("cCounselorName");
-                                dataListCounselor = new DataListCounselor(id, name);
-                                arrayListCounselorDetails.add(dataListCounselor);
+            if(CheckServer.isServerReachable(CounselorContactActivity.this)) {
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                dialog.dismiss();
+                                Log.d("CounselorResponse1", response);
+                                try {
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    Log.d("Json", jsonObject.toString());
+                                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                        String id = String.valueOf(jsonObject1.getInt("cCounselorID"));
+                                        String name = jsonObject1.getString("cCounselorName");
+                                        dataListCounselor = new DataListCounselor(id, name);
+                                        arrayListCounselorDetails.add(dataListCounselor);
+                                    }
+                                    AdapterListCounselor adapterListCounselor = new AdapterListCounselor(CounselorContactActivity.this, arrayListCounselorDetails);
+                                    LinearLayoutManager layoutManager = new LinearLayoutManager(CounselorContactActivity.this);
+                                    layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                                    recyclerCounselorDetails.setLayoutManager(layoutManager);
+                                    recyclerCounselorDetails.setAdapter(adapterListCounselor);
+                                    adapterListCounselor.notifyDataSetChanged();
+                                } catch (JSONException e) {
+                                    Toast.makeText(CounselorContactActivity.this, "Errorcode-189 CounselorContact counselorDetailsResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+                                    Log.d("CounselorDetailExceptio", String.valueOf(e));
+                                }
                             }
-                            AdapterListCounselor adapterListCounselor = new AdapterListCounselor(CounselorContactActivity.this, arrayListCounselorDetails);
-                            LinearLayoutManager layoutManager = new LinearLayoutManager(CounselorContactActivity.this);
-                            layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                            recyclerCounselorDetails.setLayoutManager(layoutManager);
-                            recyclerCounselorDetails.setAdapter(adapterListCounselor);
-                            adapterListCounselor.notifyDataSetChanged();
-                        } catch (JSONException e) {
-                            Toast.makeText(CounselorContactActivity.this,"Volley error while getting counselor details",Toast.LENGTH_SHORT);
-                            dialog.dismiss();
-                            Log.d("CounselorDetailExceptio", String.valueOf(e));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
 
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
+                                if (error == null || error.networkResponse == null)
+                                    return;
+                                final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                //get response body and parse with appropriate encoding
+                                if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                                    alertDialogBuilder.setTitle("Server Error!!!")
 
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
 
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                    dialog.dismiss();
+                                    Toast.makeText(CounselorContactActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    // showCustomPopupMenu();
+                                    Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                }
+                            }
+                        });
+                requestQueue.add(stringRequest);
+            }else
+            {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
 
-                                            dialog.dismiss();
-                                        }
-                                    }).show();
-                            dialog.dismiss();
-                            Toast.makeText(CounselorContactActivity.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
-
-                    }
-                });
-        requestQueue.add(stringRequest);
+                            }
+                        }).show();
+            }
     }else {
         dialog.dismiss();
         android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
@@ -1992,254 +2439,318 @@ try{
 
                     }
                 }).show();
-    }
+
+        }
+        }catch (Exception e)
+        {
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-188 CounselorContact getCounselorDetails "+e.toString(),Toast.LENGTH_SHORT).show();
+            Log.d("ExcCounselorDetails", String.valueOf(e));
+        }
     }
 
     public  void getOnlineLeadRefno(String serialno)
     {
-        url=clienturl+"?clientid=" + clientid + "&caseid=60&RefNo="+serialno;
-        Log.d("OnlineRefUrl", url);
-        if(CheckInternet.checkInternet(CounselorContactActivity.this)){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            Log.d("OnlineLeaREfResponse", response);
-                            getCounselorDetails();
-                            getPointCollection();
-                            dialog.dismiss();
-                            JSONObject jsonObject = new JSONObject(response);
-                            Log.d("Json", jsonObject.toString());
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            Log.d("Length", String.valueOf(jsonArray.length()));
+        try {
+        if(CheckServer.isServerReachable(CounselorContactActivity.this)) {
+            url = clienturl + "?clientid=" + clientid + "&caseid=60&RefNo=" + serialno;
+            Log.d("OnlineRefUrl", url);
 
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                String sr_no = String.valueOf(jsonObject1.getInt("nSrNo"));
-                                name = jsonObject1.getString("cCandidateName");
-                                course = jsonObject1.getString("cCourse");
-                                mbl = jsonObject1.getString("cMobile");
-                                adrs = jsonObject1.getString("cAddressLine");
-                                city = jsonObject1.getString("cCity");
-                                state1 = jsonObject1.getString("cState");
-                                pincode = jsonObject1.getString("cPinCode");
-                                parentno = jsonObject1.getString("cParantNo");
-                                email = jsonObject1.getString("cEmail");
-                                fetchedDataFrom = jsonObject1.getString("cDataFrom");
-                                fetchedAllocatedTo = jsonObject1.getString("AllocatedTo");
-                                allocatedDate = jsonObject1.getString("AllocationDate");
-                                statusid = jsonObject1.getString("CurrentStatus");
-                                remark = jsonObject1.getString("cRemarks");
-                                fetchedCreatedDate = jsonObject1.getString("dtCreatedDate");
-                                status11 = jsonObject1.getString("cStatus");
-                                // DataCounselor dataCounselor=new DataCounselor("1",sr_no,name,course,mbl,parentno,email,allocatedDate,adrs,
-                                // city,state1,pincode,statusid,status11,remark);
-                                //  arrayListOnlineLead.add(dataCounselor);
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                Log.d("OnlineLeaREfResponse", response);
+                                getCounselorDetails();
+                                getPointCollection();
+                                dialog.dismiss();
+                                JSONObject jsonObject = new JSONObject(response);
+                                Log.d("Json", jsonObject.toString());
+                                JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                Log.d("Length", String.valueOf(jsonArray.length()));
 
-                                txtCName.setText(name);
-                                txtSrno.setText(sr_no);
-                                txtCourse.setText(course);
-                                txtCurrentStatus.setText(status11);
-                                txtRemark.setText(remark);
-                                ArrayList<String> arrayListMbl = new ArrayList<>();
-                                arrayListMbl.add(mbl);
-                                arrayListMbl.add(parentno);
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                    String sr_no = String.valueOf(jsonObject1.getInt("nSrNo"));
+                                    name = jsonObject1.getString("cCandidateName");
+                                    course = jsonObject1.getString("cCourse");
+                                    mbl = jsonObject1.getString("cMobile");
+                                    adrs = jsonObject1.getString("cAddressLine");
+                                    city = jsonObject1.getString("cCity");
+                                    state1 = jsonObject1.getString("cState");
+                                    pincode = jsonObject1.getString("cPinCode");
+                                    parentno = jsonObject1.getString("cParantNo");
+                                    email = jsonObject1.getString("cEmail");
+                                    fetchedDataFrom = jsonObject1.getString("cDataFrom");
+                                    fetchedAllocatedTo = jsonObject1.getString("AllocatedTo");
+                                    allocatedDate = jsonObject1.getString("AllocationDate");
+                                    statusid = jsonObject1.getString("CurrentStatus");
+                                    remark = jsonObject1.getString("cRemarks");
+                                    fetchedCreatedDate = jsonObject1.getString("dtCreatedDate");
+                                    status11 = jsonObject1.getString("cStatus");
+                                    // DataCounselor dataCounselor=new DataCounselor("1",sr_no,name,course,mbl,parentno,email,allocatedDate,adrs,
+                                    // city,state1,pincode,statusid,status11,remark);
+                                    //  arrayListOnlineLead.add(dataCounselor);
+                                    editor.putString("SelectedMobile", mbl);
+                                    editor.putString("SelectedName", name);
+                                    editor.commit();
+                                    txtCName.setText(name);
+                                    txtSrno.setText(sr_no);
+                                    txtCourse.setText(course);
+                                    txtCurrentStatus.setText(status11);
+                                    txtRemark.setText(remark);
+                                    ArrayList<String> arrayListMbl = new ArrayList<>();
 
-                                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(CounselorContactActivity.this, R.layout.spinner_item1, arrayListMbl);
-                                //arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                spinnerMobile.setAdapter(arrayAdapter);
-                                spinnerMobile.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                    @Override
-                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                        selectedmbl = spinnerMobile.getSelectedItem().toString();
-                                        // selectedmbl =  "+91"+ selectedmbl;
-                                    }
+                                    arrayListMbl.add(mbl);
+                                    arrayListMbl.add(parentno);
 
-                                    @Override
-                                    public void onNothingSelected(AdapterView<?> parent) {
-                                        spinnerMobile.setSelection(0);
-                                    }
-                                });
-                            }
+                                    final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(CounselorContactActivity.this, R.layout.spinner_item1, arrayListMbl);
+                                    //arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                    spinnerMobile.setAdapter(arrayAdapter);
+                                    spinnerMobile.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                        @Override
+                                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                            selectedmbl = spinnerMobile.getSelectedItem().toString().trim();
+                                            selectedmbl = selectedmbl.replaceAll(" ", "");
 
-                            //dialog = ProgressDialog.show(CounselorContactActivity.this, "", "Loading...", true);
-                            getStatus1();
-
-                        } catch (JSONException e) {
-                            Toast.makeText(CounselorContactActivity.this,"Volley error while getting onlineleads with refno",Toast.LENGTH_SHORT);
-                            dialog.dismiss();
-                            Log.d("OnlineLeadRefException", String.valueOf(e));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
-
-
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                            dialog.dismiss();
+                                            // selectedmbl =  "+91"+ selectedmbl;
                                         }
-                                    }).show();
-                            dialog.dismiss();
-                            Toast.makeText(CounselorContactActivity.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
 
-                    }
-                });
-        requestQueue.add(stringRequest);
-    }else {
-        dialog.dismiss();
-        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-        alertDialogBuilder.setTitle("No Internet connection!!!")
-                .setMessage("Can't do further process")
+                                        @Override
+                                        public void onNothingSelected(AdapterView<?> parent) {
+                                            spinnerMobile.setSelection(0);
+                                        }
+                                    });
+                                }
 
-                // Specifying a listener allows you to take an action before dismissing the dialog.
-                // The dialog is automatically dismissed when a dialog button is clicked.
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        //insertIMEI();
+                                //dialog = ProgressDialog.show(CounselorContactActivity.this, "", "Loading...", true);
+                                if (CheckInternetSpeed.checkInternet(CounselorContactActivity.this).contains("0")) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                                    alertDialogBuilder.setTitle("No Internet connection!!!")
+                                            .setMessage("Can't do further process")
+
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    //insertIMEI();
                                         /*edtName.setText("");
                                         edtPassword.setText("");*/
-                        dialog.dismiss();
+                                                    dialog.dismiss();
 
-                    }
-                }).show();
+                                                }
+                                            }).show();
+                                } else if (CheckInternetSpeed.checkInternet(CounselorContactActivity.this).contains("1")) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                                    alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                                            .setMessage("Can't do further process")
+
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    //insertIMEI();
+                                                    dialog.dismiss();
+                                                }
+                                            })
+                                            .show();
+                                } else {
+                                    getStatus1();
+                                }
+
+                            } catch (JSONException e) {
+                                Toast.makeText(CounselorContactActivity.this, "Errorcode-191 CounselorContact onlineLeadRefResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                                Log.d("OnlineLeadRefException", String.valueOf(e));
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                            if (error == null || error.networkResponse == null)
+                                return;
+                            final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                            //get response body and parse with appropriate encoding
+                            if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                                alertDialogBuilder.setTitle("Server Error!!!")
+
+
+                                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                                        // The dialog is automatically dismissed when a dialog button is clicked.
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                                dialog.dismiss();
+                                            }
+                                        }).show();
+                                dialog.dismiss();
+                                Toast.makeText(CounselorContactActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                // showCustomPopupMenu();
+                                Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                            }
+
+                        }
+                    });
+            requestQueue.add(stringRequest);
+        }else {
+            if(dialog.isShowing()){
+            dialog.dismiss();
+            }
+            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+            alertDialogBuilder.setTitle("Server Down!!!!")
+                    .setMessage("Try after some time!")
+
+                    // Specifying a listener allows you to take an action before dismissing the dialog.
+                    // The dialog is automatically dismissed when a dialog button is clicked.
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                            dialog.dismiss();
+                        }
+                    }).show();
         }
-
-    }
-    public void insertOnlineLead(String srno,String cid)
-    {
-        url=clienturl+"?clientid=" + clientid + "&caseid=61&RefNo=" +srno+"&CounselorId="+cid;
-        Log.d("InsertOnlineUrl", url);
-        if(CheckInternet.checkInternet(CounselorContactActivity.this))
+        }catch (Exception e)
         {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
+            Log.d("ExcOnlineLeadRefno", String.valueOf(e));
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-190 CounselorContact getOnlinLeadRefNo "+e.toString(),Toast.LENGTH_SHORT).show();        }
 
-                        //Log.d("*******", response.toString());
-                        try {
-                            Log.d("InsertOnlineResponse", response);
+            }
+    public void insertOnlineLead(String srno,String cid)
+    { try {
+        if(CheckServer.isServerReachable(CounselorContactActivity.this)) {
+            url = clienturl + "?clientid=" + clientid + "&caseid=61&RefNo=" + srno + "&CounselorId=" + cid;
+            Log.d("InsertOnlineUrl", url);
+            if (CheckInternet.checkInternet(CounselorContactActivity.this)) {
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
 
-                            JSONObject jsonObject = new JSONObject(response);
-                            Log.d("Json", jsonObject.toString());
+                                //Log.d("*******", response.toString());
+                                try {
+                                    Log.d("InsertOnlineResponse", response);
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    Log.d("Json", jsonObject.toString());
 
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            for(int i=0;i<jsonArray.length();i++) {
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                sr_onlinelead = jsonObject1.getString("nSRNO");
+                                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                        sr_onlinelead = jsonObject1.getString("nSRNO");
+                                    }
+
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                                    alertDialogBuilder.setTitle("Online lead inserted successfully")
+                                            .setMessage("Serial no is:" + sr_onlinelead)
+
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    Intent intent = new Intent(CounselorContactActivity.this, CounselorContactActivity.class);
+                                                    intent.putExtra("ActivityName", "OLActivity");
+                                                    editor.putString("SelectedSrNo", sr_onlinelead);
+                                                    editor.putString("ActivityContact", "OLActivity");
+                                                    editor.commit();
+                                                    startActivity(intent);
+                                                    //getCounselorData(sr_onlinelead,id1);
+                                                    dialog.dismiss();
+                                                }
+                                            })
+                                            .show();
+                                    updateOnlineLead(sr_no);
+
+
+                                    //   Log.d("Size**", String.valueOf(arrayList.size()));
+                                } catch (Exception e) {
+                                    Toast.makeText(CounselorContactActivity.this, "Errorcode-193 CounselorContact insertOnlineLead " + e.toString(), Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+                                    Log.d("Exception", String.valueOf(e));
+
+                                }
                             }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
 
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-                            alertDialogBuilder.setTitle("Online lead inserted successfully")
-                                    .setMessage("Serial no is:"+sr_onlinelead)
-
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            Intent intent=new Intent(CounselorContactActivity.this,CounselorContactActivity.class);
-                                            intent.putExtra("ActivityName","OLActivity");
-                                            editor.putString("SelectedSrNo",sr_onlinelead);
-                                            editor.putString("ActivityContact","OLActivity");
-                                            editor.commit();
-                                            startActivity(intent);
-                                            //getCounselorData(sr_onlinelead,id1);
-                                            dialog.dismiss();
-                                        }
-                                    })
-
-                                    /*  // A null listener allows the button to dismiss the dialog and take no further action.
-                                      .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                          @Override
-                                          public void onClick(DialogInterface dialog, int which) {
-                                              dialog.dismiss();
-
-                                          }
-                                      })*/
-                                    .show();
-                           updateOnlineLead(sr_no);
+                                if (error == null || error.networkResponse == null)
+                                    return;
+                                final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                //get response body and parse with appropriate encoding
+                                if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                                    alertDialogBuilder.setTitle("Server Error!!!")
 
 
-                            //   Log.d("Size**", String.valueOf(arrayList.size()));
-                        }catch (Exception e)
-                        {
-                            Toast.makeText(CounselorContactActivity.this,"Volley error while inserting online lead",Toast.LENGTH_SHORT);
-                            dialog.dismiss();
-                            Log.d("Exception", String.valueOf(e));
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
 
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                    dialog.dismiss();
+                                    Toast.makeText(CounselorContactActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    // showCustomPopupMenu();
+                                    Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                }
+                            }
+                        });
+                requestQueue.add(stringRequest);
+            } else {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                alertDialogBuilder.setTitle("No Internet connection!!!")
+                        .setMessage("Can't do further process")
 
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
-
-
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                            dialog.dismiss();
-                                        }
-                                    }).show();
-                            dialog.dismiss();
-                            Toast.makeText(CounselorContactActivity.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
-
-                    }
-                });
-        requestQueue.add(stringRequest);
-    }else {
-        dialog.dismiss();
-        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-        alertDialogBuilder.setTitle("No Internet connection!!!")
-                .setMessage("Can't do further process")
-
-                // Specifying a listener allows you to take an action before dismissing the dialog.
-                // The dialog is automatically dismissed when a dialog button is clicked.
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        //insertIMEI();
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
                                         /*edtName.setText("");
                                         edtPassword.setText("");*/
-                        dialog.dismiss();
+                                dialog.dismiss();
 
-                    }
-                }).show();
-    }
+                            }
+                        }).show();
+            }
+        }else {
+            if(dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+            alertDialogBuilder.setTitle("Server Down!!!!")
+                    .setMessage("Try after some time!")
 
+                    // Specifying a listener allows you to take an action before dismissing the dialog.
+                    // The dialog is automatically dismissed when a dialog button is clicked.
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                            dialog.dismiss();
+
+                        }
+                    }).show();
+        }
+        }catch (Exception e)
+        {
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-192 CounselorContact insertOnlineLead "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
     }
     public void updateOnlineLead(String sr)
     {
+        try {
+            if(CheckServer.isServerReachable(CounselorContactActivity.this))
+            {
         url=clienturl + "?clientid=" + clientid + "&caseid=66&RefNo=" + sr;
         Log.d("UpdateOnlineUrl", url);
         if(CheckInternet.checkInternet(CounselorContactActivity.this))
@@ -2262,8 +2773,7 @@ try{
                             }
 
                         } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                            Toast.makeText(CounselorContactActivity.this,"Errorcode-197 CounselorContact updateOnlineLeadResponse "+e.toString(),Toast.LENGTH_SHORT).show();                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -2310,11 +2820,34 @@ try{
                     }
                 }).show();
     }
+        }else {
+                if(dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
 
-
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
+                            }
+                        }).show();
+            }
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-196 CounselorContact updateOnlineLead "+e.toString(),Toast.LENGTH_SHORT).show();        }
     }
     public void updateOpenLeads(String sr)
     {
+        try {
+
         url=clienturl + "?clientid=" + clientid + "&caseid=77&nSrNo=" + sr+"&CounselorID="+id1;
         Log.d("UpdateOpenLeadUrl", url);
         if(CheckInternet.checkInternet(CounselorContactActivity.this))
@@ -2337,8 +2870,7 @@ try{
                                 }
                                 catch (Exception e)
                                  {
-                                     e.printStackTrace();
-                                 }
+                                     Toast.makeText(CounselorContactActivity.this,"Errorcode-196 CounselorContact openLeadUpdateResponse "+e.toString(),Toast.LENGTH_SHORT).show();                                 }
                         }
                     },
                     new Response.ErrorListener() {
@@ -2385,12 +2917,19 @@ try{
                         }
                     }).show();
         }
-
+    }catch (Exception e)
+    {
+        Toast.makeText(CounselorContactActivity.this,"Errorcode-195 CounselorContact updateOpenLead "+e.toString(),Toast.LENGTH_SHORT).show();
+        Log.d("ExcUpdateOepnLLead", String.valueOf(e));
+    }
 
     }
 
     public void getCounselorData(String serialno,String cid) {
-        url=clienturl+"?clientid=" + clientid + "&caseid=32&nSrNo="+serialno+"&cCounselorID="+cid;
+        try {
+            if(CheckServer.isServerReachable(CounselorContactActivity.this))
+            {
+            url=clienturl+"?clientid=" + clientid + "&caseid=32&nSrNo="+serialno+"&cCounselorID="+cid;
         Log.d("CounselorUrl", url);
         if(CheckInternet.checkInternet(CounselorContactActivity.this))
         {
@@ -2398,7 +2937,6 @@ try{
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
                         Log.d("FetchedResponse", response);
                         try {
                             getCounselorDetails();
@@ -2430,6 +2968,7 @@ try{
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject jsonObject1 = jsonArray.getJSONObject(i);
                                     //String id = String.valueOf(jsonObject1.getInt("cCounselorID"));
+                                    datafrom=jsonObject1.getString("refNo");
                                     name = jsonObject1.getString("cCandidateName");
                                     course = jsonObject1.getString("cCourse");
                                     mbl = jsonObject1.getString("cMobile");
@@ -2495,8 +3034,8 @@ try{
                             //  dialog = ProgressDialog.show(CounselorContactActivity.this, "", "Loading...", true);
 
                             getStatus1();
-
                         } catch (JSONException e) {
+                            Toast.makeText(CounselorContactActivity.this,"Errorcode-199 CounselorContact counselorDataResponse "+e.toString(),Toast.LENGTH_SHORT).show();
                             Log.d("Exception", String.valueOf(e));
                         }
                     }
@@ -2549,29 +3088,220 @@ try{
                     }
                 }).show();
     }
+        }else {
+                if(dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
+
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-198 CounselorContact getCounselorDats "+e.toString(),Toast.LENGTH_SHORT).show();
+            Log.d("ExcCounselorData", String.valueOf(e));
+        }
 
     }
     public void getOpenLeadRefNo(String serialno) {
-        url=clienturl+"?clientid=" + clientid + "&caseid=76&nSrNo="+serialno;
-        Log.d("OpenLeadRefNoUrl", url);
-        if(CheckInternet.checkInternet(CounselorContactActivity.this))
-        {
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
+        try {
+            if (CheckServer.isServerReachable(CounselorContactActivity.this)) {
+                url = clienturl + "?clientid=" + clientid + "&caseid=76&nSrNo=" + serialno;
+                Log.d("OpenLeadRefNoUrl", url);
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                Log.d("OpenLeadRefNoResponse", response);
+                                try {
+                                    getCounselorDetails();
+                                    getPointCollection();
+                                    dialog.dismiss();
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    Log.d("Json", jsonObject.toString());
 
-                            Log.d("OpenLeadRefNoResponse", response);
-                            try {
-                                getCounselorDetails();
-                                getPointCollection();
+                                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                    Log.d("Length", String.valueOf(jsonArray.length()));
+                                    if (jsonArray.length() == 0) {
+                                        if (act1.contains("OnlineLead")) {
+                                            startActivity(new Intent(CounselorContactActivity.this, OnlineLead.class));
+                                        } else {
+                                            intent = new Intent(CounselorContactActivity.this, CounsellorData.class);
+                                            intent.putExtra("Activity", "CounselorData");
+                                            startActivity(intent);
+                                            //  startActivity(new Intent(CounselorContactActivity.this, CounsellorData.class));
+                                            Toast.makeText(CounselorContactActivity.this, "This candidate is allocated to someone else", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } else {
+                                        for (int i = 0; i < jsonArray.length(); i++) {
+                                            JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                            //String id = String.valueOf(jsonObject1.getInt("cCounselorID"));
+                                            datafrom = jsonObject1.getString("refNo");
+                                            name = jsonObject1.getString("cCandidateName");
+                                            course = jsonObject1.getString("cCourse");
+                                            mbl = jsonObject1.getString("cMobile");
+                                            adrs = jsonObject1.getString("cAddressLine");
+                                            city = jsonObject1.getString("cCity");
+                                            state1 = jsonObject1.getString("cState");
+                                            pincode = jsonObject1.getString("cPinCode");
+                                            parentno = jsonObject1.getString("cParantNo");
+                                            email = jsonObject1.getString("cEmail");
+                                            fetchedDataFrom = jsonObject1.getString("cDataFrom");
+                                            fetchedAllocatedTo = jsonObject1.getString("AllocatedTo");
+                                            allocatedDate = jsonObject1.getString("AllocationDate");
+                                            statusid = jsonObject1.getString("CurrentStatus");
+                                            remark = jsonObject1.getString("cRemarks");
+                                            fetchedCreatedDate = jsonObject1.getString("dtCreatedDate");
+                                            status11 = jsonObject1.getString("cStatus");
+
+                                            editor.putString("SelectedMobile", mbl);
+                                            editor.putString("SelectedParentNo", parentno);
+                                            editor.putString("SelectedName", name);
+                                            editor.putString("SelectedCourse", course);
+                                            // editor.putString("SelectedSrNo", dataCounselor.getSr_no());
+                                            editor.putString("SelectedEmail", email);
+                                            editor.putString("AllocatedDate", allocatedDate);
+                                            editor.putString("SelectedAddress", adrs);
+                                            editor.putString("SelectedCity", city);
+                                            editor.putString("SelectedState", state1);
+                                            editor.putString("SelectedPinCode", pincode);
+                                            editor.putString("SelectedStatus", status11);
+                                            editor.putString("SelectedStatusId", statusid);
+                                            editor.putString("SelectedRemark", remark);
+                                            editor.commit();
+                                        }
+
+                                        //  allocatedDate = allocatedDate.substring(allocatedDate.indexOf("date") + 6, allocatedDate.indexOf(","));
+                                        Log.d("Date!!!!", allocatedDate);
+                                        txtCName.setText(name);
+                                        txtSrno.setText(sr_no);
+                                        txtCourse.setText(course);
+                                        txtCurrentStatus.setText(status11);
+                                        txtRemark.setText(remark);
+                                        ArrayList<String> arrayListMbl = new ArrayList<>();
+                                        arrayListMbl.add(mbl);
+                                        arrayListMbl.add(parentno);
+
+                                        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(CounselorContactActivity.this, R.layout.spinner_item1, arrayListMbl);
+                                        //arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                        spinnerMobile.setAdapter(arrayAdapter);
+                                        spinnerMobile.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                            @Override
+                                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                                selectedmbl = spinnerMobile.getSelectedItem().toString();
+                                                //selectedmbl = "+91" + selectedmbl;
+                                            }
+
+                                            @Override
+                                            public void onNothingSelected(AdapterView<?> parent) {
+                                                spinnerMobile.setSelection(0);
+                                            }
+                                        });
+                                    }
+
+                                    //  dialog = ProgressDialog.show(CounselorContactActivity.this, "", "Loading...", true);
+
+                                    getStatus1();
+
+                                } catch (JSONException e) {
+                                    Toast.makeText(CounselorContactActivity.this, "Errorcode-201 CounselorContact openLeadRefNo " + e.toString(), Toast.LENGTH_SHORT).show();
+                                    Log.d("Exception", String.valueOf(e));
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+
+                                if (error == null || error.networkResponse == null)
+                                    return;
+                                final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                //get response body and parse with appropriate encoding
+                                if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                                    alertDialogBuilder.setTitle("Server Error!!!")
+
+
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                    dialog.dismiss();
+                                    Toast.makeText(CounselorContactActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    // showCustomPopupMenu();
+                                    Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                }
+
+                            }
+                        });
+                requestQueue.add(stringRequest);
+            }else
+            {
+                if(dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
                                 dialog.dismiss();
-                                JSONObject jsonObject = new JSONObject(response);
-                                Log.d("Json", jsonObject.toString());
 
-                                JSONArray jsonArray = jsonObject.getJSONArray("data");
-                                Log.d("Length", String.valueOf(jsonArray.length()));
-                                if(jsonArray.length()==0)
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-200 CounselorContact getOpenLeadRefNo "+e.toString(),Toast.LENGTH_SHORT).show();
+            Log.d("ExcOpenLeadRefNo", String.valueOf(e));
+        }
+    }
+
+    public void getSrDetailsOnlineForm(String serialno) {
+        try {
+            if(CheckServer.isServerReachable(CounselorContactActivity.this)) {
+                url = clienturl + "?clientid=" + clientid + "&caseid=83&ID=" + serialno;
+                Log.d("OpenLeadRefNoUrl", url);
+
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+
+                                Log.d("OFSrDetailsResponse", response);
+                                try {
+                                    arrayListOnlineForm = new ArrayList<>();
+                                    getCounselorDetails();
+                                    getPointCollection();
+                                    dialog.dismiss();
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    Log.d("Json", jsonObject.toString());
+
+                                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                    Log.d("Length", String.valueOf(jsonArray.length()));
+                               /* if(jsonArray.length()==0)
                                 {
                                     if(act1.contains("OnlineLead"))
                                     {
@@ -2584,56 +3314,73 @@ try{
                                         //  startActivity(new Intent(CounselorContactActivity.this, CounsellorData.class));
                                         Toast.makeText(CounselorContactActivity.this, "This candidate is allocated to someone else", Toast.LENGTH_SHORT).show();
                                     }
-                                }
-                                else {
+                                }*/
+                                    //else {
                                     for (int i = 0; i < jsonArray.length(); i++) {
                                         JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                        //String id = String.valueOf(jsonObject1.getInt("cCounselorID"));
-                                        name = jsonObject1.getString("cCandidateName");
-                                        course = jsonObject1.getString("cCourse");
-                                        mbl = jsonObject1.getString("cMobile");
-                                        adrs = jsonObject1.getString("cAddressLine");
-                                        city = jsonObject1.getString("cCity");
-                                        state1 = jsonObject1.getString("cState");
-                                        pincode = jsonObject1.getString("cPinCode");
-                                        parentno = jsonObject1.getString("cParantNo");
-                                        email = jsonObject1.getString("cEmail");
-                                        fetchedDataFrom = jsonObject1.getString("cDataFrom");
-                                        fetchedAllocatedTo = jsonObject1.getString("AllocatedTo");
-                                        allocatedDate = jsonObject1.getString("AllocationDate");
-                                        statusid = jsonObject1.getString("CurrentStatus");
-                                        remark = jsonObject1.getString("cRemarks");
-                                        fetchedCreatedDate = jsonObject1.getString("dtCreatedDate");
-                                        status11 = jsonObject1.getString("cStatus");
-
+                                        id = String.valueOf(jsonObject1.getInt("id"));
+                                        formno = jsonObject1.getString("formno");
+                                        firstname = jsonObject1.getString("firstname");
+                                        lastname = jsonObject1.getString("lastname");
+                                        fathername = jsonObject1.getString("fathername");
+                                        mothername = jsonObject1.getString("mothername");
+                                        dob = jsonObject1.getString("dob");
+                                        passport = jsonObject1.getString("passport");
+                                        mbl = jsonObject1.getString("mobile");
+                                        addrs = jsonObject1.getString("address");
+                                        city = jsonObject1.getString("city");
+                                        state1 = jsonObject1.getString("state");
+                                        pincode = jsonObject1.getString("pincode");
+                                        email = jsonObject1.getString("email");
+                                        paddresss = jsonObject1.getString("PermanentAddress");
+                                        permanentcity = jsonObject1.getString("permanentcity");
+                                        permanentstate = jsonObject1.getString("permanentstate");
+                                        permanentpin = jsonObject1.getString("permanentpin");
+                                        parentmobile = jsonObject1.getString("parentmobile");
+                                        college = jsonObject1.getString("college");
+                                        schoolboard = jsonObject1.getString("schoolboard");
+                                        tenthpercentage = jsonObject1.getString("tenthpercentage");
+                                        tenthyear = jsonObject1.getString("tenthyear");
+                                        tenthmarks = jsonObject1.getString("tenthmarks");
+                                        tenthoutof = jsonObject1.getString("tenthoutof");
+                                        twelthpercentage = jsonObject1.getString("twelthpercentage");
+                                        twelthyear = jsonObject1.getString("twelthyear");
+                                        twelthmarks = jsonObject1.getString("twelthmarks");
+                                        twelthoutof = jsonObject1.getString("twelthoutof");
+                                        neetyear = jsonObject1.getString("neetyear");
+                                        neetmarks = jsonObject1.getString("neetmarks");
+                                        physics = jsonObject1.getString("physics");
+                                        chemistry = jsonObject1.getString("chemistry");
+                                        biology = jsonObject1.getString("biology");
+                                        pcb = jsonObject1.getString("pcb");
+                                        aggregate = jsonObject1.getString("aggregate");
+                                        dtcreateddate = jsonObject1.getString("dtcreateddate");
+                                        dtcreateddate = dtcreateddate.substring(9, dtcreateddate.lastIndexOf(" "));
+                                        Log.d("Cdate", dtcreateddate);
+                                        cWebsite = jsonObject1.getString("cWebsite");
+                                        DataOnlineFormDetails dataOnlineFormDetails = new DataOnlineFormDetails(id, formno, firstname, lastname, fathername, mothername, dob, passport, addrs, mobile, city, state1, pincode, paddresss, permanentcity, permanentstate,
+                                                permanentpin, parentmobile, email, college, schoolboard, tenthpercentage, tenthyear, tenthmarks, tenthoutof, twelthpercentage, twelthyear, twelthmarks, twelthoutof,
+                                                neetmarks, neetyear, physics, chemistry, biology, pcb, aggregate, dtcreateddate, cWebsite);
+                                        arrayListOnlineForm.add(dataOnlineFormDetails);
                                         editor.putString("SelectedMobile", mbl);
-                                        editor.putString("SelectedParentNo", parentno);
-                                        editor.putString("SelectedName", name);
-                                        editor.putString("SelectedCourse", course);
-                                        // editor.putString("SelectedSrNo", dataCounselor.getSr_no());
-                                        editor.putString("SelectedEmail", email);
-                                        editor.putString("AllocatedDate", allocatedDate);
-                                        editor.putString("SelectedAddress", adrs);
-                                        editor.putString("SelectedCity", city);
-                                        editor.putString("SelectedState", state1);
-                                        editor.putString("SelectedPinCode", pincode);
-                                        editor.putString("SelectedStatus", status11);
-                                        editor.putString("SelectedStatusId", statusid);
-                                        editor.putString("SelectedRemark", remark);
+                                        editor.putString("SelectedName", firstname + " " + lastname);
                                         editor.commit();
                                     }
-
+                                    adapterOnlineFormDetails = new AdapterOnlineFormDetails(CounselorContactActivity.this, arrayListOnlineForm);
+                                    LinearLayoutManager layoutManager = new LinearLayoutManager(CounselorContactActivity.this);
+                                    layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                                    recyclerOnlineFormDetails.setLayoutManager(layoutManager);
+                                    recyclerOnlineFormDetails.setAdapter(adapterOnlineFormDetails);
                                     //  allocatedDate = allocatedDate.substring(allocatedDate.indexOf("date") + 6, allocatedDate.indexOf(","));
-                                    Log.d("Date!!!!", allocatedDate);
-                                    txtCName.setText(name);
-                                    txtSrno.setText(sr_no);
-                                    txtCourse.setText(course);
-                                    txtCurrentStatus.setText(status11);
-                                    txtRemark.setText(remark);
+                                    //     Log.d("Date!!!!", allocatedDate);
+                                    txtCName.setText(firstname);
+                                    txtSrno.setText(id);
+                                    txtCourse.setText(cWebsite);
+                                    //txtCurrentStatus.setText(status11);
+                                    // txtRemark.setText(remark);
                                     ArrayList<String> arrayListMbl = new ArrayList<>();
                                     arrayListMbl.add(mbl);
-                                    arrayListMbl.add(parentno);
-
+                                    arrayListMbl.add(parentmobile);
                                     final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(CounselorContactActivity.this, R.layout.spinner_item1, arrayListMbl);
                                     //arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                     spinnerMobile.setAdapter(arrayAdapter);
@@ -2649,64 +3396,65 @@ try{
                                             spinnerMobile.setSelection(0);
                                         }
                                     });
+                                } catch (JSONException e) {
+                                    Toast.makeText(CounselorContactActivity.this, "Errorcode-203 CounselorContact SrDetailsOnlineFormResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                    Log.d("Exception", String.valueOf(e));
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+
+                                if (error == null || error.networkResponse == null)
+                                    return;
+                                final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                //get response body and parse with appropriate encoding
+                                if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                                    alertDialogBuilder.setTitle("Server Error!!!")
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                    dialog.dismiss();
+                                    Toast.makeText(CounselorContactActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    // showCustomPopupMenu();
+                                    Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
                                 }
 
-                                //  dialog = ProgressDialog.show(CounselorContactActivity.this, "", "Loading...", true);
-
-                                getStatus1();
-
-                            } catch (JSONException e) {
-                                Log.d("Exception", String.valueOf(e));
                             }
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
+                        });
+                requestQueue.add(stringRequest);
+            }else
+            {
+                if(dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
 
-                            if (error == null || error.networkResponse == null)
-                                return;
-                            final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                            //get response body and parse with appropriate encoding
-                            if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-                                alertDialogBuilder.setTitle("Server Error!!!")
-
-
-                                        // Specifying a listener allows you to take an action before dismissing the dialog.
-                                        // The dialog is automatically dismissed when a dialog button is clicked.
-                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-
-                                                dialog.dismiss();
-                                            }
-                                        }).show();
-                                dialog.dismiss();
-                                Toast.makeText(CounselorContactActivity.this,"Server Error",Toast.LENGTH_SHORT).show();
-                                // showCustomPopupMenu();
-                                Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                            }
-
-                        }
-                    });
-            requestQueue.add(stringRequest);
-        }else {
-            dialog.dismiss();
-            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-            alertDialogBuilder.setTitle("No Internet connection!!!")
-                    .setMessage("Can't do further process")
-
-                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                    // The dialog is automatically dismissed when a dialog button is clicked.
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            //insertIMEI();
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
                                         /*edtName.setText("");
                                         edtPassword.setText("");*/
-                            dialog.dismiss();
+                                dialog.dismiss();
 
-                        }
-                    }).show();
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-202 CounselorContact getSrDetailsOnlineForm "+e.toString(),Toast.LENGTH_SHORT).show();
+            Log.d("ExcSrDetails", String.valueOf(e));
         }
 
     }
@@ -2720,361 +3468,431 @@ try{
 }*/
 
     public void getStatus1() {
-        url=clienturl+"?clientid=" + clientid + "&caseid=2";
-        Log.d("StatusUrl", url);
-        if(CheckInternet.checkInternet(CounselorContactActivity.this))
-        {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
+        try {
+            if(CheckServer.isServerReachable(CounselorContactActivity.this)) {
+                url = clienturl + "?clientid=" + clientid + "&caseid=2";
+                Log.d("StatusUrl", url);
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    Log.d("StatusResponse1", response);
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    Log.d("Json", jsonObject.toString());
+                                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                        String status1 = jsonObject1.getString("cStatus");
+                                        statusid = jsonObject1.getString("nStatusID");
+                                        Log.d("Status11", status1);
+                                        //StatusInfo statusInfo=new StatusInfo(status1,statusid);
+                                        arrayListStatusId.add(statusid);
+                                        // Log.d("Json33333",statusInfo.toString());
+                                        //arrayList.add(statusInfo);
+                                        arrayList1.add(status1);
+                                        // Log.d("Json11111",arrayList1.toString());
+                                    }
+                                    String setselected = status11;
 
-                        Log.d("StatusResponse1", response);
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            Log.d("Json", jsonObject.toString());
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                String status1 = jsonObject1.getString("cStatus");
-                                statusid=jsonObject1.getString("nStatusID");
-                                Log.d("Status11",status1);
-                                //StatusInfo statusInfo=new StatusInfo(status1,statusid);
-                                arrayListStatusId.add(statusid);
-                                // Log.d("Json33333",statusInfo.toString());
-                                //arrayList.add(statusInfo);
-                                arrayList1.add(status1);
-                                // Log.d("Json11111",arrayList1.toString());
-                            }
-                            String setselected=status11;
+                                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(CounselorContactActivity.this, R.layout.spinner_item1, arrayList1);
+                                    //arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                    spinnerStatus.setAdapter(arrayAdapter);
 
-                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(CounselorContactActivity.this, R.layout.spinner_item1, arrayList1);
-                            //arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spinnerStatus.setAdapter(arrayAdapter);
-
-                            for(int i=0;i<arrayList1.size();i++)
-                            {
-                                if(arrayList1.get(i).matches(status11))
-                                {
-                                    spinnerStatus.setSelection(i);
+                                    for (int i = 0; i < arrayList1.size(); i++) {
+                                        if (arrayList1.get(i).contains(status11)) {
+                                            spinnerStatus.setSelection(i);
+                                        }
+                                    }
+                                    Log.d("Size**", String.valueOf(arrayList1.size()));
+                                } catch (JSONException e) {
+                                    Toast.makeText(CounselorContactActivity.this, "Errorcode-205 CounselorContact statusResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                    Log.d("Exception", String.valueOf(e));
                                 }
                             }
-                            Log.d("Size**", String.valueOf(arrayList1.size()));
-                        } catch (JSONException e) {
-                            Log.d("Exception", String.valueOf(e));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                if (error == null || error.networkResponse == null)
+                                    return;
+                                final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                //get response body and parse with appropriate encoding
+                                if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                                    alertDialogBuilder.setTitle("Server Error!!!")
 
 
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
 
-                                            dialog.dismiss();
-                                        }
-                                    }).show();
-                            dialog.dismiss();
-                            Toast.makeText(CounselorContactActivity.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                    dialog.dismiss();
+                                    Toast.makeText(CounselorContactActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    // showCustomPopupMenu();
+                                    Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                }
 
-                    }
-                });
-        requestQueue.add(stringRequest);
-    }else
-    {
-        dialog.dismiss();
-        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-        alertDialogBuilder.setTitle("No Internet connection!!!")
-                .setMessage("Can't do further process")
+                            }
+                        });
+                requestQueue.add(stringRequest);
+            }else {
+                if(dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
 
-                // Specifying a listener allows you to take an action before dismissing the dialog.
-                // The dialog is automatically dismissed when a dialog button is clicked.
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        //insertIMEI();
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
                                         /*edtName.setText("");
                                         edtPassword.setText("");*/
-                        dialog.dismiss();
+                                dialog.dismiss();
 
-                    }
-                }).show();
-    }
-
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-204 CounselorContact getStatus1 "+e.toString(),Toast.LENGTH_SHORT).show();
+            Log.d("ExcStatus", String.valueOf(e));
+        }
     }
 
     public void updateStatus(int strStatus)
     {
-        url=clienturl + "?clientid=" + clientid + "&caseid=5&nSrNo=" + sr_no + "&CurrentStatus=" + strStatus;
-        Log.d("UStatusUrl", url);
-        if(CheckInternet.checkInternet(CounselorContactActivity.this))
-        {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
+        try {
+            if(CheckServer.isServerReachable(CounselorContactActivity.this)) {
+                url = clienturl + "?clientid=" + clientid + "&caseid=5&nSrNo=" + sr_no + "&CurrentStatus=" + strStatus;
+                Log.d("UStatusUrl", url);
 
-                        Log.d("*******", response.toString());
-                        try {
-                            dialog.dismiss();
-                            updatedStatus = spinnerStatus.getSelectedItem().toString();
-                            Log.d("UStatus", updatedStatus);
-                            txtCurrentStatus.setText(updatedStatus);
-                            Log.d("UpdatedStatus", response);
-                            if (response.contains("Row updated successfully")) {
-                                // statusBackup();
-                                Intent intent = getIntent();
-                                finish();
-                                startActivity(intent);
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+
+                                try {
+
+                                    dialog.dismiss();
+                                    updatedStatus = spinnerStatus.getSelectedItem().toString();
+                                    Log.d("UStatus", updatedStatus);
+                                    txtCurrentStatus.setText(updatedStatus);
+                                    Log.d("UpdatedStatus", response);
+                                    if (response.contains("Row updated successfully")) {
+                                        // statusBackup();
+                                        Intent intent = getIntent();
+                                        finish();
+                                        startActivity(intent);
                    /* txtRemark.setText(remarks);
                     edtRemarks.setText("");*/
-                                eventid = 6;
-                                // dialog = ProgressDialog.show(CounselorContactActivity.this, "", "Loading...", true);
+                                        eventid = 6;
+                                        // dialog = ProgressDialog.show(CounselorContactActivity.this, "", "Loading...", true);
 
-                                insertPointCollection(eventid);
+                                        insertPointCollection(eventid);
                     /*editor.putInt("UpdateStatus",updateStatus);
                     editor.putInt("Remark1",remark1);
                     editor.commit();*/
-                                if (updatedStatus.contains("CONFIRM SUCCESS")) {
-                                    // dialog = ProgressDialog.show(CounselorContactActivity.this, "", "Loading...", true);
+                                        if (updatedStatus.contains("CONFIRM SUCCESS")) {
+                                            // dialog = ProgressDialog.show(CounselorContactActivity.this, "", "Loading...", true);
 
-                                    eventid = 7;
-                                    insertPointCollection(eventid);
+                                            eventid = 7;
+                                            insertPointCollection(eventid);
                        /* editor.putInt("ConfirmSuccess",confirmstatus);
                         editor.commit();*/
-                                }
-                                Toast.makeText(CounselorContactActivity.this, "Status updated successfully", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(CounselorContactActivity.this, "Status not updated successfully", Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (Exception e) {
-                            Log.d("Exception", String.valueOf(e));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
-
-
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                            dialog.dismiss();
                                         }
-                                    }).show();
-                            dialog.dismiss();
-                            Toast.makeText(CounselorContactActivity.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
+                                        Toast.makeText(CounselorContactActivity.this, "Status updated successfully", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(CounselorContactActivity.this, "Status not updated successfully", Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (Exception e) {
+                                    Toast.makeText(CounselorContactActivity.this, "Errorcode-207 CounselorContact updateStatusResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                    Log.d("Exception", String.valueOf(e));
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
 
-                    }
-                });
-        requestQueue.add(stringRequest);
-        }else {
-            dialog.dismiss();
-            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-            alertDialogBuilder.setTitle("No Internet connection!!!")
-                    .setMessage("Can't do further process")
+                                if (error == null || error.networkResponse == null)
+                                    return;
+                                final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                //get response body and parse with appropriate encoding
+                                if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                                    alertDialogBuilder.setTitle("Server Error!!!")
 
-                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                    // The dialog is automatically dismissed when a dialog button is clicked.
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            //insertIMEI();
+
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                    dialog.dismiss();
+                                    Toast.makeText(CounselorContactActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    // showCustomPopupMenu();
+                                    Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                }
+
+                            }
+                        });
+                requestQueue.add(stringRequest);
+            }else {
+                if(dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
                                         /*edtName.setText("");
                                         edtPassword.setText("");*/
-                            dialog.dismiss();
+                                dialog.dismiss();
 
-                        }
-                    }).show();
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-206 CounselorContact updateStatus "+e.toString(),Toast.LENGTH_SHORT).show();
+            Log.d("ExcUpdateStatus", String.valueOf(e));
         }
     }
 
     public void statusBackup()
     {
-        status1 =  Integer.parseInt(arrayListStatusId.get(pos));
-        // updatedStatus=spinnerStatus.getSelectedItem().toString();
-        Log.d("updateStatus", String.valueOf(status1));
-        url=clienturl+"?clientid=" + clientid + "&caseid=19&SrNo=" + sr_no + "&StatusId=" + status1 +"&CounsellorId="+id1;
-        Log.d("StatusBackupUr;", url);
-        if(CheckInternet.checkInternet(CounselorContactActivity.this))
-        {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
+        try {
+            if(CheckServer.isServerReachable(CounselorContactActivity.this)) {
+                status1 = Integer.parseInt(arrayListStatusId.get(pos));
+                // updatedStatus=spinnerStatus.getSelectedItem().toString();
+                Log.d("updateStatus", String.valueOf(status1));
+                url = clienturl + "?clientid=" + clientid + "&caseid=19&SrNo=" + sr_no + "&StatusId=" + status1 + "&CounsellorId=" + id1;
+                Log.d("StatusBackupUr;", url);
+                if (CheckInternet.checkInternet(CounselorContactActivity.this)) {
+                    StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
 
-                        Log.d("*******", response.toString());
-                        try {
-                            flag2 = 1;
-                            Log.d("StatusBackup", response);
-                            if (response.contains("Data inserted successfully")) {
-                                updateStatus(status1);
-                                Toast.makeText(CounselorContactActivity.this, "Status inserted successfully", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(CounselorContactActivity.this, "Status not inserted", Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (Exception e) {
-                            Log.d("Exception", String.valueOf(e));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
-
-
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                            dialog.dismiss();
+                                    Log.d("*******", response.toString());
+                                    try {
+                                        flag2 = 1;
+                                        Log.d("StatusBackup", response);
+                                        if (response.contains("Data inserted successfully")) {
+                                            updateStatus(status1);
+                                            Toast.makeText(CounselorContactActivity.this, "Status inserted successfully", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(CounselorContactActivity.this, "Status not inserted", Toast.LENGTH_SHORT).show();
                                         }
-                                    }).show();
-                            dialog.dismiss();
-                            Toast.makeText(CounselorContactActivity.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
+                                    } catch (Exception e) {
+                                        Toast.makeText(CounselorContactActivity.this, "Errorcode-209 CounselorContact statusBackupResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                        Log.d("Exception", String.valueOf(e));
+                                    }
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
 
-                    }
-                });
-        requestQueue.add(stringRequest);
-        }else {
-            dialog.dismiss();
-            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-            alertDialogBuilder.setTitle("No Internet connection!!!")
-                    .setMessage("Can't do further process")
+                                    if (error == null || error.networkResponse == null)
+                                        return;
+                                    final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                    //get response body and parse with appropriate encoding
+                                    if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                                        alertDialogBuilder.setTitle("Server Error!!!")
 
-                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                    // The dialog is automatically dismissed when a dialog button is clicked.
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            //insertIMEI();
+
+                                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                        dialog.dismiss();
+                                                    }
+                                                }).show();
+                                        dialog.dismiss();
+                                        Toast.makeText(CounselorContactActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                        // showCustomPopupMenu();
+                                        Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                    }
+
+                                }
+                            });
+                    requestQueue.add(stringRequest);
+                } else {
+                    dialog.dismiss();
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                    alertDialogBuilder.setTitle("No Internet connection!!!")
+                            .setMessage("Can't do further process")
+
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
                                         /*edtName.setText("");
                                         edtPassword.setText("");*/
-                            dialog.dismiss();
+                                    dialog.dismiss();
 
-                        }
-                    }).show();
+                                }
+                            }).show();
+                }
+            }else {
+                if(dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
+
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-208 CounselorContact statusBackup "+e.toString(),Toast.LENGTH_SHORT).show();
+            Log.d("ExcStatusBackup", String.valueOf(e));
         }
 
     }
 
     public void remarkBackup(String strSrNo, String strCounsellorId, final String strRemarks) {
-        url=clienturl+"?clientid=" + clientid + "&caseid=20&SrNo=" + strSrNo + "&sRemarks=" + strRemarks +"&CounsellorId="+strCounsellorId;
-        Log.d("RemarkBackupUrl", url);
-       if(CheckInternet.checkInternet(CounselorContactActivity.this)) {
-           StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                   new Response.Listener<String>() {
-                       @Override
-                       public void onResponse(String response) {
-                           try {
+        try{
+            if(CheckServer.isServerReachable(CounselorContactActivity.this)) {
+                url = clienturl + "?clientid=" + clientid + "&caseid=20&SrNo=" + strSrNo + "&sRemarks=" + strRemarks + "&CounsellorId=" + strCounsellorId;
+                Log.d("RemarkBackupUrl", url);
+                if (CheckInternet.checkInternet(CounselorContactActivity.this)) {
+                    StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    try {
 
 
-                               Log.d("RemarkBackup", response);
-                               if (response.contains("Data inserted successfully")) {
+                                        Log.d("RemarkBackup", response);
+                                        if (response.contains("Data inserted successfully")) {
                    /* Intent intent = getIntent();
                     finish();
                     startActivity(intent);*/
-                                   txtRemark.setText(strRemarks);
-                                   edtRemarks.setText("");
-                                   dialog = ProgressDialog.show(CounselorContactActivity.this, "", "Updating remarks", true);
-                                   updateRemarks(strRemarks);
-                                   // refreshWhenLoading();
-                                   Toast.makeText(CounselorContactActivity.this, "Remark inserted successfully", Toast.LENGTH_SHORT).show();
-                               } else {
-                                   Toast.makeText(CounselorContactActivity.this, "Remark not inserted", Toast.LENGTH_SHORT).show();
-                               }
-                           } catch (Exception e) {
-                               Log.d("Exception", String.valueOf(e));
-                           }
-                       }
-                   },
-                   new Response.ErrorListener() {
-                       @Override
-                       public void onErrorResponse(VolleyError error) {
+                                            txtRemark.setText(strRemarks);
+                                            edtRemarks.setText("");
+                                            dialog = ProgressDialog.show(CounselorContactActivity.this, "", "Updating remarks", true);
+                                            updateRemarks(strRemarks);
+                                            // refreshWhenLoading();
+                                            Toast.makeText(CounselorContactActivity.this, "Remark inserted successfully", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(CounselorContactActivity.this, "Remark not inserted", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } catch (Exception e) {
+                                        Toast.makeText(CounselorContactActivity.this, "Errorcode-211 CounselorContact remarkBackupResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                        Log.d("Exception", String.valueOf(e));
+                                    }
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
 
-                           if (error == null || error.networkResponse == null)
-                               return;
-                           final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                           //get response body and parse with appropriate encoding
-                           if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
-                               android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-                               alertDialogBuilder.setTitle("Server Error!!!")
+                                    if (error == null || error.networkResponse == null)
+                                        return;
+                                    final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                    //get response body and parse with appropriate encoding
+                                    if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                                        alertDialogBuilder.setTitle("Server Error!!!")
 
 
-                                       // Specifying a listener allows you to take an action before dismissing the dialog.
-                                       // The dialog is automatically dismissed when a dialog button is clicked.
-                                       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                           public void onClick(DialogInterface dialog, int which) {
+                                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
 
-                                               dialog.dismiss();
-                                           }
-                                       }).show();
-                               dialog.dismiss();
-                               Toast.makeText(CounselorContactActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
-                               // showCustomPopupMenu();
-                               Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                           }
+                                                        dialog.dismiss();
+                                                    }
+                                                }).show();
+                                        dialog.dismiss();
+                                        Toast.makeText(CounselorContactActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                        // showCustomPopupMenu();
+                                        Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                    }
 
-                       }
-                   });
-           requestQueue.add(stringRequest);
-       }else {
-           dialog.dismiss();
-           android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
-           alertDialogBuilder.setTitle("No Internet connection!!!")
-                   .setMessage("Can't do further process")
+                                }
+                            });
+                    requestQueue.add(stringRequest);
+                } else {
+                    dialog.dismiss();
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                    alertDialogBuilder.setTitle("No Internet connection!!!")
+                            .setMessage("Can't do further process")
 
-                   // Specifying a listener allows you to take an action before dismissing the dialog.
-                   // The dialog is automatically dismissed when a dialog button is clicked.
-                   .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                       public void onClick(DialogInterface dialog, int which) {
-                           //insertIMEI();
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
                                         /*edtName.setText("");
                                         edtPassword.setText("");*/
-                           dialog.dismiss();
+                                    dialog.dismiss();
 
-                       }
-                   }).show();
-       }
+                                }
+                            }).show();
+                }
+            }else {
+                if(dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
+
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-210 CounselorContact remarkBackup "+e.toString(),Toast.LENGTH_SHORT).show();
+            Log.d("ExcRemarkBackup", String.valueOf(e));
+        }
     }
     public void updateRemarks(String strRemark) {
+        try{
+            if(CheckServer.isServerReachable(CounselorContactActivity.this))
+            {
         url=clienturl+"?clientid=" + clientid + "&caseid=44&SrNo=" + sr_no + "&sRemarks=" + strRemark;
         Log.d("URemarkUrl", url);
        if(CheckInternet.checkInternet(CounselorContactActivity.this))
@@ -3100,6 +3918,7 @@ try{
                             }
 
                         } catch (Exception e) {
+                            Toast.makeText(CounselorContactActivity.this,"Errorcode-213 CounselorContact updateRemarkResponse "+e.toString(),Toast.LENGTH_SHORT).show();
                             Log.d("Exception", String.valueOf(e));
                         }
                     }
@@ -3151,17 +3970,45 @@ try{
 
                        }
                    }).show();
-       }
+       } }else
+           {
+                if(dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
+
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-212 CounselorContact updateRemarks "+e.toString(),Toast.LENGTH_SHORT).show();
+            Log.d("ExcUpdateRemark", String.valueOf(e));
+        }
 
     }
 
 
     public void setReminder() {
+        try{
 
         url=clienturl+"?clientid=" + clientid + "&caseid=26&nSrNo=" + sr_no +  "&cCounselorID=" + id1 +"&dtCallDateTime=" + date11 + "&cCallTime=" + time11 + "&nStatus=" + String.valueOf(status1) + "&cUpdatedBy=" + id1;
         Log.d("ReminderUrl", url);
        if(CheckInternet.checkInternet(CounselorContactActivity.this))
        {
+           if(CheckServer.isServerReachable(CounselorContactActivity.this))
+           {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -3222,6 +4069,7 @@ try{
                             }
 
                         } catch (Exception e) {
+                            Toast.makeText(CounselorContactActivity.this,"Errorcode-215 CounselorContact setReminderResponse "+e.toString(),Toast.LENGTH_SHORT).show();
                             Log.d("Exception", String.valueOf(e));
                         }
                     }
@@ -3274,15 +4122,41 @@ try{
                        }
                    }).show();
 
+       }}else {
+           if(dialog.isShowing()) {
+               dialog.dismiss();
+           }
+           android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+           alertDialogBuilder.setTitle("Server Down!!!!")
+                   .setMessage("Try after some time!")
+
+                   // Specifying a listener allows you to take an action before dismissing the dialog.
+                   // The dialog is automatically dismissed when a dialog button is clicked.
+                   .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                       public void onClick(DialogInterface dialog, int which) {
+                           //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                           dialog.dismiss();
+
+                       }
+                   }).show();
        }
+        }catch (Exception e)
+        {
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-214 CounselorContact setReminder "+e.toString(),Toast.LENGTH_SHORT).show();
+            Log.d("ExcSetReminder", String.valueOf(e));
+        }
     }
     public void setNotification(String strNotification,String strSrNo,String strCounselorID)
     {
-
+        try{
         url=clienturl+"?clientid=" + clientid + "&caseid=62&SrNo=" + strSrNo +  "&CounselorId=" + strCounselorID +"&Notification=" + strNotification;
         Log.d("NotificationUrl", url);
         if(CheckInternet.checkInternet(CounselorContactActivity.this))
         {
+            if(CheckServer.isServerReachable(CounselorContactActivity.this))
+            {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -3302,7 +4176,9 @@ try{
                             }
 
                         } catch (Exception e) {
-                            Log.d("Exception", String.valueOf(e));                        }
+                            Toast.makeText(CounselorContactActivity.this,"Errorcode-217 CounselorContact setNotification "+e.toString(),Toast.LENGTH_SHORT).show();
+                            Log.d("Exception", String.valueOf(e));
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -3352,14 +4228,40 @@ try{
 
                         }
                     }).show();
+        } }else {
+            if(dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+            alertDialogBuilder.setTitle("Server Down!!!!")
+                    .setMessage("Try after some time!")
+
+                    // Specifying a listener allows you to take an action before dismissing the dialog.
+                    // The dialog is automatically dismissed when a dialog button is clicked.
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                            dialog.dismiss();
+
+                        }
+                    }).show();
+        }
+        }catch (Exception e)
+        {
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-216 CounselorContact setNotification "+e.toString(),Toast.LENGTH_SHORT).show();
+            Log.d("ExcSetNotifjcation", String.valueOf(e));
         }
 
     }
     public void setReminder0ifAny() {
+        try{
         url=clienturl+"?clientid=" + clientid + "&caseid=48&nSrNo=" + sr_no +  "&cCounselorID=" + id1;
         Log.d("ReminderUrl", url);
       if(CheckInternet.checkInternet(CounselorContactActivity.this))
       {
+          if(CheckServer.isServerReachable(CounselorContactActivity.this)){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -3380,6 +4282,7 @@ try{
                             }
 
                         } catch (Exception e) {
+                            Toast.makeText(CounselorContactActivity.this,"Errorcode-219 CounselorContact setReminder0Response "+e.toString(),Toast.LENGTH_SHORT).show();
                             Log.d("Exception", String.valueOf(e));
                         }
                     }
@@ -3431,7 +4334,31 @@ try{
 
                       }
                   }).show();
+      }}else {
+          if(dialog.isShowing()) {
+              dialog.dismiss();
+          }
+          android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+          alertDialogBuilder.setTitle("Server Down!!!!")
+                  .setMessage("Try after some time!")
+
+                  // Specifying a listener allows you to take an action before dismissing the dialog.
+                  // The dialog is automatically dismissed when a dialog button is clicked.
+                  .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                      public void onClick(DialogInterface dialog, int which) {
+                          //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                          dialog.dismiss();
+
+                      }
+                  }).show();
       }
+        }catch (Exception e)
+        {
+            Log.d("ExcsetReminderIfAny", String.valueOf(e));
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-218 CounselorContact setReminder0IfAny "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
 
     }
     public void setSmsEntry()
@@ -3456,11 +4383,12 @@ try{
     }
 
     public void setReallocation() {
-
+        try{
         url=clienturl+"?clientid=" + clientid+"&caseid=28&nSrNo=" + sr_no + "&nCurrentStatus=" + status1 + "&nPreAllocatedTo=" + id1 + "&nNewAllocatedTo=" + newAllocatedTo + "&dtPreAllocationDate=" + allocatedDate;
         Log.d("ReallocationUrl", url);
         if(CheckInternet.checkInternet(CounselorContactActivity.this))
         {
+            if(CheckServer.isServerReachable(CounselorContactActivity.this)){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -3484,6 +4412,7 @@ try{
                             }
 
                         } catch (Exception e) {
+                            Toast.makeText(CounselorContactActivity.this,"Errorcode-221 CounselorContact ReallocationResponse "+e.toString(),Toast.LENGTH_SHORT).show();
                             Log.d("Exception", String.valueOf(e));
                         }
                     }
@@ -3514,7 +4443,6 @@ try{
                             // showCustomPopupMenu();
                             Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
                         }
-
                     }
                 });
         requestQueue.add(stringRequest);
@@ -3535,11 +4463,36 @@ try{
 
                         }
                     }).show();
+        }}else {
+            if(dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+            alertDialogBuilder.setTitle("Server Down!!!!")
+                    .setMessage("Try after some time!")
+
+                    // Specifying a listener allows you to take an action before dismissing the dialog.
+                    // The dialog is automatically dismissed when a dialog button is clicked.
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                            dialog.dismiss();
+
+                        }
+                    }).show();
+        }
+        }catch (Exception e)
+        {
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-220 CounselorContact setReallocation "+e.toString(),Toast.LENGTH_SHORT).show();
+            Log.d("ExcSetReallocation", String.valueOf(e));
         }
     }
 
     public void setReallocateDatabaselist()
     {
+        try{
         status1 = Integer.parseInt(arrayListStatusId.get(pos));
         Log.d("updateStatus", String.valueOf(status1));
         // status=status.replaceAll(" ","");
@@ -3548,6 +4501,8 @@ try{
         Log.d("SetReallocateUrl", url);
        if(CheckInternet.checkInternet(CounselorContactActivity.this))
        {
+           if(CheckServer.isServerReachable(CounselorContactActivity.this))
+           {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -3576,6 +4531,7 @@ try{
                             }
 
                         } catch (Exception e) {
+                            Toast.makeText(CounselorContactActivity.this,"Errorcode-223 CounselorContact ReallocateDatabaselistResponse "+e.toString(),Toast.LENGTH_SHORT).show();
                             Log.d("Exception", String.valueOf(e));
                         }
                     }
@@ -3583,7 +4539,6 @@ try{
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
                         if (error == null || error.networkResponse == null)
                             return;
                         final String statusCode = String.valueOf(error.networkResponse.statusCode);
@@ -3625,7 +4580,32 @@ try{
 
                        }
                    }).show();
+       }}else
+       {
+           if(dialog.isShowing()) {
+               dialog.dismiss();
+           }
+           android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+           alertDialogBuilder.setTitle("Server Down!!!!")
+                   .setMessage("Try after some time!")
+
+                   // Specifying a listener allows you to take an action before dismissing the dialog.
+                   // The dialog is automatically dismissed when a dialog button is clicked.
+                   .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                       public void onClick(DialogInterface dialog, int which) {
+                           //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                           dialog.dismiss();
+
+                       }
+                   }).show();
        }
+        }catch (Exception e)
+        {
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-222 CounselorContact setReallocateDatabaselist "+e.toString(),Toast.LENGTH_SHORT).show();
+            Log.d("ExcReallocatedDB", String.valueOf(e));
+        }
     }
     public void insertCallInfo(String dur,String datetime) {
         try {
@@ -3646,10 +4626,11 @@ try{
             Toast.makeText(CounselorContactActivity.this,"Exception in path",Toast.LENGTH_SHORT).show();
 
         }
-
-            String url = clienturl + "?clientid=" + clientid + "&caseid=6&nSrNo=" + sr_no + "&cFileName=" + uploadFileName + "&cMobileNo=" + mbl + "&cCallDuration=" + dur + "&cCallDate=" + datetime + "&nCounselorID=" + id1;
+        String url = clienturl + "?clientid=" + clientid + "&caseid=6&nSrNo=" + sr_no + "&cFileName=" + uploadFileName + "&cMobileNo=" + mbl + "&cCallDuration=" + dur + "&cCallDate=" + datetime + "&nCounselorID=" + id1;
             Log.d("InsertCallUrl", url);
             if (CheckInternet.checkInternet(CounselorContactActivity.this)) {
+                if(CheckServer.isServerReachable(CounselorContactActivity.this))
+                {
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                         new Response.Listener<String>() {
                             @Override
@@ -3663,31 +4644,31 @@ try{
                                     Log.d("InsertedCallInfo", response);
                                     if (response.contains("Data inserted successfully")) {
 
-                                        if (dsec > 20 && dsec <119) {
+                                        if (dsec > 0 && dsec <9) {
                                             Log.d("Entered", "Greaterthan20");
                                             eventid = 11;
                                             // dialog=ProgressDialog.show(CounselorContactActivity.this,"","Loading",true);
                                             insertPointCollection(eventid);
                                         }
-                                        if (dsec >= 120) {
-                                            eventid = 12;
+                                        if (dsec >= 10)
+                                        { eventid = 12;
                                             Log.d("Entered", "Greaterthan60");
                                             //dialog=ProgressDialog.show(CounselorContactActivity.this,"","Loading",true);
                                             insertPointCollection(eventid);
-                                            if (act1.equals("OnlineLead")) {
+                                            Log.d("ActivityName",act1);
+                                            if (act1.contains("OnlineLead")||act1.contains("RefreshOnlineLead")||act1.contains("ContactOnlineLead")) {
                                                 Log.d("Entered", "Greaterthan60OnlineLead");
 
                                                 //  dialog=ProgressDialog.show(CounselorContactActivity.this,"","Loading",true);
                                                 insertOnlineLead(sr_no, id1);
                                             }
-                                            else if(activityName.contains("OpenLeads"))
+                                            else if(activityName.contains("OpenLeads")||activityName.contains("RefreshOpenLead")||activityName.contains("ContactOpenLead"))
                                                 {
                                                     Log.d("Entered", "Greaterthan60OpenLead");
-
                                                     updateOpenLeads(sr_no);
                                                 }
-
                                         }
+                                        Log.d("ActOnlineLeadName",activityName);
                                         alertDialog1.dismiss();
                                         if (!activityName.equals("OnlineLead")) {
                                             Log.d("Entered", "RefreshWhenNotOnlineLead");
@@ -3710,6 +4691,7 @@ try{
                                     }
 
                                 } catch (Exception e) {
+                                    Toast.makeText(CounselorContactActivity.this,"Errorcode-225 CounselorContact insertCallInfoResponse "+e.toString(),Toast.LENGTH_SHORT).show();
                                     Log.d("Exception", String.valueOf(e));
                                 }
                             }
@@ -3739,9 +4721,7 @@ try{
                                     Toast.makeText(CounselorContactActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
                                     // showCustomPopupMenu();
                                     Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                                }
-
-                            }
+                                } }
                         });
                 requestQueue.add(stringRequest);
             } else {
@@ -3761,12 +4741,30 @@ try{
 
                             }
                         }).show();
+            }}else {
+                if(dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(CounselorContactActivity.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
+
+                            }
+                        }).show();
             }
         }catch (Exception e)
         {
-            Toast.makeText(CounselorContactActivity.this,"Got exception",Toast.LENGTH_SHORT).show();
-
-        }
+            Log.d("ExcInsertCallInfo",e.toString());
+            Toast.makeText(CounselorContactActivity.this,"Errorcode-224 CounselorContact insertCallInfo "+e.toString(),Toast.LENGTH_SHORT).show();        }
     }
 
 

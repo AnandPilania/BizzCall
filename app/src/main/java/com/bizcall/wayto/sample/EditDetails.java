@@ -153,7 +153,6 @@ public class EditDetails extends AppCompatActivity
 
                 }*/
                 }
-
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
 
@@ -174,14 +173,80 @@ public class EditDetails extends AppCompatActivity
                 txtSrnoTitle.setVisibility(View.GONE);
                 btnUpdate.setText("Add");
                 txtActivityNameTitle.setText("New Lead");
-                dialog = ProgressDialog.show(EditDetails.this, "", "Loading Refnames and Status ..", true);
-                getRefName();
-                getStatus1();
+                if(CheckInternetSpeed.checkInternet(EditDetails.this).contains("0")) {
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
+                    alertDialogBuilder.setTitle("No Internet connection!!!")
+                            .setMessage("Can't do further process")
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                    dialog.dismiss();
+
+                                }
+                            }).show();
+                }
+                else if(CheckInternetSpeed.checkInternet(EditDetails.this).contains("1")) {
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
+                    alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                            .setMessage("Can't do further process")
+
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                }
+                else {
+                    dialog = ProgressDialog.show(EditDetails.this, "", "Loading Refnames and Status ..", true);
+                    getRefName();
+                    getStatus1();
+                }
                // refreshWhenLoading();
 
             } else {
-                dialog = ProgressDialog.show(EditDetails.this, "", "Loading Counselor Data...", true);
-                getCounselorData(sr_no, counsellorid);
+                if(CheckInternetSpeed.checkInternet(EditDetails.this).contains("0")) {
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
+                    alertDialogBuilder.setTitle("No Internet connection!!!")
+                            .setMessage("Can't do further process")
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                    dialog.dismiss();
+
+                                }
+                            }).show();
+                }
+                else if(CheckInternetSpeed.checkInternet(EditDetails.this).contains("1")) {
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
+                    alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                            .setMessage("Can't do further process")
+
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                }
+                else {
+                    dialog = ProgressDialog.show(EditDetails.this, "", "Loading Counselor Data...", true);
+                    getCounselorData(sr_no, counsellorid);
+                }
                // refreshWhenLoading();
                 }
             imgBack.setOnClickListener(new View.OnClickListener() {
@@ -216,127 +281,191 @@ public class EditDetails extends AppCompatActivity
         }catch (Exception e)
         {
             Log.d("Exception", String.valueOf(e));
+            Toast.makeText(EditDetails.this,"Errorcode-256 EditDetails onCreate "+e.toString(),Toast.LENGTH_SHORT).show();
         }
     }//onCreate
 
     public void onBtnUpdateClicked(){
-        if (btnUpdate.getText() == "Add") {
-            name11 = edtName1.getText().toString();
-            name11 = name11.replaceAll("'", "");
-            if (name11.length() == 0) {
-            }
-            address1 = edtAddress1.getText().toString();
-            address1 = address1.replaceAll("'", "");
-            if (address1.length() == 0) {
-                address1 = "NA";
+        try {
+            if (btnUpdate.getText() == "Add") {
+                name11 = edtName1.getText().toString();
+                name11 = name11.replaceAll("'", "");
+                if (name11.length() == 0) {
+                }
+                address1 = edtAddress1.getText().toString();
+                address1 = address1.replaceAll("'", "");
+                if (address1.length() == 0) {
+                    address1 = "NA";
                    /* edtAddress1.setError("Please enter address");
                     temp = 1;*/
-            }
-            city1 = edtCity1.getText().toString();
-            city1 = city1.replaceAll("'", "");
-            if (city1.length() == 0) {
-                city1 = "NA";
+                }
+                city1 = edtCity1.getText().toString();
+                city1 = city1.replaceAll("'", "");
+                if (city1.length() == 0) {
+                    city1 = "NA";
                    /* edtCity1.setError("Please enter city");
                     temp = 1;*/
-            }
-            state11 = spinnerState1.getSelectedItem().toString();
-            if (state11.contains("-Select State-")) {
-                state11 = "NA";
-            }
-            email1 = edtEmail1.getText().toString();
-            email1 = email1.replaceAll("'", "");
-            String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-            if (!email1.matches(emailPattern)) {
-                email1 = "NA";
+                }
+                state11 = spinnerState1.getSelectedItem().toString();
+                if (state11.contains("-Select State-")) {
+                    state11 = "NA";
+                }
+                email1 = edtEmail1.getText().toString();
+                email1 = email1.replaceAll("'", "");
+                String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+                if (!email1.matches(emailPattern)) {
+                    email1 = "NA";
                    /* edtEmail1.setError("Please enter email");
                     temp = 1;*/
-            }
-            parentno1 = edtParent1.getText().toString();
-            parentno1 = parentno1.replaceAll("'", "");
-            if (parentno1.length() < 10 || parentno1.length() == 0) {
-                parentno1 = "NA";
+                }
+                parentno1 = edtParent1.getText().toString();
+                parentno1 = parentno1.replaceAll("'", "");
+                if (parentno1.length() < 10 || parentno1.length() == 0) {
+                    parentno1 = "NA";
                    /*
                     edtParent1.setError("Invalid number");
                     temp = 1;*/
-            }
-            pincode1 = edtPincode1.getText().toString();
-            pincode1 = pincode1.replaceAll("'", "");
-            if (pincode1.length() < 6 || pincode1.length() == 0) {
-                pincode1 = "NA";
+                }
+                pincode1 = edtPincode1.getText().toString();
+                pincode1 = pincode1.replaceAll("'", "");
+                if (pincode1.length() < 6 || pincode1.length() == 0) {
+                    pincode1 = "NA";
                   /*  edtPincode1.setError("Invalid pin");
                     temp = 1;*/
-            }
-            int pos = spinnerStatus.getSelectedItemPosition();
-            status11 = arrayListStatusId.get(pos);
-            Log.d("Status**", status11);
+                }
+                int pos = spinnerStatus.getSelectedItemPosition();
+                status11 = arrayListStatusId.get(pos);
+                Log.d("Status**", status11);
 
-            refname = spinnerRefName.getSelectedItem().toString();
-            int refid = spinnerRefName.getSelectedItemPosition();
+                refname = spinnerRefName.getSelectedItem().toString();
+                int refid = spinnerRefName.getSelectedItemPosition();
 
-            refno = arrayListRefId.get(refid);
-            Log.d("RefID", refno);
+                refno = arrayListRefId.get(refid);
+                Log.d("RefID", refno);
+                remark = edtRemarks.getText().toString();
+                remark = remark.replaceAll("'", "");
+                if (remark.length() == 0) {
+                    remark = "NA";
+                }
+                //  course=spinnerCourse.getSelectedItem().toString();
+                selectedCourse = edtOtherCourse.getText().toString();
+                selectedCourse = selectedCourse.replaceAll("'", "");
+                if (selectedCourse.contains("Select Course")) {
+                    edtOtherCourse.setError("Please select course");
+                }
+                mbl = edtPhone.getText().toString();
+                mbl = mbl.replaceAll("'", "");
+                if (mbl.length() == 0 || mbl.length() < 10) {
+                    mbl = "NA";
+                }
+                if (CheckInternetSpeed.checkInternet(EditDetails.this).contains("0")) {
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
+                    alertDialogBuilder.setTitle("No Internet connection!!!")
+                            .setMessage("Can't do further process")
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                    dialog.dismiss();
 
+                                }
+                            }).show();
+                } else if (CheckInternetSpeed.checkInternet(EditDetails.this).contains("1")) {
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
+                    alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                            .setMessage("Can't do further process")
 
-            remark = edtRemarks.getText().toString();
-            remark = remark.replaceAll("'", "");
-            if (remark.length() == 0) {
-                remark = "NA";
-            }
-            //  course=spinnerCourse.getSelectedItem().toString();
-            selectedCourse = edtOtherCourse.getText().toString();
-            selectedCourse = selectedCourse.replaceAll("'", "");
-            if (selectedCourse.contains("Select Course")) {
-                edtOtherCourse.setError("Please select course");
-            }
-            mbl = edtPhone.getText().toString();
-            mbl = mbl.replaceAll("'", "");
-            if (mbl.length() == 0 || mbl.length() < 10) {
-                mbl = "NA";
-            }
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                } else {
+                    dialog = ProgressDialog.show(EditDetails.this, "", "Checking number in database", true);
+                    checkPhoneNumber(mbl);
+                }
+            } else {
+                name11 = edtName1.getText().toString();
+                name11 = name11.replaceAll("'", "");
+                if (name11.length() == 0) {
+                    name11 = "NA";
+                }
+                address1 = edtAddress1.getText().toString();
+                address1 = address1.replaceAll("'", "");
+                if (address1.length() == 0) {
+                    address1 = "NA";
+                }
+                city1 = edtCity1.getText().toString();
+                city1 = city1.replaceAll("'", "");
+                if (city1.length() == 0) {
+                    city1 = "NA";
+                }
+                state11 = spinnerState1.getSelectedItem().toString();
+                if (state11.contains("-Select State-")) {
+                    state11 = "NA";
+                }
+                email1 = edtEmail1.getText().toString();
+                email1 = email1.replaceAll("'", "");
+                String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+                if (!email1.matches(emailPattern)) {
+                }
+                parentno1 = edtParent1.getText().toString();
+                parentno1 = parentno1.replaceAll("'", "");
+                if (parentno1.length() < 10 || parentno1.length() == 0) {
+                    parentno1 = "NA";
 
-            dialog = ProgressDialog.show(EditDetails.this, "", "Checking number in database", true);
-            checkPhoneNumber(mbl);
-        }
-        else {
-            name11 = edtName1.getText().toString();
-            name11 = name11.replaceAll("'", "");
-            if (name11.length() == 0) {
-                name11 = "NA";
-            }
-            address1 = edtAddress1.getText().toString();
-            address1 = address1.replaceAll("'", "");
-            if (address1.length() == 0) {
-                address1 = "NA";
-            }
-            city1 = edtCity1.getText().toString();
-            city1 = city1.replaceAll("'", "");
-            if (city1.length() == 0) {
-                city1 = "NA";
-            }
-            state11 = spinnerState1.getSelectedItem().toString();
-            if (state11.contains("-Select State-")) {
-                state11 = "NA";
-            }
-            email1 = edtEmail1.getText().toString();
-            email1 = email1.replaceAll("'", "");
-            String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-            if (!email1.matches(emailPattern)) {
-            }
-            parentno1 = edtParent1.getText().toString();
-            parentno1 = parentno1.replaceAll("'", "");
-            if (parentno1.length() < 10 || parentno1.length() == 0) {
-                parentno1 = "NA";
+                }
+                pincode1 = edtPincode1.getText().toString();
+                pincode1 = pincode1.replaceAll("'", "");
+                if (pincode1.length() < 6 || pincode1.length() == 0) {
+                    pincode1 = "NA";
+                }
+                if (CheckInternetSpeed.checkInternet(EditDetails.this).contains("0")) {
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
+                    alertDialogBuilder.setTitle("No Internet connection!!!")
+                            .setMessage("Can't do further process")
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                    dialog.dismiss();
 
-            }
-            pincode1 = edtPincode1.getText().toString();
-            pincode1 = pincode1.replaceAll("'", "");
-            if (pincode1.length() < 6 || pincode1.length() == 0) {
-                pincode1 = "NA";
-            }
+                                }
+                            }).show();
+                } else if (CheckInternetSpeed.checkInternet(EditDetails.this).contains("1")) {
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
+                    alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                            .setMessage("Can't do further process")
 
-            dialog = ProgressDialog.show(EditDetails.this, "", "Inserting counselor details...", true);
-            insertCounselorDetails();
-            //  refreshWhenLoading();
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                } else {
+
+                    dialog = ProgressDialog.show(EditDetails.this, "", "Inserting counselor details...", true);
+                    insertCounselorDetails();
+                }
+                //  refreshWhenLoading();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(EditDetails.this,"Errorcode-257 EditDetails BtnUpdateClicked "+e.toString(),Toast.LENGTH_SHORT).show();
         }
     }
     public void refreshWhenLoading()
@@ -356,119 +485,93 @@ public class EditDetails extends AppCompatActivity
     }
 
     public void checkPhoneNumber(String number) {
+        try {
+            url = clienturl + "?clientid=" + clientid + "&caseid=70&CounselorID=" + counsellorid + "&PhoneNumber=" + number;
+            Log.d("CheckNumberUrl", url);
 
-        url=clienturl+"?clientid=" + clientid + "&caseid=70&CounselorID=" + counsellorid+"&PhoneNumber="+number;
-        Log.d("CheckNumberUrl",url);
-        if(CheckInternet.checkInternet(EditDetails.this))
-        {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (dialog.isShowing()) {
-                            dialog.dismiss();
-                        }
-                        Log.d("CheckNumberResponse", response);
-                        try {
-                            // arrayListTotal.clear();
-                            JSONObject jsonObject = new JSONObject(response);
-                            // Log.d("Json",jsonObject.toString());
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                totalcount = jsonObject1.getString("mobilecount");
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            if (dialog.isShowing()) {
+                                dialog.dismiss();
                             }
-                            if(totalcount.equals("0"))
-                            {
-                                //  insertNewLead();
-                                result=0;
-                            }
-                            else
-                            {
-                                result=1;
-                            }
-                            if(result==0)
-                            {
-                                if(parentno1.length()>9) {
-                                    checkPhoneNumber(parentno1);
-                                    }
-                                else
-                                {
-                                    insertNewLead();
+                            Log.d("CheckNumberResponse", response);
+                            try {
+                                // arrayListTotal.clear();
+                                JSONObject jsonObject = new JSONObject(response);
+                                // Log.d("Json",jsonObject.toString());
+                                JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                    totalcount = jsonObject1.getString("mobilecount");
                                 }
+                                if (totalcount.equals("0")) {
+                                    //  insertNewLead();
+                                    result = 0;
+                                } else {
+                                    result = 1;
+                                }
+                                if (result == 0) {
+                                    if (parentno1.length() > 9) {
+                                        checkPhoneNumber(parentno1);
+                                    } else {
+                                        insertNewLead();
+                                    }
+                                } else {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
+                                    alertDialogBuilder.setTitle("Mobile number is allocated to someone else")
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            })
+
+                                            .show();
+                                }
+
+
+                            } catch (JSONException e) {
+                                Log.d("CheckPhoneException", String.valueOf(e));
+                                Toast.makeText(EditDetails.this,"Errorcode-259 EditDetails checkPhoneNumberResponse "+e.toString(),Toast.LENGTH_SHORT).show();
                             }
-                            else
-                            {
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                            if (error == null || error.networkResponse == null)
+                                return;
+                            final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                            //get response body and parse with appropriate encoding
+                            if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
                                 android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
-                                alertDialogBuilder.setTitle("Mobile number is allocated to someone else")
+                                alertDialogBuilder.setTitle("Server Error!!!")
                                         // Specifying a listener allows you to take an action before dismissing the dialog.
                                         // The dialog is automatically dismissed when a dialog button is clicked.
                                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
+
                                                 dialog.dismiss();
                                             }
-                                        })
-
-                                        .show();
+                                        }).show();
+                                dialog.dismiss();
+                                Toast.makeText(EditDetails.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                // showCustomPopupMenu();
+                                Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
                             }
 
-
-
-
-                        } catch (JSONException e) {
-                            Log.d("CheckPhoneException", String.valueOf(e));
                         }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                            dialog.dismiss();
-                                        }
-                                    }).show();
-                            dialog.dismiss();
-                            Toast.makeText(EditDetails.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
-
-                    }
-                });
-        requestQueue.add(stringRequest);
-    }else {
-    dialog.dismiss();
-    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
-    alertDialogBuilder.setTitle("No Internet connection!!!")
-            .setMessage("Can't do further process")
-
-            // Specifying a listener allows you to take an action before dismissing the dialog.
-            // The dialog is automatically dismissed when a dialog button is clicked.
-            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    //insertIMEI();
-                                        /*edtName.setText("");
-                                        edtPassword.setText("");*/
-                    dialog.dismiss();
-
-                }
-            }).show();
-}
-
-
-}
+                    });
+            requestQueue.add(stringRequest);
+        }catch (Exception e)
+        {
+            Toast.makeText(EditDetails.this,"Errorcode-258 EditDetails checkPhoneNumber "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     public void onBackPressed()
@@ -484,659 +587,640 @@ public class EditDetails extends AppCompatActivity
             }
         }catch (Exception e)
         {
+            Toast.makeText(EditDetails.this,"Errorcode-260 EditDetails onBackPressed "+e.toString(),Toast.LENGTH_SHORT).show();
             Log.d("Exception", String.valueOf(e));
         }
        // super.onBackPressed();
     }
 
     public void getCounselorData(String serialno, String cid) {
+        try {
+            url = clienturl + "?clientid=" + clientid + "&caseid=32&nSrNo=" + serialno + "&cCounselorID=" + cid;
+            Log.d("CounselorUrl", url);
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            dialog.dismiss();
+                            Log.d("FetchedResponse", response);
 
-         url=clienturl+"?clientid=" + clientid + "&caseid=32&nSrNo="+serialno+"&cCounselorID="+cid;
-        Log.d("CounselorUrl",url);
-        if(CheckInternet.checkInternet(EditDetails.this))
-        {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        dialog.dismiss();
-                        Log.d("FetchedResponse", response);
+                            try {
 
-                        try {
-
-                            JSONObject jsonObject = new JSONObject(response);
-                            Log.d("Json", jsonObject.toString());
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            Log.d("Length", String.valueOf(jsonArray.length()));
+                                JSONObject jsonObject = new JSONObject(response);
+                                Log.d("Json", jsonObject.toString());
+                                JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                Log.d("Length", String.valueOf(jsonArray.length()));
                    /* if(jsonArray.length()==0)
                     {
                         startActivity(new Intent(DetailsActivity.this,CounsellorData.class));
                         Toast.makeText(DetailsActivity.this,"This candidate is allocated to someone else",Toast.LENGTH_SHORT).show();
                     }*/
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject jsonObject1 = jsonArray.getJSONObject(i);
 
 
-                                name = jsonObject1.getString("cCandidateName");
-                                course = jsonObject1.getString("cCourse");
-                                Log.d("Course&*",course);
-                                mbl = jsonObject1.getString("cMobile");
-                                adrs = jsonObject1.getString("cAddressLine");
-                                city = jsonObject1.getString("cCity");
-                                state1 = jsonObject1.getString("cState");
-                                pincode = jsonObject1.getString("cPinCode");
-                                parentno = jsonObject1.getString("cParantNo");
-                                email = jsonObject1.getString("cEmail");
-                                //  fetchedDataFrom = jsonObject1.getString("cDataFrom");
-                                // fetchedAllocatedTo = jsonObject1.getString("AllocatedTo");
-                                allocatedDate = jsonObject1.getString("AllocationDate");
-                                statusid = jsonObject1.getString("CurrentStatus");
-                                remark = jsonObject1.getString("cRemarks");
-                                //  fetchedCreatedDate = jsonObject1.getString("dtCreatedDate");
-                                status11 = jsonObject1.getString("cStatus");
+                                    name = jsonObject1.getString("cCandidateName");
+                                    course = jsonObject1.getString("cCourse");
+                                    Log.d("Course&*", course);
+                                    mbl = jsonObject1.getString("cMobile");
+                                    adrs = jsonObject1.getString("cAddressLine");
+                                    city = jsonObject1.getString("cCity");
+                                    state1 = jsonObject1.getString("cState");
+                                    pincode = jsonObject1.getString("cPinCode");
+                                    parentno = jsonObject1.getString("cParantNo");
+                                    email = jsonObject1.getString("cEmail");
+                                    //  fetchedDataFrom = jsonObject1.getString("cDataFrom");
+                                    // fetchedAllocatedTo = jsonObject1.getString("AllocatedTo");
+                                    allocatedDate = jsonObject1.getString("AllocationDate");
+                                    statusid = jsonObject1.getString("CurrentStatus");
+                                    remark = jsonObject1.getString("cRemarks");
+                                    //  fetchedCreatedDate = jsonObject1.getString("dtCreatedDate");
+                                    status11 = jsonObject1.getString("cStatus");
 
-                            }
-
-                            txtSrno1.setText(sr_no);
-                            txtCourse1.setText(course);
-                            txtMobile1.setText(mbl);
-                            edtName1.setText(name);
-                            if(edtName1.getText().toString().length()==0)
-                            {
-                                edtName1.setText("NA");
-                            }
-                            edtAddress1.setText(adrs);
-                            if(edtAddress1.getText().toString().length()==0)
-                            {
-                                edtAddress1.setText("NA");
-                            }
-                            edtCity1.setText(city);
-                            if(edtCity1.getText().toString().length()==0)
-                            {
-                                edtCity1.setText("NA");
-                            }
-                            edtParent1.setText(parentno);
-                            if(edtParent1.getText().toString().length()==0)
-                            {
-                                edtParent1.setText("NA");
-                            }
-                            edtEmail1.setText(email);
-                            if(edtEmail1.getText().toString().length()==0)
-                            {
-                                edtEmail1.setText("NA");
-                            }
-                            edtPincode1.setText(pincode);
-                            if(edtPincode1.getText().toString().length()==0)
-                            {
-                                edtPincode1.setText("NA");
-                            }
-
-
-                            String[] array=getResources().getStringArray(R.array.States);
-                            for(int i=0;i<array.length;i++)
-                            {
-                                if(array[i].matches(state1))
-                                {
-                                    spinnerState1.setSelection(i);
                                 }
+
+                                txtSrno1.setText(sr_no);
+                                txtCourse1.setText(course);
+                                txtMobile1.setText(mbl);
+                                edtName1.setText(name);
+                                if (edtName1.getText().toString().length() == 0) {
+                                    edtName1.setText("NA");
+                                }
+                                edtAddress1.setText(adrs);
+                                if (edtAddress1.getText().toString().length() == 0) {
+                                    edtAddress1.setText("NA");
+                                }
+                                edtCity1.setText(city);
+                                if (edtCity1.getText().toString().length() == 0) {
+                                    edtCity1.setText("NA");
+                                }
+                                edtParent1.setText(parentno);
+                                if (edtParent1.getText().toString().length() == 0) {
+                                    edtParent1.setText("NA");
+                                }
+                                edtEmail1.setText(email);
+                                if (edtEmail1.getText().toString().length() == 0) {
+                                    edtEmail1.setText("NA");
+                                }
+                                edtPincode1.setText(pincode);
+                                if (edtPincode1.getText().toString().length() == 0) {
+                                    edtPincode1.setText("NA");
+                                }
+
+
+                                String[] array = getResources().getStringArray(R.array.States);
+                                for (int i = 0; i < array.length; i++) {
+                                    if (array[i].matches(state1)) {
+                                        spinnerState1.setSelection(i);
+                                    }
+                                }
+
+                            } catch (Exception e) {
+                                Toast.makeText(EditDetails.this,"Errorcode-262 EditDetails getCounselorDataResponse "+e.toString(),Toast.LENGTH_SHORT).show();
+                                Log.d("Exception", String.valueOf(e));
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                            if (error == null || error.networkResponse == null)
+                                return;
+                            final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                            //get response body and parse with appropriate encoding
+                            if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
+                                alertDialogBuilder.setTitle("Server Error!!!")
+
+
+                                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                                        // The dialog is automatically dismissed when a dialog button is clicked.
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                                dialog.dismiss();
+                                            }
+                                        }).show();
+                                dialog.dismiss();
+                                Toast.makeText(EditDetails.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                // showCustomPopupMenu();
+                                Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
                             }
 
-                        } catch (Exception e) {
-                            Log.d("Exception", String.valueOf(e));
-                        } }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
-
-
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                            dialog.dismiss();
-                                        }
-                                    }).show();
-                            dialog.dismiss();
-                            Toast.makeText(EditDetails.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
                         }
-
-                    }
-                });
-        requestQueue.add(stringRequest);
-    }else {
-    dialog.dismiss();
-    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
-    alertDialogBuilder.setTitle("No Internet connection!!!")
-            .setMessage("Can't do further process")
-
-            // Specifying a listener allows you to take an action before dismissing the dialog.
-            // The dialog is automatically dismissed when a dialog button is clicked.
-            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    //insertIMEI();
-                                        /*edtName.setText("");
-                                        edtPassword.setText("");*/
-                    dialog.dismiss();
-
-                }
-            }).show();
-}
-
+                    });
+            requestQueue.add(stringRequest);
+        }catch (Exception e)
+        {
+            Toast.makeText(EditDetails.this,"Errorcode-261 EditDetails getCounselorData "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void updateCounselorDetails() {
+            try {
+                url = clienturl + "?clientid=" + clientid + "&caseid=18&Srno=" + sr_no + "&CounselorName=" + name11 + "&Address=" +
+                        address1 + "&City=" + city1 + "&State=" + state11 + "&Pincode=" + pincode1 + "&Email=" + email1 + "&ParentNo=" + parentno1;
+                Log.d("UCounselorUrl", url);
+                if (CheckInternet.checkInternet(EditDetails.this)) {
+                    StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
 
-        url=clienturl+"?clientid="+clientid+"&caseid=18&Srno=" + sr_no + "&CounselorName=" + name11 + "&Address=" +
-                address1 + "&City=" + city1 + "&State=" + state11 + "&Pincode=" + pincode1 + "&Email=" + email1 + "&ParentNo=" + parentno1;
-        Log.d("UCounselorUrl",url);
-        if(CheckInternet.checkInternet(EditDetails.this))
-        {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
+                                    Log.d("*******", response.toString());
+                                    try {
+                                        Log.d("updateDetailsResponse", response);
 
-                        Log.d("*******", response.toString());
-                        try {
-                            Log.d("updateDetailsResponse", response);
-
-                            if (response.contains("Row updated successfully")) {
-                                int eventid=5;
-                                insertPointCollection(eventid);
-                                startActivity(new Intent(EditDetails.this,DetailsActivity.class));
-                                editor.putInt("UpdateDetails",updateDetails);
-                                editor.commit();
-                                Toast.makeText(EditDetails.this, "Data updated successfully", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(EditDetails.this,DetailsActivity.class));
-                            } else {
-                                Toast.makeText(EditDetails.this, "Data not updated successfully", Toast.LENGTH_SHORT).show();
-                            }
-
-                        } catch (Exception e) {
-                            Log.d("Exception", String.valueOf(e));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
-
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                            dialog.dismiss();
+                                        if (response.contains("Row updated successfully")) {
+                                            int eventid = 5;
+                                            insertPointCollection(eventid);
+                                            startActivity(new Intent(EditDetails.this, DetailsActivity.class));
+                                            editor.putInt("UpdateDetails", updateDetails);
+                                            editor.commit();
+                                            Toast.makeText(EditDetails.this, "Data updated successfully", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(EditDetails.this, DetailsActivity.class));
+                                        } else {
+                                            Toast.makeText(EditDetails.this, "Data not updated successfully", Toast.LENGTH_SHORT).show();
                                         }
-                                    }).show();
-                            dialog.dismiss();
-                            Toast.makeText(EditDetails.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
 
-                    }
-                });
-        requestQueue.add(stringRequest);
-    }else {
-    dialog.dismiss();
-    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
-    alertDialogBuilder.setTitle("No Internet connection!!!")
-            .setMessage("Can't do further process")
+                                    } catch (Exception e) {
+                                        Toast.makeText(EditDetails.this,"Errorcode-264 EditDetails updateCounselorDetailsResponse "+e.toString(),Toast.LENGTH_SHORT).show();
+                                        Log.d("Exception", String.valueOf(e));
+                                    }
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
 
-            // Specifying a listener allows you to take an action before dismissing the dialog.
-            // The dialog is automatically dismissed when a dialog button is clicked.
-            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    //insertIMEI();
+                                    if (error == null || error.networkResponse == null)
+                                        return;
+                                    final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                    //get response body and parse with appropriate encoding
+                                    if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
+                                        alertDialogBuilder.setTitle("Server Error!!!")
+
+                                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                        dialog.dismiss();
+                                                    }
+                                                }).show();
+                                        dialog.dismiss();
+                                        Toast.makeText(EditDetails.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                        // showCustomPopupMenu();
+                                        Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                    }
+
+                                }
+                            });
+                    requestQueue.add(stringRequest);
+                } else {
+                    dialog.dismiss();
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
+                    alertDialogBuilder.setTitle("No Internet connection!!!")
+                            .setMessage("Can't do further process")
+
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
                                         /*edtName.setText("");
                                         edtPassword.setText("");*/
-                    dialog.dismiss();
+                                    dialog.dismiss();
 
+                                }
+                            }).show();
                 }
-            }).show();
-}
-
-
-}
+            }catch (Exception e)
+            {
+                Toast.makeText(EditDetails.this,"Errorcode-263 EditDetails updateCounselorDetails "+e.toString(),Toast.LENGTH_SHORT).show();
+            }
+    }
 
     public void insertPointCollection(int eid)
     {
-        url=clienturl+"?clientid=" + clientid + "&caseid=36&nCounsellorId=" + counsellorid + "&nEventId="+eid;
-       Log.d("PointCollection",url);
-       if(CheckInternet.checkInternet(EditDetails.this))
-       {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
+        try {
+            url = clienturl + "?clientid=" + clientid + "&caseid=36&nCounsellorId=" + counsellorid + "&nEventId=" + eid;
+            Log.d("PointCollection", url);
+            if (CheckInternet.checkInternet(EditDetails.this)) {
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
 
-                        Log.d("*******", response.toString());
-                        try {
-                            if (dialog.isShowing()) {
-                                dialog.dismiss();
+                                Log.d("*******", response.toString());
+                                try {
+                                    if (dialog.isShowing()) {
+                                        dialog.dismiss();
+                                    }
+                                    Log.d("PointCollectionResponse", response);
+                                    if (response.contains("Data inserted successfully")) {
+                                        Toast.makeText(EditDetails.this, "Added point for update details", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(EditDetails.this, "Point not added for update details", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                } catch (Exception e) {
+                                    Toast.makeText(EditDetails.this,"Errorcode-266 EditDetails insertPointResponse "+e.toString(),Toast.LENGTH_SHORT).show();
+                                    Log.d("Exception", String.valueOf(e));
+                                }
                             }
-                            Log.d("PointCollectionResponse", response);
-                            if (response.contains("Data inserted successfully")) {
-                                Toast.makeText(EditDetails.this, "Added point for update details",Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(EditDetails.this, "Point not added for update details", Toast.LENGTH_SHORT).show();
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+
+                                if (error == null || error.networkResponse == null)
+                                    return;
+                                final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                //get response body and parse with appropriate encoding
+                                if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
+                                    alertDialogBuilder.setTitle("Server Error!!!")
+
+
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                    dialog.dismiss();
+                                    Toast.makeText(EditDetails.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    // showCustomPopupMenu();
+                                    Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                }
+
                             }
+                        });
+                requestQueue.add(stringRequest);
+            } else {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
+                alertDialogBuilder.setTitle("No Internet connection!!!")
+                        .setMessage("Can't do further process")
 
-                        } catch (Exception e) {
-                            Log.d("Exception", String.valueOf(e));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
-
-
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                            dialog.dismiss();
-                                        }
-                                    }).show();
-                            dialog.dismiss();
-                            Toast.makeText(EditDetails.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
-
-                    }
-                });
-        requestQueue.add(stringRequest);
-    }else {
-    dialog.dismiss();
-    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
-    alertDialogBuilder.setTitle("No Internet connection!!!")
-            .setMessage("Can't do further process")
-
-            // Specifying a listener allows you to take an action before dismissing the dialog.
-            // The dialog is automatically dismissed when a dialog button is clicked.
-            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    //insertIMEI();
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
                                         /*edtName.setText("");
                                         edtPassword.setText("");*/
-                    dialog.dismiss();
+                                dialog.dismiss();
 
-                }
-            }).show();
-}
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(EditDetails.this,"Errorcode-265 EditDetails insertPoint "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
 
     }
 
     public void insertCounselorDetails() {
-        url=clienturl+"?clientid="+clientid+"&caseid=31&nSrno=" + sr_no;
-        Log.d("InsertCounselorUrl",url);
-        if(CheckInternet.checkInternet(EditDetails.this))
-        {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
+        try {
+            url = clienturl + "?clientid=" + clientid + "&caseid=31&nSrno=" + sr_no;
+            Log.d("InsertCounselorUrl", url);
 
-                        Log.d("*******", response.toString());
-                        try {
-                            dialog.dismiss();
-                            Log.d("InsertDetailsResponse", response);
-                            if (response.contains("Data inserted successfully"))
-                            {
-                                updateCounselorDetails();
-                                Toast.makeText(EditDetails.this, "Data inserted successfully", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(EditDetails.this, "Data not inserted successfully", Toast.LENGTH_SHORT).show();
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+
+                            Log.d("*******", response.toString());
+                            try {
+                                dialog.dismiss();
+                                Log.d("InsertDetailsResponse", response);
+                                if (response.contains("Data inserted successfully")) {
+                                    updateCounselorDetails();
+                                    Toast.makeText(EditDetails.this, "Data inserted successfully", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(EditDetails.this, "Data not inserted successfully", Toast.LENGTH_SHORT).show();
+                                }
+
+                            } catch (Exception e) {
+                                Toast.makeText(EditDetails.this,"Errorcode-268 EditDetails insertCounselorDetailsResponse "+e.toString(),Toast.LENGTH_SHORT).show();
+                                Log.d("Exception", String.valueOf(e));
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                            if (error == null || error.networkResponse == null)
+                                return;
+                            final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                            //get response body and parse with appropriate encoding
+                            if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
+                                alertDialogBuilder.setTitle("Server Error!!!")
+
+
+                                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                                        // The dialog is automatically dismissed when a dialog button is clicked.
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                                dialog.dismiss();
+                                            }
+                                        }).show();
+                                dialog.dismiss();
+                                Toast.makeText(EditDetails.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                // showCustomPopupMenu();
+                                Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
                             }
 
-                        } catch (Exception e) {
-                            Log.d("Exception", String.valueOf(e));
                         }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
-
-
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                            dialog.dismiss();
-                                        }
-                                    }).show();
-                            dialog.dismiss();
-                            Toast.makeText(EditDetails.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
-
-                    }
-                });
-        requestQueue.add(stringRequest);
-    }else {
-    dialog.dismiss();
-    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
-    alertDialogBuilder.setTitle("No Internet connection!!!")
-            .setMessage("Can't do further process")
-
-            // Specifying a listener allows you to take an action before dismissing the dialog.
-            // The dialog is automatically dismissed when a dialog button is clicked.
-            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    //insertIMEI();
-                                        /*edtName.setText("");
-                                        edtPassword.setText("");*/
-                    dialog.dismiss();
-
-                }
-            }).show();
-}
+                    });
+            requestQueue.add(stringRequest);
+        }catch (Exception e)
+        {
+            Toast.makeText(EditDetails.this,"Errorcode-267 EditDetails insertCounselorDetails "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
 
 }
     public void getRefName() {
-        // arrayListRefrences=new ArrayList<>();
-        arrayListRefName = new ArrayList<>();
-        arrayListRefId = new ArrayList<>();
-      //  arrayListRefName.add(0, "All");
-        url=clienturl+"?clientid=" + clientid + "&caseid=47";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
+        try {
+            // arrayListRefrences=new ArrayList<>();
+            arrayListRefName = new ArrayList<>();
+            arrayListRefId = new ArrayList<>();
+            //  arrayListRefName.add(0, "All");
+            url = clienturl + "?clientid=" + clientid + "&caseid=47";
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
 
-                        if (dialog.isShowing()) {
-                            dialog.dismiss();
-                        }
-                        Log.d("RefNameUrl", response);
-                        try {
-
-                            JSONObject jsonObject = new JSONObject(response);
-                            // Log.d("Json",jsonObject.toString());
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                String refID = jsonObject1.getString("DataRefID");
-                                String dataRefName = jsonObject1.getString("DataRefName");
-                                //    DataReference dataReference=new DataReference(dataRefName,dataFrom);
-                                arrayListRefName.add(dataRefName);
-                                arrayListRefId.add(refID);
-                                // arrayListRefrences.add(dataReference);
-                                //  String total=jsonObject1.getString("Total No");
-
+                            if (dialog.isShowing()) {
+                                dialog.dismiss();
                             }
-                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter(EditDetails.this, R.layout.spinner_item1, arrayListRefName);
-                            // arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spinnerRefName.setAdapter(arrayAdapter);
-                            arrayAdapter.notifyDataSetChanged();
+                            Log.d("RefNameUrl", response);
+                            try {
 
-                            Log.d("RefIdSize", String.valueOf(arrayListRefId.size()));
-                        }catch (Exception e)
-                        {
-                            Log.d("Exception", String.valueOf(e));
+                                JSONObject jsonObject = new JSONObject(response);
+                                // Log.d("Json",jsonObject.toString());
+                                JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                    String refID = jsonObject1.getString("DataRefID");
+                                    String dataRefName = jsonObject1.getString("DataRefName");
+                                    //    DataReference dataReference=new DataReference(dataRefName,dataFrom);
+                                    arrayListRefName.add(dataRefName);
+                                    arrayListRefId.add(refID);
+                                    // arrayListRefrences.add(dataReference);
+                                    //  String total=jsonObject1.getString("Total No");
+
+                                }
+                                ArrayAdapter<String> arrayAdapter = new ArrayAdapter(EditDetails.this, R.layout.spinner_item1, arrayListRefName);
+                                // arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                spinnerRefName.setAdapter(arrayAdapter);
+                                arrayAdapter.notifyDataSetChanged();
+
+                                Log.d("RefIdSize", String.valueOf(arrayListRefId.size()));
+                            } catch (Exception e) {
+                                Toast.makeText(EditDetails.this,"Errorcode-270 EditDetails getRefNamesResponse "+e.toString(),Toast.LENGTH_SHORT).show();
+                                Log.d("Exception", String.valueOf(e));
+                            }
                         }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
 
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
+                            if (error == null || error.networkResponse == null)
+                                return;
+                            final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                            //get response body and parse with appropriate encoding
+                            if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
+                                alertDialogBuilder.setTitle("Server Error!!!")
 
 
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
+                                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                                        // The dialog is automatically dismissed when a dialog button is clicked.
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
 
-                                            dialog.dismiss();
-                                        }
-                                    }).show();
-                            dialog.dismiss();
-                            Toast.makeText(EditDetails.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                                dialog.dismiss();
+                                            }
+                                        }).show();
+                                dialog.dismiss();
+                                Toast.makeText(EditDetails.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                // showCustomPopupMenu();
+                                Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                            }
+
                         }
-
-                    }
-                });
-        requestQueue.add(stringRequest);
+                    });
+            requestQueue.add(stringRequest);
+        }catch (Exception e)
+        {
+            Toast.makeText(EditDetails.this,"Errorcode-269 EditDetails getRefNames "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
 
     }
 
     public void getStatus1() {
-        url = clienturl + "?clientid=" + clientid + "&caseid=2";
-        Log.d("StatusUrl",url);
-        if(CheckInternet.checkInternet(EditDetails.this))
-        {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        dialog.dismiss();
-                        arrayListStatusId = new ArrayList<>();
-                        arrayList1 = new ArrayList<>();
-                        Log.d("StatusResponse1", response);
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            Log.d("Json", jsonObject.toString());
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                String status1 = jsonObject1.getString("cStatus");
-                                statusid = jsonObject1.getString("nStatusID");
-                                Log.d("Status11", statusid + status1);
-                                //StatusInfo statusInfo=new StatusInfo(status1,statusid);
-                                arrayListStatusId.add(statusid);
-                                // Log.d("Json33333",statusInfo.toString());
-                                //arrayList.add(statusInfo);
-                                arrayList1.add(status1);
-                                // Log.d("Json11111",arrayList1.toString());
+        try {
+            url = clienturl + "?clientid=" + clientid + "&caseid=2";
+            Log.d("StatusUrl", url);
+            if (CheckInternet.checkInternet(EditDetails.this)) {
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                dialog.dismiss();
+                                arrayListStatusId = new ArrayList<>();
+                                arrayList1 = new ArrayList<>();
+                                Log.d("StatusResponse1", response);
+                                try {
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    Log.d("Json", jsonObject.toString());
+                                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                        String status1 = jsonObject1.getString("cStatus");
+                                        statusid = jsonObject1.getString("nStatusID");
+                                        Log.d("Status11", statusid + status1);
+                                        //StatusInfo statusInfo=new StatusInfo(status1,statusid);
+                                        arrayListStatusId.add(statusid);
+                                        // Log.d("Json33333",statusInfo.toString());
+                                        //arrayList.add(statusInfo);
+                                        arrayList1.add(status1);
+                                        // Log.d("Json11111",arrayList1.toString());
+                                    }
+                                    String setselected = status11;
+
+                                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(EditDetails.this, R.layout.spinner_item1, arrayList1);
+                                    //arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                    spinnerStatus.setAdapter(arrayAdapter);
+
+
+                                    //  Log.d("Size**", String.valueOf(arrayList1.size()));
+                                } catch (Exception e) {
+                                    Toast.makeText(EditDetails.this,"Errorcode-272 EditDetails getStatusResponse "+e.toString(),Toast.LENGTH_SHORT).show();
+                                    Log.d("Exception", String.valueOf(e));
+                                }
                             }
-                            String setselected = status11;
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
 
-                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(EditDetails.this, R.layout.spinner_item1, arrayList1);
-                            //arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spinnerStatus.setAdapter(arrayAdapter);
-
-
-                            //  Log.d("Size**", String.valueOf(arrayList1.size()));
-                        } catch (Exception e) {
-                            Log.d("Exception", String.valueOf(e));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
+                                if (error == null || error.networkResponse == null)
+                                    return;
+                                final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                //get response body and parse with appropriate encoding
+                                if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
+                                    alertDialogBuilder.setTitle("Server Error!!!")
 
 
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
 
-                                            dialog.dismiss();
-                                        }
-                                    }).show();
-                            dialog.dismiss();
-                            Toast.makeText(EditDetails.this, "Server Error", Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                    dialog.dismiss();
+                                    Toast.makeText(EditDetails.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    // showCustomPopupMenu();
+                                    Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                }
 
-                    }
-                });
-        requestQueue.add(stringRequest);
-    }else {
-    dialog.dismiss();
-    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
-    alertDialogBuilder.setTitle("No Internet connection!!!")
-            .setMessage("Can't do further process")
+                            }
+                        });
+                requestQueue.add(stringRequest);
+            } else {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
+                alertDialogBuilder.setTitle("No Internet connection!!!")
+                        .setMessage("Can't do further process")
 
-            // Specifying a listener allows you to take an action before dismissing the dialog.
-            // The dialog is automatically dismissed when a dialog button is clicked.
-            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    //insertIMEI();
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
                                         /*edtName.setText("");
                                         edtPassword.setText("");*/
-                    dialog.dismiss();
+                                dialog.dismiss();
 
-                }
-            }).show();
-}
-
-
-}
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(EditDetails.this,"Errorcode-271 EditDetails getStatus "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
+    }
     public void insertNewLead()
     {
-        url=clienturl+"?clientid="+clientid+"&caseid=45&RefNo=4444&Name="+name11+"&Course="+selectedCourse+"&Mobile="+mbl+"&Address="+address1+"&City="+city1+"&State="+state11+"&PinCod="+pincode1
-                +"&Mobile2="+parentno1+"&MailID="+email1+"&DataRef="+refno+"&UserID="+counsellorid+"&Status="+status11+"&Remarks="+remark;
-        Log.d("NewLeadUrl", url);
-        if(CheckInternet.checkInternet(EditDetails.this))
-        {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
+        try {
+            url = clienturl + "?clientid=" + clientid + "&caseid=45&RefNo=4444&Name=" + name11 + "&Course=" + selectedCourse + "&Mobile=" + mbl + "&Address=" + address1 + "&City=" + city1 + "&State=" + state11 + "&PinCod=" + pincode1
+                    + "&Mobile2=" + parentno1 + "&MailID=" + email1 + "&DataRef=" + refno + "&UserID=" + counsellorid + "&Status=" + status11 + "&Remarks=" + remark;
+            Log.d("NewLeadUrl", url);
+            if (CheckInternet.checkInternet(EditDetails.this)) {
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
 
-                        Log.d("*******", response.toString());
-                        try {
-                            dialog.dismiss();
-                            Log.d("InsertNewLeadResponse", response);
-                            if (response.contains("Data inserted successfully"))
-                            {
-                                edtName1.getText().clear();
-                                // edtCourse.getText().clear();
-                                edtPhone.getText().clear();
-                                edtAddress1.getText().clear();
-                                edtCity1.getText().clear();
-                                edtPincode1.getText().clear();
-                                edtParent1.getText().clear();
-                                edtEmail1.getText().clear();
-                                edtRemarks.getText().clear();
-                                spinnerCourse.setSelection(0);
-                                spinnerRefName.setSelection(0);
-                                spinnerState1.setSelection(0);
-                                spinnerStatus.setSelection(0);
-                                // updateCounselorDetails();
-                                Toast.makeText(EditDetails.this, "Data inserted successfully", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(EditDetails.this, "Data not inserted", Toast.LENGTH_SHORT).show();
+                                Log.d("*******", response.toString());
+                                try {
+                                    dialog.dismiss();
+                                    Log.d("InsertNewLeadResponse", response);
+                                    if (response.contains("Data inserted successfully")) {
+                                        edtName1.getText().clear();
+                                        // edtCourse.getText().clear();
+                                        edtPhone.getText().clear();
+                                        edtAddress1.getText().clear();
+                                        edtCity1.getText().clear();
+                                        edtPincode1.getText().clear();
+                                        edtParent1.getText().clear();
+                                        edtEmail1.getText().clear();
+                                        edtRemarks.getText().clear();
+                                        spinnerCourse.setSelection(0);
+                                        spinnerRefName.setSelection(0);
+                                        spinnerState1.setSelection(0);
+                                        spinnerStatus.setSelection(0);
+                                        // updateCounselorDetails();
+                                        Toast.makeText(EditDetails.this, "Data inserted successfully", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(EditDetails.this, "Data not inserted", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                } catch (Exception e) {
+                                    Toast.makeText(EditDetails.this,"Errorcode-274 EditDetails insertNewLeadResponse "+e.toString(),Toast.LENGTH_SHORT).show();
+                                    Log.d("Exception", String.valueOf(e));
+                                }
                             }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
 
-                        } catch (Exception e) {
-                            Log.d("Exception", String.valueOf(e));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
+                                if (error == null || error.networkResponse == null)
+                                    return;
+                                final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                //get response body and parse with appropriate encoding
+                                if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
+                                    alertDialogBuilder.setTitle("Server Error!!!")
 
 
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
 
-                                            dialog.dismiss();
-                                        }
-                                    }).show();
-                            dialog.dismiss();
-                            Toast.makeText(EditDetails.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                    dialog.dismiss();
+                                    Toast.makeText(EditDetails.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    // showCustomPopupMenu();
+                                    Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                }
 
-                    }
-                });
-        requestQueue.add(stringRequest);
-    }else {
-    dialog.dismiss();
-    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
-    alertDialogBuilder.setTitle("No Internet connection!!!")
-            .setMessage("Can't do further process")
+                            }
+                        });
+                requestQueue.add(stringRequest);
+            } else {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(EditDetails.this);
+                alertDialogBuilder.setTitle("No Internet connection!!!")
+                        .setMessage("Can't do further process")
 
-            // Specifying a listener allows you to take an action before dismissing the dialog.
-            // The dialog is automatically dismissed when a dialog button is clicked.
-            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    //insertIMEI();
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
                                         /*edtName.setText("");
                                         edtPassword.setText("");*/
-                    dialog.dismiss();
+                                dialog.dismiss();
 
-                }
-            }).show();
-}
-
-
-}
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(EditDetails.this,"Errorcode-273 EditDetails insertNewLead "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }

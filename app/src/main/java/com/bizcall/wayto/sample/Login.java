@@ -1,7 +1,6 @@
 package com.bizcall.wayto.sample;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.KeyguardManager;
@@ -11,19 +10,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.hardware.fingerprint.FingerprintManager;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.CallLog;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyPermanentlyInvalidatedException;
 import android.security.keystore.KeyProperties;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -38,13 +33,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
+import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -66,12 +63,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Timer;
@@ -129,10 +123,7 @@ public class Login extends AppCompatActivity /*implements GoogleApiClient.Connec
     //private GoogleApiClient mGoogleApiClient;
     private Location mLocation;
     private LocationManager locationManager;
-
-
-
-        String urlSMSDate;
+    String urlSMSDate;
     String  strIMEI1, strIMEI2;
     ProgressDialog dialog;
     String username, pwd, url;
@@ -164,9 +155,8 @@ public class Login extends AppCompatActivity /*implements GoogleApiClient.Connec
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
         try {
+            setContentView(R.layout.activity_login);
             linearClientVerify = findViewById(R.id.linearClientVerify);
             linearLogin = findViewById(R.id.linearLogin);
             txtResponse = findViewById(R.id.txtResponse);
@@ -189,7 +179,12 @@ public class Login extends AppCompatActivity /*implements GoogleApiClient.Connec
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_SMS}, 1);
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 1);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAPTURE_AUDIO_OUTPUT}, 1);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.PROCESS_OUTGOING_CALLS}, 1);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALL_LOG}, 1);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, 1);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_CALENDAR}, 1);
             //  clientid = "AnDe828500";
             //  timeout=50000L;
             // clienturl="http://anilsahasrabuddhe.in/CRM/AnDe828500/AnDe828500.php";
@@ -252,7 +247,7 @@ public class Login extends AppCompatActivity /*implements GoogleApiClient.Connec
         }//try
         catch (Exception e)
         {
-            Log.d("Exception", String.valueOf(e));
+            Toast.makeText(Login.this, "Errorcode-101 Login OnCreate "+e.toString(), Toast.LENGTH_SHORT).show();
         }//catch (Exception e)
 
 
@@ -260,14 +255,11 @@ public class Login extends AppCompatActivity /*implements GoogleApiClient.Connec
 
 
     private boolean checkPermission() {
-        String[] perm = {Manifest.permission.READ_PHONE_STATE,Manifest.permission.READ_SMS,Manifest.permission.READ_CALL_LOG,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION};
+        String[] perm = {Manifest.permission.READ_PHONE_STATE,Manifest.permission.READ_SMS,Manifest.permission.READ_CALL_LOG,Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CALL_PHONE,Manifest.permission.READ_CALL_LOG,Manifest.permission.WRITE_CALL_LOG,Manifest.permission.PROCESS_OUTGOING_CALLS,Manifest.permission.READ_CALENDAR,Manifest.permission.WRITE_CALENDAR};
         List<String> reqPerm = new ArrayList<>();
         try {
-
-
-        int i = 0;
-
-        for (String permis : perm) {
+            int i = 0;
+            for (String permis : perm) {
             int resultPhone = ContextCompat.checkSelfPermission(Login.this, permis);
             if (resultPhone == PackageManager.PERMISSION_GRANTED)
                 i++;
@@ -275,8 +267,7 @@ public class Login extends AppCompatActivity /*implements GoogleApiClient.Connec
                 reqPerm.add(permis);
             }
         }
-
-        if (i == 1)
+            if (i == 1)
             return true;
         else
             return requestPermission(reqPerm);
@@ -284,8 +275,8 @@ public class Login extends AppCompatActivity /*implements GoogleApiClient.Connec
         catch (Exception e)
         {
             Log.d("Exception", String.valueOf(e));
+            Toast.makeText(Login.this, "Errorcode-102 Login check Permission "+e.toString(), Toast.LENGTH_SHORT).show();
             return requestPermission(reqPerm);
-
         }
     }
 
@@ -309,8 +300,7 @@ public class Login extends AppCompatActivity /*implements GoogleApiClient.Connec
         }
         catch (Exception e)
         {
-            Log.d("Exception", String.valueOf(e));
-
+            Toast.makeText(Login.this, "Errorcode-103 Login Request Permission "+e.toString(), Toast.LENGTH_SHORT).show();
             return false;
         }
     }
@@ -327,173 +317,282 @@ public class Login extends AppCompatActivity /*implements GoogleApiClient.Connec
         }
     }
     public void getClientDetails(String url) {
+        try {
+            Log.d("OnlineLeadUrl", url);
+            if (CheckInternet.checkInternet(Login.this)) {
+                if(CheckServer.isServerReachable(Login.this))
+                {
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
 
-        urlRequest = UrlRequest.getObject();
-        urlRequest.setContext(getApplicationContext());
-        //String clienturl="http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php";
-        urlRequest.setUrl(url);
-        Log.d("ClientDetailsUrl", url);
-        urlRequest.getResponse(new ServerCallback()
-        {
-            @Override
-            public void onSuccess(String response) throws JSONException
-            {
-                try {
-                    dialog.dismiss();
-                    Log.d("ClientDetailsResponse", response);
-                    if (!response.contains("User not Identified")) {
-                        JSONObject jsonObject = new JSONObject(response);
-                        // Log.d("Json",jsonObject.toString());
-                        JSONArray jsonArray = jsonObject.getJSONArray("data");
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                            clienturl = jsonObject1.getString("ClientUrl");
-                            String timeout1 = jsonObject1.getString("TimeOut");
-                            clientid = jsonObject1.getString("ClientId");
-                            timeout = Long.parseLong(timeout1);
-                            Log.d("ClientUrl**",clienturl);
-                          //  editor = sp.edit();
-                            editor.putString("ClientId", clientid);
-                            editor.putLong("TimeOut", timeout);
-                            editor.putString("ClientUrl", clienturl);
-                            editor.commit();
-                            }
-
-                            linearClientVerify.setVisibility(View.GONE);
-                            if(linearLogin.getVisibility()==View.GONE) {
-                                edtClientId.setText("");
-                                txtClientID.setText("ClientID:"+clientid);
-                                linearLogin.setVisibility(View.VISIBLE);
-                                linearContact.setVisibility(View.GONE);
-                            }
-                    }
-                else
-                    {
-                        Toast.makeText(Login.this, "Invalid Client", Toast.LENGTH_SHORT).show();
-                    }
-                }catch(Exception e){
-                    Toast.makeText(Login.this,"Got exception",Toast.LENGTH_SHORT).show();
-                    Log.d("Exception", String.valueOf(e));
-                    }
-                    }
-        });
-    }
-
-public  void  onClick()
-{
-    btnLogin.setOnClickListener(new View.OnClickListener()
-    {
-        @Override
-        public void onClick(View v) {
-            try {
-            username = edtName.getText().toString();
-            Log.d("Name111", username);
-            pwd = edtPassword.getText().toString();
-            // url="http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?caseid=4";
-            Log.d("Url111", clienturl+"?clientid=" + clientid + "&caseid=1&UserName=" + username + "&UserPassword=" + pwd);
-            if (username.length() == 0) {
-                edtName.setError("Please enter name");
-                flag = 1;
-            }
-            if (pwd.length() == 0) {
-                edtPassword.setError("Please enter password");
-                flag = 1;
-            }
-            if (flag == 0)
-            {
-                dialog = ProgressDialog.show(Login.this, "", "Logging in", false, true);
-
-                checkData();
-
-                refreshWhenLoading();
-            }
-            flag = 0;
-        }catch(Exception e){
-        Log.d("Exception", String.valueOf(e));
-    }
-        }
-    });
-
-    btnVerify.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(final View v) {
-            try {
-                clientid1 = edtClientId.getText().toString();
-
-                Log.d("CId", clientid1);
-                if (clientid1.length() == 0) {
-                    edtClientId.setError("Invalid client id");
-                    flag = 1;
-                }
-                if (flag == 0) {
-
-                    dialog = ProgressDialog.show(Login.this, "", "Verifying client", false, true);
-                    url = "http://anilsahasrabuddhe.in/CRM/ClientDetails.php?clientid=" + clientid1;
-                    getClientDetails(url);
-
-                 //  refreshWhenLoading();
-
-                    /*new CountDownTimer(timeout, 1000) {
-
-                        public void onTick(long millisUntilFinished) {
-                            //mtextView.setText("seconds remaining: " + millisUntilFinished / 1000);
-                        }
-
-                        public void onFinish() {
-                            conditon++;
-                           *//* if (dialog.isShowing()) {
                                 dialog.dismiss();
-                                if (conditon == 2) {
-                                    v.performClick();
-                                    url = "http://mentebit.com/CRM/ClientDetails.php?clientid=" + clientid1;
-                                    getClientDetails(url);
-                                } else if (conditon == 3) {
-                                    v.performClick();
-                                    url = "http://bizcallcrm.com/CRM/ClientDetails.php?clientid=" + clientid1;
+                                Log.d("LoginResponse", response);
+                                try {
+                                    dialog.dismiss();
+                                    Log.d("ClientDetailsResponse", response);
+                                    if (!response.contains("User not Identified")) {
+                                        JSONObject jsonObject = new JSONObject(response);
+                                        // Log.d("Json",jsonObject.toString());
+                                        JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                        for (int i = 0; i < jsonArray.length(); i++) {
+                                            JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                            clienturl = jsonObject1.getString("ClientUrl");
+                                            String timeout1 = jsonObject1.getString("TimeOut");
+                                            clientid = jsonObject1.getString("ClientId");
+                                            timeout = Long.parseLong(timeout1);
+                                            Log.d("ClientUrl**", clienturl);
+                                            //  editor = sp.edit();
+                                            editor.putString("ClientId", clientid);
+                                            editor.putLong("TimeOut", timeout);
+                                            editor.putString("ClientUrl", clienturl);
+                                            editor.commit();
+                                        }
+                                        linearClientVerify.setVisibility(View.GONE);
+                                        if (linearLogin.getVisibility() == View.GONE) {
+                                            edtClientId.setText("");
+                                            txtClientID.setText("ClientID:" + clientid);
+                                            linearLogin.setVisibility(View.VISIBLE);
+                                            linearContact.setVisibility(View.GONE);
+                                        }
+                                    } else {
+                                        Toast.makeText(Login.this, "Invalid Client", Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (JSONException e) {
+                                    Toast.makeText(Login.this, "Errorcode-104 Login ClientVerifyResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                    Log.d("OnlineLeadException", String.valueOf(e));
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+
+                                if (error == null || error.networkResponse == null)
+                                    return;
+
+                                //get response body and parse with appropriate encoding
+                                if (error.networkResponse != null || error.equals("TimeoutError") || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Login.this);
+                                    alertDialogBuilder.setTitle("Server Error!!!")
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                    dialog.dismiss();
+                                    Toast.makeText(Login.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    // showCustomPopupMenu();
+                                    Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                }
+                            }
+                        });
+                requestQueue.add(stringRequest);
+            }else{
+                    dialog.dismiss();
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Login.this);
+                    alertDialogBuilder.setTitle("Server Down!!!!")
+                            .setMessage("Try after some time!")
+
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                    dialog.dismiss();
+
+                                }
+                            }).show();
+                }} else {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Login.this);
+                alertDialogBuilder.setTitle("No Internet connection!!!")
+                        .setMessage("Can't do further process")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
+
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
+        {
+           /* if(dialog.isShowing())
+            {
+                dialog.dismiss();
+            }*/
+            Toast.makeText(Login.this, "Errorcode-105 Login ClientDetails function"+e.toString(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+        public void onClick ()
+        {
+            try {
+                btnLogin.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            username = edtName.getText().toString();
+                            Log.d("Name111", username);
+                            pwd = edtPassword.getText().toString();
+                            // url="http://anilsahasrabuddhe.in/CRM/AnDe828500/cases.php?caseid=4";
+                            Log.d("Url111", clienturl + "?clientid=" + clientid + "&caseid=1&UserName=" + username + "&UserPassword=" + pwd);
+                            if (username.length() == 0) {
+                                edtName.setError("Please enter name");
+                                flag = 1;
+                            }
+                            if (pwd.length() == 0) {
+                                edtPassword.setError("Please enter password");
+                                flag = 1;
+                            }
+                            if (flag == 0) {
+                                if (CheckInternetSpeed.checkInternet(Login.this).contains("0")) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Login.this);
+                                    alertDialogBuilder.setTitle("No Internet connection!!!")
+                                            .setMessage("Can't do further process")
+
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                                    dialog.dismiss();
+
+                                                }
+                                            }).show();
+                                } else if (CheckInternetSpeed.checkInternet(Login.this).contains("1")) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Login.this);
+                                    alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                                            .setMessage("Can't do further process")
+
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    //insertIMEI();
+                                                    dialog.dismiss();
+                                                }
+                                            })
+                                            .show();
+                                } else {
+
+                                    dialog = ProgressDialog.show(Login.this, "", "Logging in", false, true);
+                                    checkData();
+                                }
+
+                                //refreshWhenLoading();
+                            }
+                            flag = 0;
+                        } catch (Exception e) {
+                            Toast.makeText(Login.this, "Errorcode-107 Login BtnLogin clicked  "+e.toString(), Toast.LENGTH_SHORT).show();
+
+                            Log.d("Exception", String.valueOf(e));
+                        }
+                    }
+                });
+
+                btnVerify.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        try {
+                            clientid1 = edtClientId.getText().toString();
+
+                            Log.d("CId", clientid1);
+                            if (clientid1.length() == 0) {
+                                edtClientId.setError("Invalid client id");
+                                flag = 1;
+                            }
+                            if (flag == 0) {
+                                if (CheckInternetSpeed.checkInternet(Login.this).contains("0")) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Login.this);
+                                    alertDialogBuilder.setTitle("No Internet connection!!!")
+                                            .setMessage("Can't do further process")
+
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                                    dialog.dismiss();
+
+                                                }
+                                            }).show();
+                                } else if (CheckInternetSpeed.checkInternet(Login.this).contains("1")) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Login.this);
+                                    alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                                            .setMessage("Can't do further process")
+
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    //insertIMEI();
+                                                    dialog.dismiss();
+                                                }
+                                            })
+                                            .show();
+                                } else {
+                                    dialog = ProgressDialog.show(Login.this, "", "Verifying client", false, true);
+                                    url = "http://anilsahasrabuddhe.in/CRM/ClientDetails.php?clientid=" + clientid1;
                                     getClientDetails(url);
                                 }
-                            }*//*
+
+                            }
+
+                        } catch (Exception e) {
+                            Toast.makeText(Login.this, "Errorcode-108 Login BtnVerify clicked "+e.toString(), Toast.LENGTH_SHORT).show();
+
+                            Log.d("Exception", String.valueOf(e));
                         }
+                    }
+                });
+            }catch (Exception e)
+            {
+                Toast.makeText(Login.this, "Errorcode-106 Login onclick function "+e.toString(), Toast.LENGTH_SHORT).show();
+            }
 
-                        // finish();
-                        //startActivity(getIntent());
-                    }.start();*/
+        }
 
 
-                    //flag = 0;
-                }
+        @TargetApi(Build.VERSION_CODES.M)
+        private void generateKey () {
+            try {
+                keyStore = KeyStore.getInstance("AndroidKeyStore");
+                KeyGenerator keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
 
-            } catch (Exception e) {
-                Log.d("Exception", String.valueOf(e));
+                keyStore.load(null);
+                keyGenerator.init(new
+                        KeyGenParameterSpec.Builder(KEY_NAME,
+                        KeyProperties.PURPOSE_ENCRYPT |
+                                KeyProperties.PURPOSE_DECRYPT)
+                        .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
+                        .setUserAuthenticationRequired(true)
+                        .setEncryptionPaddings(
+                                KeyProperties.ENCRYPTION_PADDING_PKCS7)
+                        .build());
+                keyGenerator.generateKey();
+            } catch (KeyStoreException | IOException | CertificateException
+                    | NoSuchAlgorithmException | InvalidAlgorithmParameterException
+                    | NoSuchProviderException e) {
+                e.printStackTrace();
             }
         }
-    });
 
-    }
-
-    @TargetApi(Build.VERSION_CODES.M)
-    private void generateKey() {
-        try {
-            keyStore = KeyStore.getInstance("AndroidKeyStore");
-            KeyGenerator keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
-
-            keyStore.load(null);
-            keyGenerator.init(new
-                    KeyGenParameterSpec.Builder(KEY_NAME,
-                    KeyProperties.PURPOSE_ENCRYPT |
-                            KeyProperties.PURPOSE_DECRYPT)
-                    .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
-                    .setUserAuthenticationRequired(true)
-                    .setEncryptionPaddings(
-                            KeyProperties.ENCRYPTION_PADDING_PKCS7)
-                    .build());
-            keyGenerator.generateKey();
-        } catch (KeyStoreException | IOException | CertificateException
-                | NoSuchAlgorithmException | InvalidAlgorithmParameterException
-                | NoSuchProviderException e) {
-            e.printStackTrace();
-        }
-    }
 
     @TargetApi(Build.VERSION_CODES.M)
     public boolean cipherInit() {
@@ -515,174 +614,223 @@ public  void  onClick()
     }
 
 
-    public void checkData()
-    {
-        urlRequest = UrlRequest.getObject();
-        urlRequest.setContext(getApplicationContext());
-        url = clienturl+"?clientid=" + clientid + "&caseid=1&UserName=" + username + "&UserPassword=" + pwd;
-        urlRequest.setUrl(url);
-        urlRequest.getResponse(new ServerCallback()
-        {
-            @Override
-            public void onSuccess(String response) throws JSONException {
+    public void checkData() {
+        try {
+            if(CheckServer.isServerReachable(Login.this)) {
+                urlRequest = UrlRequest.getObject();
+                urlRequest.setContext(getApplicationContext());
+                url = clienturl + "?clientid=" + clientid + "&caseid=1&UserName=" + username + "&UserPassword=" + pwd;
+                urlRequest.setUrl(url);
+                urlRequest.getResponse(new ServerCallback() {
+                    @Override
+                    public void onSuccess(String response) throws JSONException {
 
-                //temp=1;
-                WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
-                ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
-                Log.d("IPP", ip);
-                // getLocalIpAddress();
+                        //temp=1;
+                        WifiManager wm = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+                        ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+                        Log.d("IPP", ip);
+                        // getLocalIpAddress();
 
-               dialog.dismiss();
-                Log.d("LoginResponse", response);
-                if (response.startsWith("Array")) {
-                    String uname = response.substring(response.indexOf("[UserName] =>") + 13, response.indexOf("[UserPassword] =>"));
-                    String emailID = response.substring(response.indexOf("[cEmailAdd] =>") + 14, response.indexOf("[cEmailPassword] =>"));
-                    String mobile = response.substring(response.indexOf("[cMobileNO] =>") + 14, response.indexOf("[cProfilePhoto] => "));
-                    String role = response.substring(response.indexOf("[UserRole] =>") + 13, response.indexOf("[Status] =>"));
-                    counselorId = response.substring(response.indexOf("[cCounselorID] =>") + 17, response.indexOf(" [cCounselorName] =>"));
-                    String statusid = response.substring(response.indexOf("[Status] =>") + 11, response.indexOf("[cEmailAdd] =>"));
-                    strImei1 = response.substring(response.indexOf("[IMEI1] =>") + 10, response.indexOf("[IMEI2]")).trim();
-                    strImei2 = response.substring(response.indexOf("[IMEI2] =>") + 10);
-                    strImei2 = strImei2.substring(1, strImei2.length() - 4).trim();
+                        dialog.dismiss();
+                        Log.d("LoginResponse", response);
+                        if (response.startsWith("Array")) {
+                            String uname = response.substring(response.indexOf("[UserName] =>") + 13, response.indexOf("[UserPassword] =>"));
+                            String emailID = response.substring(response.indexOf("[cEmailAdd] =>") + 14, response.indexOf("[cEmailPassword] =>"));
+                            String mobile = response.substring(response.indexOf("[cMobileNO] =>") + 14, response.indexOf("[cProfilePhoto] => "));
+                            String role = response.substring(response.indexOf("[UserRole] =>") + 13, response.indexOf("[Status] =>"));
+                            counselorId = response.substring(response.indexOf("[cCounselorID] =>") + 17, response.indexOf(" [cCounselorName] =>"));
+                            String statusid = response.substring(response.indexOf("[Status] =>") + 11, response.indexOf("[cEmailAdd] =>"));
+                            strImei1 = response.substring(response.indexOf("[IMEI1] =>") + 10, response.indexOf("[IMEI2]")).trim();
+                            strImei2 = response.substring(response.indexOf("[IMEI2] =>") + 10);
+                            strImei2 = strImei2.substring(1, strImei2.length() - 4).trim();
 
-                    String role1 = "";
+                            String role1 = "";
 
-                    if (strImei1.equals("0")||strImei2.equals("0")) {
-                        Log.d("IMEI", strImei1 + " " + strImei2);
-                        int condition=0;
-                        try {
-                            if (IMEINumber1.length() > 4||IMEINumber2.length() > 4) {
-                                condition = 1;
-                            }
-                            else
-                                {
-                                    condition = 0;
+                            if (strImei1.equals("0") || strImei2.equals("0")) {
+                                Log.d("IMEI", strImei1 + " " + strImei2);
+                                int condition = 0;
+                                try {
+                                    if (IMEINumber1.length() > 4 || IMEINumber2.length() > 4) {
+                                        condition = 1;
+                                    } else {
+                                        condition = 0;
+                                    }
+
+                                } catch (Exception e) {
+                                    Toast.makeText(Login.this, "Errorcode-110 Login LoginResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                    Log.d("Exception", String.valueOf(e));
+                                    //condition = 0;
                                 }
 
-                        } catch (Exception e) {
-                            Log.d("Exception", String.valueOf(e));
-                            //condition = 0;
-                        }
+                                if (condition == 1) {
+                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Login.this);
+                                    alertDialogBuilder.setTitle("Your IMEI No is:" + IMEINumber1 + " " + IMEINumber2)
 
-                        if (condition == 1) {
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Login.this);
-                            alertDialogBuilder.setTitle("Your IMEI No is:" + IMEINumber1 + " " + IMEINumber2)
-                                    .setMessage("No mobile attached with this ID  Do you want to add this device as Primary device?")
+                                            .setMessage("No mobile attached with this ID.  Do you want to add this device as Primary device?")
 
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            insertIMEI();
-                                            edtName.setText("");
-                                            edtPassword.setText("");
-                                            dialog.dismiss();
-                                        }
-                                    })
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    insertIMEI();
+                                                    edtName.setText("");
+                                                    edtPassword.setText("");
+                                                    dialog.dismiss();
+                                                }
+                                            })
 
-                                    // A null listener allows the button to dismiss the dialog and take no further action.
-                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                            linearClientVerify.setVisibility(View.VISIBLE);
-                                            linearLogin.setVisibility(View.GONE);
-                                            edtName.setText("");
-                                            edtPassword.setText("");
-                                        }
-                                    })
-                                    .show();
-                        } else {
-                            Log.d("Alert", "ALert111");
-                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Login.this);
-                            alertDialogBuilder.setTitle("Phone permission is not allowed for BizcallCRM")
-                                    .setMessage("Goto->Settings->App Permission->Bizcall and allow phone permission")
+                                            // A null listener allows the button to dismiss the dialog and take no further action.
+                                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                    linearClientVerify.setVisibility(View.VISIBLE);
+                                                    linearLogin.setVisibility(View.GONE);
+                                                    edtName.setText("");
+                                                    edtPassword.setText("");
+                                                }
+                                            })
+                                            .show();
+                                } else {
+                                    Log.d("Alert", "ALert111");
+                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Login.this);
+                                    alertDialogBuilder.setTitle("Phone permission is not allowed for BizcallCRM")
+                                            .setMessage("Goto->Settings->App Permission->Bizcall and allow phone permission")
 
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                            intent = new Intent(Intent.ACTION_MAIN);
-                                            intent.addCategory(Intent.CATEGORY_HOME);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                            startActivity(intent);
-                                            finish();
-                                        }
-                                    })
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                    intent = new Intent(Intent.ACTION_MAIN);
+                                                    intent.addCategory(Intent.CATEGORY_HOME);
+                                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                    startActivity(intent);
+                                                    finish();
+                                                }
+                                            })
 
-                                    // A null listener allows the button to dismiss the dialog and take no further action.
+                                            // A null listener allows the button to dismiss the dialog and  take no further action.
 
-                                    .show();
+                                            .show();
 
-                        }
-                    }
-                    else if(strImei1.equals(IMEINumber1)||strImei2.equals(IMEINumber2))
-                    {
-                        editor.putString("Name", uname);
-                        editor.putString("Id", counselorId);
-                        editor.putString("EmailId", emailID);
-                        editor.putString("Role", role1);
-                        editor.putString("MobileNo", mobile);
-                        editor.putString("StatusId", statusid);
-                        editor.commit();
-                        try {
-                            ip = URLEncoder.encode(ip, "UTF-8");
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-                        counselorId = counselorId.replace(" ", "");
-                        insertLoginInfo();
-                        insertPointCollection();
+                                }
+                            } else if (strImei1.equals(IMEINumber1) || strImei2.equals(IMEINumber2)) {
+                                editor.putString("Name", uname);
+                                editor.putString("Id", counselorId);
+                                editor.putString("EmailId", emailID);
+                                editor.putString("Role", role1);
+                                editor.putString("MobileNo", mobile);
+                                editor.putString("StatusId", statusid);
+                                editor.commit();
+                                try {
+                                    ip = URLEncoder.encode(ip, "UTF-8");
+                                } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                }
+                                counselorId = counselorId.replace(" ", "");
+                                if (CheckInternetSpeed.checkInternet(Login.this).contains("0")) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Login.this);
+                                    alertDialogBuilder.setTitle("No Internet connection!!!")
+                                            .setMessage("Can't do further process")
 
-                        Log.d("Logincount", String.valueOf(loginCount));
-
-                        Log.d("Role1111", role1);
-                        Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
-                       //getCallDetails();
-                        //getSMSDetails();
-                       // getUserLocation();
-                        intent = new Intent(Login.this, Home.class);
-                        intent.putExtra("Activity","Login");
-                        startActivity(intent);
-                        finish();
-                    }
-                    else {
-                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Login.this);
-                        alertDialogBuilder.setTitle("Device Authorization Failed")
-                                .setMessage("Your ID is registered on device IMEI ending with"+strImei1.substring(strImei1.length()-4,strImei1.length()))
-
-                                // Specifying a listener allows you to take an action before dismissing the dialog.
-                                // The dialog is automatically dismissed when a dialog button is clicked.
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //insertIMEI();
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    //insertIMEI();
                                         /*edtName.setText("");
                                         edtPassword.setText("");*/
-                                        dialog.dismiss();
-                                    }
-                                })
+                                                    dialog.dismiss();
 
-                                // A null listener allows the button to dismiss the dialog and take no further action.
-                                /*.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        linearClientVerify.setVisibility(View.VISIBLE);
-                                        linearLogin.setVisibility(View.GONE);
-                                        edtName.setText("");
-                                        edtPassword.setText("");
-                                    }
-                                })*/
-                                .show();
-                        }
-                }
-                else{
+                                                }
+                                            }).show();
+                                } else if (CheckInternetSpeed.checkInternet(Login.this).contains("1")) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Login.this);
+                                    alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                                            .setMessage("Can't do further process")
+
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    //insertIMEI();
+                                                    dialog.dismiss();
+                                                }
+                                            })
+                                            .show();
+                                } else {
+
+                                    insertLoginInfo();
+                                    insertPointCollection();
+                                }
+
+                                Log.d("Logincount", String.valueOf(loginCount));
+
+                                Log.d("Role1111", role1);
+                                Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+                                //getCallDetails();
+                                //getSMSDetails();
+                                // getUserLocation();
+                                intent = new Intent(Login.this, Home.class);
+                                intent.putExtra("Activity", "Login");
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Login.this);
+                                alertDialogBuilder.setTitle("Device Authorization Failed")
+                                        .setMessage("Your ID is registered on device IMEI ending with" + strImei1.substring(strImei1.length() - 4, strImei1.length()))
+
+                                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                                        // The dialog is automatically dismissed when a dialog button is clicked.
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                                dialog.dismiss();
+                                            }
+                                        })
+
+                                        // A null listener allows the button to dismiss the dialog and take no further action.
+                                        /*.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                                linearClientVerify.setVisibility(View.VISIBLE);
+                                                linearLogin.setVisibility(View.GONE);
+                                                edtName.setText("");
+                                                edtPassword.setText("");
+                                            }
+                                        })*/
+                                        .show();
+                            }
+                        } else {
                             Toast.makeText(Login.this, "Login failed", Toast.LENGTH_SHORT).show();
+                        }
                     }
+                });
+            }else {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Login.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
 
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
+
+                            }
+                        }).show();
             }
-        });
+        } catch (Exception e) {
+            Toast.makeText(Login.this, "Errorcode-109 Login Login function "+e.toString(), Toast.LENGTH_SHORT).show();
+        }
     }
 
    public void refreshWhenLoading()
@@ -722,78 +870,19 @@ public  void  onClick()
     public void insertLoginInfo()
     {
         try {
-            urlRequest = UrlRequest.getObject();
-            urlRequest.setContext(getApplicationContext());
-            urlRequest.setUrl(clienturl + "?clientid=" + clientid + "&caseid=16&CounsellorId=" + counselorId + "&IpAddress1=" + ip);
-            Log.d("LoginInfoResponse", clienturl + "?clientid=" + clientid + "&caseid=16&CounsellorId=" + counselorId + "&IpAddress=" + ip);
-            urlRequest.getResponse(new ServerCallback() {
-                @Override
-                public void onSuccess(String response) throws JSONException {
-                    if (dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
-                    Log.d("RestRefNameResponse", response);
-                    if (response.contains("Data inserted successfully")) {
-                        Toast.makeText(Login.this, "Data inserted successfully", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(Login.this, "Data not inserted successfully", Toast.LENGTH_SHORT).show();
-                    }
-                    //   Log.d("Size**", String.valueOf(arrayList.size()));
-                }
-            });
-        }catch(Exception e){
-            Log.d("Exception", String.valueOf(e));
-        }
-    }
-    public void insertPointCollection()
-    {
-       try {
-           urlRequest = UrlRequest.getObject();
-            urlRequest.setContext(getApplicationContext());
-            urlRequest.setUrl(clienturl+"?clientid=" + clientid + "&caseid=36&nCounsellorId=" + counselorId + "&nEventId=1");
-            Log.d("PointCollectionResponse", clienturl+"?clientid=" + clientid + "&caseid=36&nCounsellorId=" + counselorId + "&nEventId=1");
-            urlRequest.getResponse(new ServerCallback() {
-            @Override
-            public void onSuccess(String response) throws JSONException {
-                if (dialog.isShowing()) {
-                    dialog.dismiss();
-                }
-                Log.d("PointCollectionResponse", response);
-                if (response.contains("Data inserted successfully")) {
-                    Toast.makeText(Login.this, "Data inserted successfully", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(Login.this, "Data not inserted successfully", Toast.LENGTH_SHORT).show();
-                }
-                //   Log.d("Size**", String.valueOf(arrayList.size()));
-            }
-        });
-       }catch(Exception e){
-           Log.d("Exception", String.valueOf(e));
-       }
-    }
-    public void insertIMEI()
-    {
-        try {
-            urlRequest = UrlRequest.getObject();
-            urlRequest.setContext(getApplicationContext());
-            String urlIMEI=clienturl+"?clientid=" + clientid + "&caseid=49&CounselorID=" + counselorId+"&IMEI1="+IMEINumber1+"&IMEI2="+IMEINumber2;
-
-            String checIMEIResponse=checkIMEI(IMEINumber1);
-            Log.d("checIMEIResponse",checIMEIResponse);
-            if(checIMEIResponse.equals("0")) {
-
-                urlRequest.setUrl(urlIMEI);
-                Log.d("insertIMEIUrl", urlIMEI);
+            if(CheckServer.isServerReachable(Login.this)) {
+                urlRequest = UrlRequest.getObject();
+                urlRequest.setContext(getApplicationContext());
+                urlRequest.setUrl(clienturl + "?clientid=" + clientid + "&caseid=16&CounsellorId=" + counselorId + "&IpAddress1=" + ip);
+                Log.d("LoginInfoResponse", clienturl + "?clientid=" + clientid + "&caseid=16&CounsellorId=" + counselorId + "&IpAddress=" + ip);
                 urlRequest.getResponse(new ServerCallback() {
                     @Override
                     public void onSuccess(String response) throws JSONException {
                         if (dialog.isShowing()) {
                             dialog.dismiss();
                         }
-                        Log.d("insertIMEIResponse", response);
+                        Log.d("LoginInfoResponse", response);
                         if (response.contains("Data inserted successfully")) {
-                            linearClientVerify.setVisibility(View.VISIBLE);
-                            linearLogin.setVisibility(View.GONE);
                             Toast.makeText(Login.this, "Data inserted successfully", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(Login.this, "Data not inserted successfully", Toast.LENGTH_SHORT).show();
@@ -801,77 +890,219 @@ public  void  onClick()
                         //   Log.d("Size**", String.valueOf(arrayList.size()));
                     }
                 });
-            }
-            else
-            {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Login.this);
-                alertDialogBuilder.setTitle("Device authorization failed")
-                        .setMessage("This IMEI"+IMEINumber1+" is already assigned. Contact admin")
+            }else {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Login.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
+
                         // Specifying a listener allows you to take an action before dismissing the dialog.
                         // The dialog is automatically dismissed when a dialog button is clicked.
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 //insertIMEI();
-
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
                                 dialog.dismiss();
-                            }
-                        })
 
-                        // A null listener allows the button to dismiss the dialog and take no further action.
-                       /* .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                linearClientVerify.setVisibility(View.VISIBLE);
-                                linearLogin.setVisibility(View.GONE);
-                                edtName.setText("");
-                                edtPassword.setText("");
                             }
-                        })*/
-                        .show();
+                        }).show();
             }
         }catch(Exception e){
+            Toast.makeText(Login.this, "Errorcode-111 Login InsertLoginInfo "+e.toString(), Toast.LENGTH_SHORT).show();
+
+            Log.d("Exception", String.valueOf(e));
+        }
+    }
+    public void insertPointCollection()
+    {
+       try {
+           if(CheckServer.isServerReachable(Login.this)) {
+               urlRequest = UrlRequest.getObject();
+               urlRequest.setContext(getApplicationContext());
+               urlRequest.setUrl(clienturl + "?clientid=" + clientid + "&caseid=36&nCounsellorId=" + counselorId + "&nEventId=1");
+               Log.d("PointCollectionResponse", clienturl + "?clientid=" + clientid + "&caseid=36&nCounsellorId=" + counselorId + "&nEventId=1");
+               urlRequest.getResponse(new ServerCallback() {
+                   @Override
+                   public void onSuccess(String response) throws JSONException {
+                       if (dialog.isShowing()) {
+                           dialog.dismiss();
+                       }
+                       Log.d("PointCollectionResponse", response);
+                       if (response.contains("Data inserted successfully")) {
+                           Toast.makeText(Login.this, "Data inserted successfully", Toast.LENGTH_SHORT).show();
+                       } else {
+                           Toast.makeText(Login.this, "Data not inserted successfully", Toast.LENGTH_SHORT).show();
+                       }
+                       //   Log.d("Size**", String.valueOf(arrayList.size()));
+                   }
+               });
+           }else {
+               dialog.dismiss();
+               android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Login.this);
+               alertDialogBuilder.setTitle("Server Down!!!!")
+                       .setMessage("Try after some time!")
+
+                       // Specifying a listener allows you to take an action before dismissing the dialog.
+                       // The dialog is automatically dismissed when a dialog button is clicked.
+                       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                           public void onClick(DialogInterface dialog, int which) {
+                               //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                               dialog.dismiss();
+
+                           }
+                       }).show();
+           }
+       }catch(Exception e){
+           Toast.makeText(Login.this, "Errorcode-112 Login InsertPoint "+e.toString(), Toast.LENGTH_SHORT).show();
+           Log.d("Exception", String.valueOf(e));
+       }
+    }
+    public void insertIMEI()
+    {
+        try {
+            if(CheckServer.isServerReachable(Login.this)) {
+                urlRequest = UrlRequest.getObject();
+                urlRequest.setContext(getApplicationContext());
+                String urlIMEI = clienturl + "?clientid=" + clientid + "&caseid=49&CounselorID=" + counselorId + "&IMEI1=" + IMEINumber1 + "&IMEI2=" + IMEINumber2;
+
+                String checIMEIResponse = checkIMEI(IMEINumber1);
+                Log.d("checIMEIResponse", checIMEIResponse);
+                if (checIMEIResponse.equals("0")) {
+
+                    urlRequest.setUrl(urlIMEI);
+                    Log.d("insertIMEIUrl", urlIMEI);
+                    urlRequest.getResponse(new ServerCallback() {
+                        @Override
+                        public void onSuccess(String response) throws JSONException {
+                            if (dialog.isShowing()) {
+                                dialog.dismiss();
+                            }
+                            Log.d("insertIMEIResponse", response);
+                            if (response.contains("Data inserted successfully")) {
+                                linearClientVerify.setVisibility(View.VISIBLE);
+                                linearLogin.setVisibility(View.GONE);
+                                Toast.makeText(Login.this, "Data inserted successfully", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(Login.this, "Data not inserted successfully", Toast.LENGTH_SHORT).show();
+                            }
+                            //   Log.d("Size**", String.valueOf(arrayList.size()));
+                        }
+                    });
+                } else {
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Login.this);
+                    alertDialogBuilder.setTitle("Device authorization failed")
+                            .setMessage("This IMEI" + IMEINumber1 + " is already assigned. Contact admin")
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+
+                                    dialog.dismiss();
+                                }
+                            })
+
+                            // A null listener allows the button to dismiss the dialog and take no further action.
+                            /* .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                 @Override
+                                 public void onClick(DialogInterface dialog, int which) {
+                                     dialog.dismiss();
+                                     linearClientVerify.setVisibility(View.VISIBLE);
+                                     linearLogin.setVisibility(View.GONE);
+                                     edtName.setText("");
+                                     edtPassword.setText("");
+                                 }
+                             })*/
+                            .show();
+                }
+            }else
+            {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Login.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
+
+                            }
+                        }).show();
+            }
+        }catch(Exception e){
+            Toast.makeText(Login.this, "Errorcode-113 Login InsertIMEINo "+e.toString(), Toast.LENGTH_SHORT).show();
             Log.d("Exception", String.valueOf(e));
         }
     }
     public String checkIMEI(String strIMEI) {
+        try {
+            if(CheckServer.isServerReachable(Login.this)) {
+                urlRequest = UrlRequest.getObject();
+                urlRequest.setContext(getApplicationContext());
+                String checkIMEIurl = clienturl + "?clientid=" + clientid + "&caseid=50&IMEI=" + strIMEI;
+                urlRequest.setUrl(checkIMEIurl);
+                Log.d("IMEIurl", checkIMEIurl);
+                urlRequest.getResponse(new ServerCallback() {
+                    @Override
+                    public void onSuccess(String response) throws JSONException {
 
-        urlRequest = UrlRequest.getObject();
-        urlRequest.setContext(getApplicationContext());
-        String checkIMEIurl = clienturl + "?clientid=" + clientid + "&caseid=50&IMEI=" + strIMEI;
-        ;
-        urlRequest.setUrl(checkIMEIurl);
-        Log.d("IMEIurl", checkIMEIurl);
-        urlRequest.getResponse(new ServerCallback() {
-            @Override
-            public void onSuccess(String response) throws JSONException {
+                        dialog.dismiss();
+                        Log.d("IEMIResponse", response);
+                        try {
+                            if (!response.contains("User not Identified")) {
+                                JSONObject jsonObject = new JSONObject(response);
+                                // Log.d("Json",jsonObject.toString());
+                                JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                if (response.contains("[]")) {
+                                    Log.d("resultImeiexist", "1");
+                                    resultImeiexist = 1;
+                                }
 
-                dialog.dismiss();
-                Log.d("IEMIResponse", response);
-                try {
-                    if (!response.contains("User not Identified")) {
-                        JSONObject jsonObject = new JSONObject(response);
-                        // Log.d("Json",jsonObject.toString());
-                        JSONArray jsonArray = jsonObject.getJSONArray("data");
-                        if (response.contains("[]")) {
-                            Log.d("resultImeiexist", "1");
-                            resultImeiexist = 1;
+                            } else {
+                                resultImeiexist = 1;
+                                Toast.makeText(Login.this, "Invalid Client", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(Login.this, "Errorcode-115 Login CheckIMEIResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                            Log.d("Exception", String.valueOf(e));
                         }
-
-                    } else {
-                        resultImeiexist = 1;
-                        Toast.makeText(Login.this, "Invalid Client", Toast.LENGTH_SHORT).show();
                     }
-                } catch (Exception e) {
-                    Log.d("Exception", String.valueOf(e));
-                }
+                });
+            }else {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Login.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
+
+                            }
+                        }).show();
             }
-        });
+        } catch (Exception e) {
+            Toast.makeText(Login.this, "Errorcode-114 Login check IMEI " + e.toString(), Toast.LENGTH_SHORT).show();
+        }
         if (resultImeiexist == 1) {
             return "1";
         } else {
             return "0";
         }
+
     }
 
    /* public  void loginUsingFingerPrint() {
@@ -909,551 +1140,6 @@ public  void  onClick()
         editor.putString("Id", null);
         editor.commit();
     }
-
-
-
-    ////Calls--------------------------------------------
-
-    @SuppressLint("NewApi")
-    public void getCallDetails() {
-
-        if (ContextCompat.checkSelfPermission(Login.this, Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(Login.this, Manifest.permission.READ_CALL_LOG)) {
-                ActivityCompat.requestPermissions(Login.this, new String[]
-                        {Manifest.permission.READ_CALL_LOG}, 1);
-            } else {
-                ActivityCompat.requestPermissions(Login.this, new String[]
-                        {Manifest.permission.READ_CALL_LOG}, 1);
-            }
-        } else {
-            getCallLogDetails();
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void getCallLogDetails() {
-
-        Cursor managedCursor = managedQuery(CallLog.Calls.CONTENT_URI, null,
-                null, null, null);
-        int number = managedCursor.getColumnIndex(CallLog.Calls.NUMBER);
-        int type = managedCursor.getColumnIndex(CallLog.Calls.TYPE);
-        int date = managedCursor.getColumnIndex(CallLog.Calls.DATE);
-        int duration = managedCursor.getColumnIndex(CallLog.Calls.DURATION);
-        int phAccID = managedCursor.getColumnIndex(CallLog.Calls.PHONE_ACCOUNT_ID);
-
-        mCallArrayList = new ArrayList<>();
-        mUrlCallArrayList = new ArrayList<>();
-        mUploadCallArrayList = new ArrayList<>();
-        sdfComapre = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
-
-        while (managedCursor.moveToNext()) {
-            callPhoneno = managedCursor.getString(number);
-            String callType = managedCursor.getString(type);
-            String callDate = managedCursor.getString(date);
-            Date callDayTime = new Date(Long.valueOf(callDate));
-            callDuration = managedCursor.getString(duration);
-            callphAccID = managedCursor.getString(phAccID);
-            finalCallType = null;
-
-            int dircode = Integer.parseInt(callType);
-            switch (dircode) {
-                case CallLog.Calls.OUTGOING_TYPE:
-                    finalCallType = "OUTGOING";
-                    break;
-
-                case CallLog.Calls.INCOMING_TYPE:
-                    finalCallType = "INCOMING";
-                    break;
-
-                case CallLog.Calls.MISSED_TYPE:
-                    finalCallType = "MISSED";
-                    break;
-            }
-            sdfSaveArray = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
-            strdateFormated = sdfSaveArray.format(callDayTime);
-
-            callDetialswithIMEI = new CallDetialswithIMEI(callPhoneno, finalCallType, strdateFormated, callDuration, IMEINumber1, IMEINumber2, callphAccID);
-            mCallArrayList.add(callDetialswithIMEI);
-        }
-        Log.d("callarraysize", mCallArrayList.size() + "");
-
-        requestQueue = Volley.newRequestQueue(Login.this);
-        urlCallDate = "http://anilsahasrabuddhe.in/rohit-testing/imeicasesdetailsinsert.php?clientid=AnDe828500&caseid=405&IMEI=351891080405985";
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlCallDate, null,
-                new callSuccess(), new callFail());
-
-        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
-                DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        requestQueue.add(jsonObjectRequest);
-    }
-
-    public void uploadCalls(String callPhoneno, String finalCallType, final String strdateFormated,
-                            String callDuration, final String callIMEI1, String callIMEI2, String callphAccID) {
-
-        if (requestQueue == null) {
-            requestQueue = Volley.newRequestQueue(Login.this);
-        } else {
-            String strurl = "http://anilsahasrabuddhe.in/rohit-testing/imeicasesdetailsinsert.php?clientid=AnDe828500&caseid=401&MobileNo=" + callPhoneno +
-                    "&CallType=" + finalCallType + "&CallDate=" + strdateFormated + "&CallDuration=" + callDuration +
-                    "&IMEI1=" + callIMEI1 + "&IMEI2=" + callIMEI2 + "&PhoneAccountId=" + callphAccID;
-
-
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, strurl, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    //Log.d("ChatResponse", response);
-                    if (response.contains("Call inserted successfully")) {
-                        //Toast.makeText(MainActivity.this, "Record inserted successfully", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(Login.this, "Record not inserted successfully", Toast.LENGTH_SHORT).show();
-                    }
-                    counturl++;
-                    Log.d("url count", counturl + " / " + "&CallDate=" + strdateFormated + " / " + response + " / " + callIMEI1);
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("VolleyError", String.valueOf(error));
-                }
-            });
-
-            stringRequest.setRetryPolicy(new RetryPolicy() {
-                @Override
-                public int getCurrentTimeout() {
-                    return 50000;
-                }
-
-                @Override
-                public int getCurrentRetryCount() {
-                    return 50000;
-                }
-
-                @Override
-                public void retry(VolleyError error) throws VolleyError {
-
-                }
-            });
-
-            stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                    DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2,
-                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-            requestQueue.add(stringRequest);
-        }
-    }
-
-    private class callSuccess implements Response.Listener<JSONObject> {
-        @Override
-        public void onResponse(JSONObject response) {
-            Log.e("success", String.valueOf(response));
-            try {
-                JSONArray jsonArray = response.getJSONArray("data");
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                    JSONObject lastdate = jsonObject.getJSONObject("dtCallDate");
-                    String mlastdate = lastdate.getString("date");
-
-                    Log.d("lastdate", mlastdate);
-                    callDetailsFetch = new CallDetailsFetch(mlastdate);
-                    mUrlCallArrayList.add(callDetailsFetch);
-                }
-                Log.d("urlarrlen", mUrlCallArrayList.size() + "");
-
-
-                for (int i = 0; i < mCallArrayList.size(); i++) {
-                    String clno = mCallArrayList.get(i).getmCallMobileNo();
-                    String cltype = mCallArrayList.get(i).getmCallType();
-                    String cldate = mCallArrayList.get(i).getmCallDate();
-                    String clduration = mCallArrayList.get(i).getmCallDuration();
-                    String climei1 = mCallArrayList.get(i).getmIMEI1();
-                    String climei2 = mCallArrayList.get(i).getmIMEI2();
-                    String clphAccID = mCallArrayList.get(i).getmphAccID();
-
-                    if (mUrlCallArrayList.size() == 0) {
-                        uploadCalls(clno, cltype, cldate, clduration, climei1, climei2, clphAccID);
-                    } else {
-                        String strCompareRecord = mUrlCallArrayList.get(mUrlCallArrayList.size() - 1).getmfthCallDate();
-                        Date dtMydate = sdfComapre.parse(strCompareRecord);
-                        String strUrlDate = sdfComapre.format(dtMydate);
-
-                        if (strUrlDate.compareTo(cldate) < 0) {
-                            Log.d("datematch", strUrlDate + " / " + cldate);
-                            callDetialswithIMEI = new CallDetialswithIMEI(clno, cltype, cldate, clduration, climei1, climei2, clphAccID);
-                            mUploadCallArrayList.add(callDetails);
-                        }
-                    }
-                }
-                Log.d("recordscall", "call upload without date");
-                Log.d("uploadarraysizecall", mUploadCallArrayList.size() + "");
-            } catch (ParseException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            for (int i = 0; i < mUploadCallArrayList.size(); i++) {
-                String clno = mUploadCallArrayList.get(i).getmCallMobileNo();
-                String cltype = mUploadCallArrayList.get(i).getmCallType();
-                String cldate = mUploadCallArrayList.get(i).getmCallDate();
-                String clduration = mUploadCallArrayList.get(i).getmCallDuration();
-                String climei1 = mUploadCallArrayList.get(i).getmIMEI1();
-                String climei2 = mUploadCallArrayList.get(i).getmIMEI2();
-                String clphAccID = mUploadCallArrayList.get(i).getmphAccID();
-
-                uploadCalls(clno, cltype, cldate, clduration, climei1, climei2, clphAccID);
-            }
-            Toast.makeText(Login.this, "Call Records Upload Successfully.", Toast.LENGTH_SHORT).show();
-            Log.d("recordscall", "call upload with date");
-        }
-    }
-
-    private class callFail implements Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.e("Fail", String.valueOf(error));
-        }
-    }
-
-
-    ///////////////////////////Location////////////////////////////////
-
-
-    /*@TargetApi(Build.VERSION_CODES.M)
-    public void getUserLocation() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-
-        locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-
-        checkLocation(); //check whether location service is enable or not in your  phone
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-
-        mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-        if (mLocation != null) {
-
-            currentLat = mLocation.getLatitude();
-            currentLong = mLocation.getLongitude();
-            Log.d("latlong",currentLat+" / "+currentLong);
-
-            uploadLocation(IMEINumber1, IMEINumber2, currentLat, currentLong);    //upload location method
-            Log.d("location uploaded.",currentLat+" / "+currentLong);
-            Toast.makeText(this, "Location Uploaded", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Location not Detected", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.i("conn suspend", "Connection Suspended");
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.i("conn fail", "Connection failed. Error: " + connectionResult.getErrorCode());
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.connect();
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-    }
-
-    private boolean checkLocation() {
-        if(!isLocationEnabled()) {
-            return isLocationEnabled();
-        }
-        return true;
-    }
-
-    private boolean isLocationEnabled() {
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-    }
-
-    public void uploadLocation(String callIMEI1, String callIMEI2, final double latitude, final double longitude) {
-
-        if (requestQueue == null) {
-            requestQueue = Volley.newRequestQueue(Login.this);
-        } else {
-            String strurl = "http://anilsahasrabuddhe.in/rohit-testing/imeicasesdetailsinsert.php?clientid=AnDe828500&caseid=403&IMEI1=" + callIMEI1
-                    + "&IMEI2=" + callIMEI2 + "&latitude=" + latitude + "&longitude=" + longitude;
-
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, strurl, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    if (response.contains("Data inserted successfully")) {
-                        Toast.makeText(Login.this, "Location inserted successfully", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(Login.this, "Location not inserted successfully", Toast.LENGTH_SHORT).show();
-                    }
-                    Log.d("url count", counturl + " / " + "&latitude=" + latitude + " / " + "&longitude=" + longitude + " / " + response);
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("VolleyError", String.valueOf(error));
-                }
-            });
-
-            stringRequest.setRetryPolicy(new RetryPolicy() {
-                @Override
-                public int getCurrentTimeout() {
-                    return 50000;
-                }
-
-                @Override
-                public int getCurrentRetryCount() {
-                    return 50000;
-                }
-
-                @Override
-                public void retry(VolleyError error) throws VolleyError {
-                }
-            });
-            stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                    DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2,
-                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-            requestQueue.add(stringRequest);
-        }
-    }
-*/
-
-    //////////////////////////////////SMS/////////////////////////////////
-
-
-
-    @SuppressLint("NewApi")
-    public void getSMSDetails() {
-
-        if (ContextCompat.checkSelfPermission(Login.this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(Login.this, Manifest.permission.READ_SMS)) {
-                ActivityCompat.requestPermissions(Login.this, new String[]
-                        {Manifest.permission.READ_SMS}, 2);
-            } else {
-                ActivityCompat.requestPermissions(Login.this, new String[]
-                        {Manifest.permission.READ_SMS}, 2);
-            }
-        } else {
-            getSMSLogDetails();
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void getSMSLogDetails() {
-
-        Uri uri = Uri.parse("content://sms");
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-
-        mSMSArrayList = new ArrayList<>();
-        mUrlSMSArrayList = new ArrayList<>();
-        mUploadSMSArrayList = new ArrayList<>();
-        sdfComapre = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
-
-        if (cursor.moveToFirst()) {
-            for (int i = 0; i < cursor.getCount(); i++) {
-                String smsbody = cursor.getString(cursor.getColumnIndexOrThrow("body"));
-                String phoneno = cursor.getString(cursor.getColumnIndexOrThrow("address"));
-                String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
-                Date smsDayTime = new Date(Long.valueOf(date));
-                String smstype = cursor.getString(cursor.getColumnIndexOrThrow("type"));
-
-                String typeOfSMS = null;
-                switch (Integer.parseInt(smstype)) {
-                    case 1:
-                        typeOfSMS = "INBOX";
-                        break;
-
-                    case 2:
-                        typeOfSMS = "SENT";
-                        break;
-
-                    case 3:
-                        typeOfSMS = "DRAFT";
-                        break;
-                }
-                sdfSaveArray = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                String strdateFormated = sdfSaveArray.format(smsDayTime);
-
-                smsDetails = new SMSDetails(phoneno, typeOfSMS, strdateFormated, smsbody, IMEINumber1, IMEINumber2);
-                mSMSArrayList.add(smsDetails);
-                cursor.moveToNext();
-            }
-        }
-        Log.d("smsarraylist", String.valueOf(mSMSArrayList.size()));
-
-        requestQueue = Volley.newRequestQueue(Login.this);
-        String urlSMSDate = "http://anilsahasrabuddhe.in/rohit-testing/imeicasesdetailsinsert.php?clientid=AnDe828500&caseid=406&IMEI=351891080405985";
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlSMSDate, null,
-                new smsSuccess(), new smsFail());
-
-        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
-                DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        requestQueue.add(jsonObjectRequest);
-    }
-
-    public void uploadSMS(String smsPhoneno, String finalsmsType, final String strdateFormated,
-                          String smsBody, String smsIMEI1, String smsIMEI2) {
-
-        if (requestQueue == null) {
-            requestQueue = Volley.newRequestQueue(Login.this);
-        } else {
-            String strurl = "http://anilsahasrabuddhe.in/rohit-testing/imeicasesdetailsinsert.php?clientid=AnDe828500&caseid=402&MobileNo=" + smsPhoneno +
-                    "&SMSType=" + finalsmsType + "&SMSDate=" + strdateFormated + "&SMSBODY=" + smsBody +
-                    "&IMEI1=" + smsIMEI1 + "&IMEI2=" + smsIMEI2;
-
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, strurl, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    //Log.d("ChatResponse", response);
-                    if (response.contains("SMS inserted successfully")) {
-                        //Toast.makeText(MainActivity.this, "Record inserted successfully", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(Login.this, "Record not inserted successfully", Toast.LENGTH_SHORT).show();
-                    }
-                    counturl++;
-                    Log.d("url count", counturl + " / " + "&SMSDate=" + strdateFormated + " / " + response);
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("VolleyError", String.valueOf(error));
-                }
-            });
-
-            stringRequest.setRetryPolicy(new RetryPolicy() {
-                @Override
-                public int getCurrentTimeout() {
-                    return 50000;
-                }
-
-                @Override
-                public int getCurrentRetryCount() {
-                    return 50000;
-                }
-
-                @Override
-                public void retry(VolleyError error) throws VolleyError {
-
-                }
-            });
-
-            stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                    DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2,
-                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-            requestQueue.add(stringRequest);
-        }
-    }
-
-    private class smsSuccess implements Response.Listener<JSONObject> {
-        @Override
-        public void onResponse(JSONObject response) {
-           // Log.d("success", urlSMSDate);
-
-            Log.e("success", String.valueOf(response));
-            try {
-                JSONArray jsonArray = response.getJSONArray("data");
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                    JSONObject lastdate = jsonObject.getJSONObject("dtSMSDate");
-                    String mlastdate = lastdate.getString("date");
-
-                    Log.d("lastdate", mlastdate);
-                    smsDetailsFetch = new SMSDetailsFetch(mlastdate);
-                    mUrlSMSArrayList.add(smsDetailsFetch);
-                }
-                Log.d("urlarrlen", mUrlSMSArrayList.size() + "");
-
-                Collections.reverse(mSMSArrayList);
-                for (int i = 0; i < mSMSArrayList.size(); i++) {
-                    String smsno = mSMSArrayList.get(i).getmSMSMobileNo();
-                    String smstype = mSMSArrayList.get(i).getmSMStype();
-                    String smsdate = mSMSArrayList.get(i).getmSMSdate();
-                    String smsbody = mSMSArrayList.get(i).getmSMSbody();
-                    String smsimei1 = mSMSArrayList.get(i).getmSMSIMEI1();
-                    String smsimei2 = mSMSArrayList.get(i).getmSMSIMEI2();
-
-                    if (mUrlSMSArrayList.size() == 0) {
-                        uploadSMS(smsno, smstype, smsdate, smsbody, smsimei1, smsimei2);
-                    } else {
-                        String strCompareRecord = mUrlSMSArrayList.get(mUrlSMSArrayList.size() - 1).getmfthSMSDate();
-                        Date dtMydate = sdfComapre.parse(strCompareRecord);
-                        String strUrlDate = sdfComapre.format(dtMydate);
-
-                        if (strUrlDate.compareTo(smsdate) < 0) {
-                            Log.d("datematch", strUrlDate + " / " + smsdate);
-                            smsDetails = new SMSDetails(smsno, smstype, smsdate, smsbody, smsimei1, smsimei2);
-                            mUploadSMSArrayList.add(smsDetails);
-                        }
-                    }
-                }
-                Log.d("recordsms", "sms upload with date");
-                Log.d("uploadarraysizesms", mUploadSMSArrayList.size() + "");
-            } catch (ParseException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            for (int i = 0; i < mUploadSMSArrayList.size(); i++) {
-                String smsno = mUploadSMSArrayList.get(i).getmSMSMobileNo();
-                String smstype = mUploadSMSArrayList.get(i).getmSMStype();
-                String smsdate = mUploadSMSArrayList.get(i).getmSMSdate();
-                String smsbody = mUploadSMSArrayList.get(i).getmSMSbody();
-                String smsimei1 = mUploadSMSArrayList.get(i).getmSMSIMEI1();
-                String smsimei2 = mUploadSMSArrayList.get(i).getmSMSIMEI2();
-
-                uploadSMS(smsno, smstype, smsdate, smsbody, smsimei1, smsimei2);
-            }
-            Toast.makeText(Login.this, "SMS Records Upload Successfully.", Toast.LENGTH_SHORT).show();
-            Log.d("recordsms", "sms upload");
-        }
-    }
-
-    private class smsFail implements Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.e("Fail", String.valueOf(error));
-        }
-    }
-
 
 
 

@@ -16,7 +16,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.RingtoneManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -78,12 +80,9 @@ import org.json.JSONObject;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -110,6 +109,8 @@ public class Home extends AppCompatActivity
     ArrayList<String> arrayList1;
     private boolean isSpinnerTouched = false;
     NavigationView navigationView;
+
+    WifiManager wifiManager;
     // ArrayList<StatusInfo> arrayList;
 
     String uploadFilePath = "";
@@ -169,8 +170,6 @@ public class Home extends AppCompatActivity
 
     String callPhoneno, finalCallType, strdateFormated, callDuration, strImei1, strImei2, callphAccID;
 
-
-
     private ArrayList<CallDetialswithIMEI>  mUploadCallArrayList;
     private ArrayList<CallDetailsFetch> mUrlCallArrayList;
 
@@ -199,32 +198,12 @@ public class Home extends AppCompatActivity
     int clickcount=0;
     NotificationManager notificationManager;
     DataNotification dataNotification;
+    NetworkInfo info;
 
-  /*  class MyJSON implements Runnable {
-        @Override
-        public void run() {
-            try {
-                String url = clienturl+"?clientid=" + clientid + "&caseid=33";
-                Log.d("ReminderUrl",url);
-                while (true) {
-                    *//* RequestQueue requestQueue = Volley.newRequestQueue(Home.this);
-                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,
-                            null, new success(), new fail());
-                    requestQueue.add(jsonObjectRequest);*//*
-                    t1.sleep(120000);
-
-                }
-            }catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }*/
-
-    @Override
+   @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        try{
         supportRequestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -243,7 +222,6 @@ public class Home extends AppCompatActivity
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR}, 1);
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_CALENDAR}, 1);
 
-        try {
             imgRefresh=findViewById(R.id.imgRefresh);
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
             pref.edit().putInt("numOfCalls", 0).apply();
@@ -318,10 +296,43 @@ public class Home extends AppCompatActivity
             toggle.syncState();
 
             expandableList = (ExpandableListView) findViewById(R.id.navigationmenu);
-            dialog = ProgressDialog.show(Home.this, "", "Loading all data for refnames...", true);
             mtextView = findViewById(R.id.txtTimer);
+            if(CheckInternetSpeed.checkInternet(Home.this).contains("0")) {
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
+                alertDialogBuilder.setTitle("No Internet connection!!!")
+                        .setMessage("Can't do further process")
 
-            getRefName();
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
+
+                            }
+                        }).show();
+            }
+            else if(CheckInternetSpeed.checkInternet(Home.this).contains("1")) {
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
+                alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                        .setMessage("Can't do further process")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+            }
+            else {
+                dialog = ProgressDialog.show(Home.this, "", "Loading all data for refnames...", false,true);
+                getRefName();
+            }
             imgRefresh.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -418,15 +429,21 @@ public class Home extends AppCompatActivity
                         case "Online Leads":
                             // case "Submenu1":
                             intent = new Intent(Home.this, OnlineLead.class);
-                            intent.putExtra("Activity", "OnlineLead");
+                            intent.putExtra("ActivityLeads", "OnlineLead");
+                            startActivity(intent);
+                            break;
+                        case "Form Filled":
+                            // case "Submenu1":
+                            intent = new Intent(Home.this, FormFilled.class);
+                            //intent.putExtra("Activity", "OnlineLead");
                             startActivity(intent);
                             break;
                         case "Open Leads":
                             intent=new Intent(Home.this,OpenLeads.class);
+                            intent.putExtra("Activity","OpenLead");
                             startActivity(intent);
                             break;
-
-                        case "Dashboard":
+                            case "Dashboard":
                             // case "Submenu1":
                             intent = new Intent(Home.this, Home.class);
                             intent.putExtra("Activity", selected);
@@ -436,7 +453,7 @@ public class Home extends AppCompatActivity
                         case "Converted Online Lead":
                             // case "Submenu1":
                             intent = new Intent(Home.this, OnlineLead.class);
-                            intent.putExtra("Activity", "ConvertedOnlineLead");
+                            intent.putExtra("ActivityLeads", "ConvertedOnlineLead");
                             startActivity(intent);
                             break;
 
@@ -454,10 +471,10 @@ public class Home extends AppCompatActivity
                             startActivity(intent);
                             break;
 
-
                         case "Reminder":
                             startActivity(new Intent(Home.this, ReminderActivity.class));
                             break;
+
                         case "Master Entry":
                             startActivity(new Intent(Home.this, MasterEntry.class));
                             break;
@@ -466,6 +483,14 @@ public class Home extends AppCompatActivity
 
                             // case "Submenu1":
                             intent = new Intent(Home.this, MessageTemplate.class);
+                            intent.putExtra("Activity","Message");
+                            startActivity(intent);
+                            break;
+
+                        case "Mail Template":
+                            // case "Submenu1":
+                            intent = new Intent(Home.this, MessageTemplate.class);
+                            intent.putExtra("Activity","Mail");
                             startActivity(intent);
                             break;
 
@@ -475,7 +500,6 @@ public class Home extends AppCompatActivity
                             break;
 
                         case "Search":
-
                             // case "Submenu1":
                             intent = new Intent(Home.this, SearchAllActivity.class);
                             startActivity(intent);
@@ -512,13 +536,11 @@ public class Home extends AppCompatActivity
                             startActivity(intent);
                             break;
                         case "Status Report":
-
                             intent = new Intent(Home.this, StatusReport.class);
                             intent.putExtra("ActivityName", "Status Report");
                             startActivity(intent);
                             break;
                         case "Status Report DataRefwise":
-
                             intent = new Intent(Home.this, StatusReport.class);
                             intent.putExtra("ActivityName", "Status Report DataRefwise");
                             startActivity(intent);
@@ -549,6 +571,7 @@ public class Home extends AppCompatActivity
                             break;
                         case "New Client Entry":
                                 intent=new Intent(Home.this,NewClientEntry.class);
+                                intent.putExtra("Activity","Home");
                                 startActivity(intent);
 
                     }
@@ -606,114 +629,189 @@ public class Home extends AppCompatActivity
 
         }catch (Exception e)
         {
-            Toast.makeText(Home.this,"Got exception in Dashboard",Toast.LENGTH_SHORT).show();
+            Toast.makeText(Home.this,"Errorcode-116 Dashboard oncreate "+e.toString(),Toast.LENGTH_SHORT).show();
             Log.d("Exception", String.valueOf(e));
         }
     }//onCreate close
     public void logoutClick()
     {
-        LayoutInflater li = LayoutInflater.from(getApplicationContext());
-        //Creating a view to get the dialog box
-        View confirmCall = li.inflate(R.layout.layout_confirm_logout, null);
-        TextView txtYes = (TextView) confirmCall.findViewById(R.id.txtYes);
-        TextView txtNo = (TextView) confirmCall.findViewById(R.id.txtNo);
-
-        AlertDialog.Builder alert = new AlertDialog.Builder(Home.this);
-        //Adding our dialog box to the view of alert dialog
-        alert.setView(confirmCall);
-        //Creating an alert dialog
-        alertDialog = alert.create();
-        alertDialog.show();
-
-        txtYes.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                editor = sp.edit();
-                editor.putString("Name", null);
-                editor.putString("Id",null);
-                editor.commit();
-                intent = new Intent(Home.this, Login.class);
-                startActivity(intent);
-                finish();
-
-            }
-        });
-
-        txtNo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-            }
-        });
-    }
-    public void spinnerItemSelected()
-    {
-        if (isSpinnerTouched) {
-
-            String texttoload = spinnerRef.getSelectedItem().toString();
-            editor = sp.edit();
-            editor.putString("DataRefName", texttoload);
-            editor.commit();
+        try {
             LayoutInflater li = LayoutInflater.from(getApplicationContext());
             //Creating a view to get the dialog box
-            View confirmCall = li.inflate(R.layout.layout_confirm_loadtext, null);
+            View confirmCall = li.inflate(R.layout.layout_confirm_logout, null);
             TextView txtYes = (TextView) confirmCall.findViewById(R.id.txtYes);
             TextView txtNo = (TextView) confirmCall.findViewById(R.id.txtNo);
-            TextView txtLoad = confirmCall.findViewById(R.id.txtConfirmLoad);
-            txtLoad.setText("Do you want to load " + texttoload + "?");
-            final AlertDialog.Builder alert = new AlertDialog.Builder(Home.this);
+
+            AlertDialog.Builder alert = new AlertDialog.Builder(Home.this);
             //Adding our dialog box to the view of alert dialog
             alert.setView(confirmCall);
             //Creating an alert dialog
-            alertRefName = alert.create();
-            //if (++check > 1) {
-            alertRefName.show();
-            // }
+            alertDialog = alert.create();
+            alertDialog.show();
 
             txtYes.setOnClickListener(new View.OnClickListener() {
+
                 @Override
                 public void onClick(View view) {
+                    editor = sp.edit();
+                    editor.putString("Name", null);
+                    editor.putString("Id", null);
+                    editor.commit();
+                    intent = new Intent(Home.this, Login.class);
+                    startActivity(intent);
+                    finish();
 
-                    if (pos == 0) {
-
-                        editor = sp.edit();
-                        editor.putString("DtaFrom", "0");
-                        editor.commit();
-                        dialog = ProgressDialog.show(Home.this, "", "Loading All Data...", true);
-                        alertRefName.dismiss();
-                        //getStatusCount();
-                        getAllRefName();
-                        //   refreshWhenLoading();
-
-
-
-                    } else {
-                        alertRefName.dismiss();
-                        int p = pos - 1;
-
-                        // DataReference dataReference1=arrayListRefrences.get(position);
-                        dataFrom1 = arrayListRefId.get(p);
-                        Log.d("RefId", dataFrom1);
-                        editor = sp.edit();
-                        editor.putString("DtaFrom", dataFrom1);
-                        editor.commit();
-                        dialog = ProgressDialog.show(Home.this, "", "Loading Refnamewise data...", true);
-                        alertRefName.dismiss();
-                        getRestRefName();
-                        // refreshWhenLoading();
-                              /*  }
-                            }).start();*/
-                    }
                 }
             });
 
             txtNo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    alertRefName.dismiss();
+                    alertDialog.dismiss();
                 }
             });
+        }catch (Exception e)
+        {
+            Toast.makeText(Home.this,"Errorcode-117 Dashboard BtnLogout clicked "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void spinnerItemSelected()
+    {
+        try {
+            if (isSpinnerTouched) {
+
+                String texttoload = spinnerRef.getSelectedItem().toString();
+                editor = sp.edit();
+                editor.putString("DataRefName", texttoload);
+                editor.commit();
+                LayoutInflater li = LayoutInflater.from(getApplicationContext());
+                //Creating a view to get the dialog box
+                View confirmCall = li.inflate(R.layout.layout_confirm_loadtext, null);
+                TextView txtYes = (TextView) confirmCall.findViewById(R.id.txtYes);
+                TextView txtNo = (TextView) confirmCall.findViewById(R.id.txtNo);
+                TextView txtLoad = confirmCall.findViewById(R.id.txtConfirmLoad);
+                txtLoad.setText("Do you want to load " + texttoload + "?");
+                final AlertDialog.Builder alert = new AlertDialog.Builder(Home.this);
+                //Adding our dialog box to the view of alert dialog
+                alert.setView(confirmCall);
+                //Creating an alert dialog
+                alertRefName = alert.create();
+                //if (++check > 1) {
+                alertRefName.show();
+                // }
+
+                txtYes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        if (pos == 0) {
+
+                            editor = sp.edit();
+                            editor.putString("DtaFrom", "0");
+                            editor.commit();
+                            dialog = ProgressDialog.show(Home.this, "", "Loading All Data...", true);
+                            alertRefName.dismiss();
+                            //getStatusCount();
+                            if (CheckInternetSpeed.checkInternet(Home.this).contains("0")) {
+                                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
+                                alertDialogBuilder.setTitle("No Internet connection!!!")
+                                        .setMessage("Can't do further process")
+
+                                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                                        // The dialog is automatically dismissed when a dialog button is clicked.
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                                dialog.dismiss();
+
+                                            }
+                                        }).show();
+                            } else if (CheckInternetSpeed.checkInternet(Home.this).contains("1")) {
+                                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
+                                alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                                        .setMessage("Can't do further process")
+
+                                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                                        // The dialog is automatically dismissed when a dialog button is clicked.
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                //insertIMEI();
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                        .show();
+                            } else {
+                                getAllRefName();
+                            }
+
+                            //   refreshWhenLoading();
+
+
+                        } else {
+                            alertRefName.dismiss();
+                            int p = pos - 1;
+
+                            // DataReference dataReference1=arrayListRefrences.get(position);
+                            dataFrom1 = arrayListRefId.get(p);
+                            Log.d("RefId", dataFrom1);
+                            editor = sp.edit();
+                            editor.putString("DtaFrom", dataFrom1);
+                            editor.commit();
+                            dialog = ProgressDialog.show(Home.this, "", "Loading Refnamewise data...", true);
+                            alertRefName.dismiss();
+                            if (CheckInternetSpeed.checkInternet(Home.this).contains("0")) {
+                                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
+                                alertDialogBuilder.setTitle("No Internet connection!!!")
+                                        .setMessage("Can't do further process")
+
+                                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                                        // The dialog is automatically dismissed when a dialog button is clicked.
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                                dialog.dismiss();
+
+                                            }
+                                        }).show();
+                            } else if (CheckInternetSpeed.checkInternet(Home.this).contains("1")) {
+                                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
+                                alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                                        .setMessage("Can't do further process")
+
+                                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                                        // The dialog is automatically dismissed when a dialog button is clicked.
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                //insertIMEI();
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                        .show();
+                            } else {
+                                getRestRefName();
+                            }
+
+                            // refreshWhenLoading();
+                              /*  }
+                            }).start();*/
+                        }
+                    }
+                });
+
+                txtNo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertRefName.dismiss();
+                    }
+                });
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(Home.this,"Errorcode-118 Dashboard SpinnerItemSelected clicked "+e.toString(),Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -738,143 +836,225 @@ public class Home extends AppCompatActivity
 
     @SuppressLint("NewApi")
     public void getCallDetails() {
+            try {
+                if (ContextCompat.checkSelfPermission(Home.this, Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(Home.this, Manifest.permission.READ_CALL_LOG)) {
+                        ActivityCompat.requestPermissions(Home.this, new String[]
+                                {Manifest.permission.READ_CALL_LOG}, 1);
+                    } else {
+                        ActivityCompat.requestPermissions(Home.this, new String[]
+                                {Manifest.permission.READ_CALL_LOG}, 1);
+                    }
+                } else {
+                    if (CheckInternetSpeed.checkInternet(Home.this).contains("0")) {
+                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
+                        alertDialogBuilder.setTitle("No Internet connection!!!")
+                                .setMessage("Can't do further process")
 
-        if (ContextCompat.checkSelfPermission(Home.this, Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(Home.this, Manifest.permission.READ_CALL_LOG)) {
-                ActivityCompat.requestPermissions(Home.this, new String[]
-                        {Manifest.permission.READ_CALL_LOG}, 1);
-            } else {
-                ActivityCompat.requestPermissions(Home.this, new String[]
-                        {Manifest.permission.READ_CALL_LOG}, 1);
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                        dialog.dismiss();
+
+                                    }
+                                }).show();
+                    } else if (CheckInternetSpeed.checkInternet(Home.this).contains("1")) {
+                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
+                        alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                                .setMessage("Can't do further process")
+
+                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //insertIMEI();
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
+                    } else {
+                        getCallLogDetails();
+                    }
+
+                }
+            }catch (Exception e)
+            {
+                Toast.makeText(Home.this,"Errorcode-119 Dashboard GetCallDetails "+e.toString(),Toast.LENGTH_SHORT).show();
             }
-        } else {
-            getCallLogDetails();
-        }
     }
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void getCallLogDetails() {
+            try {
+                Cursor managedCursor = managedQuery(CallLog.Calls.CONTENT_URI, null,
+                        null, null, null);
+                int number = managedCursor.getColumnIndex(CallLog.Calls.NUMBER);
+                int type = managedCursor.getColumnIndex(CallLog.Calls.TYPE);
+                int date = managedCursor.getColumnIndex(CallLog.Calls.DATE);
+                int duration = managedCursor.getColumnIndex(CallLog.Calls.DURATION);
+                int phAccID = managedCursor.getColumnIndex(CallLog.Calls.PHONE_ACCOUNT_ID);
 
-        Cursor managedCursor = managedQuery(CallLog.Calls.CONTENT_URI, null,
-                null, null, null);
-        int number = managedCursor.getColumnIndex(CallLog.Calls.NUMBER);
-        int type = managedCursor.getColumnIndex(CallLog.Calls.TYPE);
-        int date = managedCursor.getColumnIndex(CallLog.Calls.DATE);
-        int duration = managedCursor.getColumnIndex(CallLog.Calls.DURATION);
-        int phAccID = managedCursor.getColumnIndex(CallLog.Calls.PHONE_ACCOUNT_ID);
+                mCallArrayList = new ArrayList<>();
+                mUrlCallArrayList = new ArrayList<>();
+                mUploadCallArrayList = new ArrayList<>();
+                sdfComapre = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
 
-        mCallArrayList = new ArrayList<>();
-        mUrlCallArrayList = new ArrayList<>();
-        mUploadCallArrayList = new ArrayList<>();
-        sdfComapre = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
+                while (managedCursor.moveToNext()) {
+                    callPhoneno = managedCursor.getString(number);
+                    String callType = managedCursor.getString(type);
+                    String callDate = managedCursor.getString(date);
+                    Date callDayTime = new Date(Long.valueOf(callDate));
+                    callDuration = managedCursor.getString(duration);
+                    callphAccID = managedCursor.getString(phAccID);
+                    finalCallType = null;
 
-        while (managedCursor.moveToNext()) {
-            callPhoneno = managedCursor.getString(number);
-            String callType = managedCursor.getString(type);
-            String callDate = managedCursor.getString(date);
-            Date callDayTime = new Date(Long.valueOf(callDate));
-            callDuration = managedCursor.getString(duration);
-            callphAccID = managedCursor.getString(phAccID);
-            finalCallType = null;
+                    int dircode = Integer.parseInt(callType);
+                    switch (dircode) {
+                        case CallLog.Calls.OUTGOING_TYPE:
+                            finalCallType = "OUTGOING";
+                            break;
 
-            int dircode = Integer.parseInt(callType);
-            switch (dircode) {
-                case CallLog.Calls.OUTGOING_TYPE:
-                    finalCallType = "OUTGOING";
-                    break;
+                        case CallLog.Calls.INCOMING_TYPE:
+                            finalCallType = "INCOMING";
+                            break;
 
-                case CallLog.Calls.INCOMING_TYPE:
-                    finalCallType = "INCOMING";
-                    break;
+                        case CallLog.Calls.MISSED_TYPE:
+                            finalCallType = "MISSED";
+                            break;
+                    }
+                    sdfSaveArray = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
+                    strdateFormated = sdfSaveArray.format(callDayTime);
 
-                case CallLog.Calls.MISSED_TYPE:
-                    finalCallType = "MISSED";
-                    break;
+                    callDetialswithIMEI = new CallDetialswithIMEI(callPhoneno, finalCallType, strdateFormated, callDuration, IMEINumber1, IMEINumber2, callphAccID);
+                    mCallArrayList.add(callDetialswithIMEI);
+                }
+                Log.d("callarraysize", mCallArrayList.size() + "");
+
+                if(CheckServer.isServerReachable(Home.this)) {
+                    requestQueue = Volley.newRequestQueue(Home.this);
+                    urlCallDate = clienturl + "?clientid=" + clientid + "&caseid=57&IMEI=" + IMEINumber1;
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlCallDate, null,
+                            new callSuccess(), new callFail());
+                    Log.d("UrlLastCallDate", urlCallDate);
+
+                    jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
+                            DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2,
+                            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                    requestQueue.add(jsonObjectRequest);
+                }
+                else {
+                    dialog.dismiss();
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
+                    alertDialogBuilder.setTitle("Server Down!!!!")
+                            .setMessage("Try after some time!")
+
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                    dialog.dismiss();
+
+                                }
+                            }).show();
+                }
+            }catch (Exception e)
+            {
+                Toast.makeText(Home.this,"Errorcode-120 Dashboard CallLogDetails "+e.toString(),Toast.LENGTH_SHORT).show();
             }
-            sdfSaveArray = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
-            strdateFormated = sdfSaveArray.format(callDayTime);
-
-            callDetialswithIMEI = new CallDetialswithIMEI(callPhoneno, finalCallType, strdateFormated, callDuration, IMEINumber1, IMEINumber2, callphAccID);
-            mCallArrayList.add(callDetialswithIMEI);
-        }
-        Log.d("callarraysize", mCallArrayList.size() + "");
-
-        requestQueue = Volley.newRequestQueue(Home.this);
-        urlCallDate = clienturl+"?clientid="+clientid+"&caseid=57&IMEI="+IMEINumber1;
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlCallDate, null,
-                new callSuccess(), new callFail());
-        Log.d("UrlLastCallDate",urlCallDate);
-
-        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
-                DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        requestQueue.add(jsonObjectRequest);
     }
 
     public void uploadCalls(String callPhoneno, String finalCallType, final String strdateFormated,
-                            String callDuration, final String callIMEI1, String callIMEI2, String callphAccID) {
-
-        if (requestQueue == null) {
-            requestQueue = Volley.newRequestQueue(Home.this);
-        } else {
-            String strurl = clienturl+"?clientid="+clientid+"&caseid=53&MobileNo=" + callPhoneno +
-                    "&CallType=" + finalCallType + "&CallDate=" + strdateFormated + "&CallDuration=" + callDuration +
-                    "&IMEI1=" + callIMEI1 + "&IMEI2=" + callIMEI2 + "&PhoneAccountId=" + callphAccID;
-            Log.d("CallUrl",strurl);
-
-
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, strurl, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    Log.d("UploadCallResponse", response);
+                            String callDuration, final String callIMEI1, String callIMEI2, String callphAccID)
+    {
+        try {
+            if(CheckServer.isServerReachable(Home.this)) {
+                if (requestQueue == null) {
+                    requestQueue = Volley.newRequestQueue(Home.this);
+                } else {
+                    String strurl = clienturl + "?clientid=" + clientid + "&caseid=53&MobileNo=" + callPhoneno +
+                            "&CallType=" + finalCallType + "&CallDate=" + strdateFormated + "&CallDuration=" + callDuration +
+                            "&IMEI1=" + callIMEI1 + "&IMEI2=" + callIMEI2 + "&PhoneAccountId=" + callphAccID;
+                    Log.d("CallUrl", strurl);
+                    StringRequest stringRequest = new StringRequest(Request.Method.GET, strurl, new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            Log.d("UploadCallResponse", response);
                    /* if (response.contains("Data inserted successfully")) {
                         Toast.makeText(Home.this, "Record inserted successfully", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(Home.this, "Record not inserted", Toast.LENGTH_SHORT).show();
                     }*/
-                    counturl++;
-                    Log.d("url count", counturl + " / " + "&CallDate=" + strdateFormated + " / " + response + " / " + callIMEI1);
+                            counturl++;
+                            Log.d("url count", counturl + " / " + "&CallDate=" + strdateFormated + " / " + response + " / " + callIMEI1);
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                            Log.d("VolleyError", String.valueOf(error));
+                        }
+                    });
+
+                    stringRequest.setRetryPolicy(new RetryPolicy() {
+                        @Override
+                        public int getCurrentTimeout() {
+                            return 50000;
+                        }
+
+                        @Override
+                        public int getCurrentRetryCount() {
+                            return 50000;
+                        }
+
+                        @Override
+                        public void retry(VolleyError error) throws VolleyError {
+
+                        }
+                    });
+
+                    stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                            DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2,
+                            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+                    requestQueue.add(stringRequest);
                 }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
+            }else {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
 
-                    Log.d("VolleyError", String.valueOf(error));
-                }
-            });
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
 
-            stringRequest.setRetryPolicy(new RetryPolicy() {
-                @Override
-                public int getCurrentTimeout() {
-                    return 50000;
-                }
-
-                @Override
-                public int getCurrentRetryCount() {
-                    return 50000;
-                }
-
-                @Override
-                public void retry(VolleyError error) throws VolleyError {
-
-                }
-            });
-
-            stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                    DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2,
-                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-            requestQueue.add(stringRequest);
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(Home.this,"Errorcode-121 Dashboard UploadCallLog "+e.toString(),Toast.LENGTH_SHORT).show();
         }
     }
 
     private class callSuccess implements Response.Listener<JSONObject> {
         @Override
         public void onResponse(JSONObject response) {
+            try{
             Log.e("success", String.valueOf(response));
-            try {
                 JSONArray jsonArray = response.getJSONArray("data");
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -887,8 +1067,6 @@ public class Home extends AppCompatActivity
                     mUrlCallArrayList.add(callDetailsFetch);
                 }
                 Log.d("urlarrlen", mUrlCallArrayList.size() + "");
-
-
                 for (int i = 0; i < mCallArrayList.size(); i++) {
                     String clno = mCallArrayList.get(i).getmCallMobileNo();
                     String cltype = mCallArrayList.get(i).getmCallType();
@@ -914,11 +1092,6 @@ public class Home extends AppCompatActivity
                 }
                 Log.d("recordscall", "call upload without date");
                 Log.d("uploadarraysizecall", mUploadCallArrayList.size() + "");
-            } catch (ParseException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
 
             for (int i = 0; i < mUploadCallArrayList.size(); i++) {
                 String clno = mUploadCallArrayList.get(i).getmCallMobileNo();
@@ -932,12 +1105,17 @@ public class Home extends AppCompatActivity
                 uploadCalls(clno, cltype, cldate, clduration, climei1, climei2, clphAccID);
             }
             Log.d("recordscall", "call upload with date");
+            }  catch (Exception e) {
+                Toast.makeText(Home.this,"Errorcode-122 Dashboard UploadCallResponse "+e.toString(),Toast.LENGTH_SHORT).show();
+                //  e.printStackTrace();
+            }
         }
     }
 
     private class callFail implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
+            Toast.makeText(Home.this,"Errorcode-123 Dashboard CallLogDetails Fail "+error.toString(),Toast.LENGTH_SHORT).show();
             Log.e("Fail", String.valueOf(error));
         }
     }
@@ -946,176 +1124,228 @@ public class Home extends AppCompatActivity
     //-----------------------------------SMS-------------------------------------------------
     @SuppressLint("NewApi")
     public void getSMSDetails() {
-
-        if (ContextCompat.checkSelfPermission(Home.this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(Home.this, Manifest.permission.READ_SMS)) {
-                ActivityCompat.requestPermissions(Home.this, new String[]
-                        {Manifest.permission.READ_SMS}, 2);
+        try {
+            if (ContextCompat.checkSelfPermission(Home.this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(Home.this, Manifest.permission.READ_SMS)) {
+                    ActivityCompat.requestPermissions(Home.this, new String[]
+                            {Manifest.permission.READ_SMS}, 2);
+                } else {
+                    ActivityCompat.requestPermissions(Home.this, new String[]
+                            {Manifest.permission.READ_SMS}, 2);
+                }
             } else {
-                ActivityCompat.requestPermissions(Home.this, new String[]
-                        {Manifest.permission.READ_SMS}, 2);
+                getSMSLogDetails();
             }
-        } else {
-            getSMSLogDetails();
+        }catch (Exception e)
+        {
+            Toast.makeText(Home.this,"Errorcode-123 Dashboard SmsDetails "+e.toString(),Toast.LENGTH_SHORT).show();
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void getSMSLogDetails() {
+        try {
+            Uri uri = Uri.parse("content://sms");
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
 
-        Uri uri = Uri.parse("content://sms");
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            mSMSArrayList = new ArrayList<>();
+            mUrlSMSArrayList = new ArrayList<>();
+            mUploadSMSArrayList = new ArrayList<>();
+            sdfComapre = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
 
-        mSMSArrayList = new ArrayList<>();
-        mUrlSMSArrayList = new ArrayList<>();
-        mUploadSMSArrayList = new ArrayList<>();
-        sdfComapre = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
+            if (cursor.moveToFirst()) {
+                for (int i = 0; i < cursor.getCount(); i++) {
+                    String smsbody = cursor.getString(cursor.getColumnIndexOrThrow("body"));
+                    String phoneno = cursor.getString(cursor.getColumnIndexOrThrow("address"));
+                    String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
+                    Date smsDayTime = new Date(Long.valueOf(date));
+                    String smstype = cursor.getString(cursor.getColumnIndexOrThrow("type"));
 
-        if (cursor.moveToFirst()) {
-            for (int i = 0; i < cursor.getCount(); i++) {
-                String smsbody = cursor.getString(cursor.getColumnIndexOrThrow("body"));
-                String phoneno = cursor.getString(cursor.getColumnIndexOrThrow("address"));
-                String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
-                Date smsDayTime = new Date(Long.valueOf(date));
-                String smstype = cursor.getString(cursor.getColumnIndexOrThrow("type"));
+                    String typeOfSMS = null;
+                    switch (Integer.parseInt(smstype)) {
+                        case 1:
+                            typeOfSMS = "INBOX";
+                            break;
 
-                String typeOfSMS = null;
-                switch (Integer.parseInt(smstype)) {
-                    case 1:
-                        typeOfSMS = "INBOX";
-                        break;
+                        case 2:
+                            typeOfSMS = "SENT";
+                            break;
 
-                    case 2:
-                        typeOfSMS = "SENT";
-                        break;
+                        case 3:
+                            typeOfSMS = "DRAFT";
+                            break;
+                    }
+                    sdfSaveArray = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String strdateFormated = sdfSaveArray.format(smsDayTime);
 
-                    case 3:
-                        typeOfSMS = "DRAFT";
-                        break;
+                    smsDetails = new SMSDetails(phoneno, typeOfSMS, strdateFormated, smsbody, IMEINumber1, IMEINumber2);
+                    mSMSArrayList.add(smsDetails);
+                    cursor.moveToNext();
                 }
-                sdfSaveArray = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                String strdateFormated = sdfSaveArray.format(smsDayTime);
-
-                smsDetails = new SMSDetails(phoneno, typeOfSMS, strdateFormated, smsbody, IMEINumber1, IMEINumber2);
-                mSMSArrayList.add(smsDetails);
-                cursor.moveToNext();
             }
-        }
-        Log.d("smsarraylist", String.valueOf(mSMSArrayList.size()));
-       // txtttlsmsrecord.setText(mSMSArrayList.size()+"");
+            Log.d("smsarraylist", String.valueOf(mSMSArrayList.size()));
+            // txtttlsmsrecord.setText(mSMSArrayList.size()+"");
+            if(CheckServer.isServerReachable(Home.this)) {
+                requestQueue = Volley.newRequestQueue(Home.this);
+                urlSMSDate = clienturl + "?clientid=" + clientid + "&caseid=58&IMEI=" + IMEINumber1;
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlSMSDate, null,
+                        new smsSuccess(), new smsFail());
+                Log.d("Lastsms", urlSMSDate);
+                jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
+                        DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2,
+                        DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                requestQueue.add(jsonObjectRequest);
+            }else {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
 
-        requestQueue = Volley.newRequestQueue(Home.this);
-        urlSMSDate = clienturl+"?clientid="+clientid+"&caseid=58&IMEI="+IMEINumber1;
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlSMSDate, null,
-                new smsSuccess(), new smsFail());
-            Log.d("Lastsms",urlSMSDate);
-        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
-                DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        requestQueue.add(jsonObjectRequest);
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
+
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(Home.this,"Errorcode-124 Dashboard SmsLogDetails "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void uploadSMS(String smsPhoneno, String finalsmsType, final String strdateFormated,
                           String smsBody, String smsIMEI1, String smsIMEI2) {
+        try {
+            if(CheckServer.isServerReachable(Home.this)) {
+                if (requestQueue == null) {
+                    requestQueue = Volley.newRequestQueue(Home.this);
+                } else {
+                    String strurl = clienturl + "?clientid=" + clientid + "&caseid=54&MobileNo=" + smsPhoneno +
+                            "&SMSType=" + finalsmsType + "&SMSDate=" + strdateFormated + "&SMSBODY=" + smsBody +
+                            "&IMEI1=" + smsIMEI1 + "&IMEI2=" + smsIMEI2;
 
-        if (requestQueue == null) {
-            requestQueue = Volley.newRequestQueue(Home.this);
-        } else {
-            String strurl =clienturl+"?clientid="+clientid+"&caseid=54&MobileNo=" + smsPhoneno +
-                    "&SMSType=" + finalsmsType + "&SMSDate=" + strdateFormated + "&SMSBODY=" + smsBody +
-                    "&IMEI1=" + smsIMEI1 + "&IMEI2=" + smsIMEI2;
+                    StringRequest stringRequest = new StringRequest(Request.Method.GET, strurl, new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            //Log.d("ChatResponse", response);
+                            if (response.contains("SMS inserted successfully")) {
+                                //Toast.makeText(MainActivity.this, "Record inserted successfully", Toast.LENGTH_SHORT).show();
+                            }
+                            counturl++;
+                            Log.d("url count", counturl + " / " + "&SMSDate=" + strdateFormated + " / " + response);
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("VolleyError", String.valueOf(error));
+                        }
+                    });
 
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, strurl, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    //Log.d("ChatResponse", response);
-                    if (response.contains("SMS inserted successfully")) {
-                        //Toast.makeText(MainActivity.this, "Record inserted successfully", Toast.LENGTH_SHORT).show();
-                    }
-                    counturl++;
-                    Log.d("url count", counturl + " / " + "&SMSDate=" + strdateFormated + " / " + response);
+                    stringRequest.setRetryPolicy(new RetryPolicy() {
+                        @Override
+                        public int getCurrentTimeout() {
+                            return 50000;
+                        }
+
+                        @Override
+                        public int getCurrentRetryCount() {
+                            return 50000;
+                        }
+
+                        @Override
+                        public void retry(VolleyError error) throws VolleyError {
+
+                        }
+                    });
+
+                    stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                            DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2,
+                            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                    requestQueue.add(stringRequest);
                 }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("VolleyError", String.valueOf(error));
-                }
-            });
+            }else {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
 
-            stringRequest.setRetryPolicy(new RetryPolicy() {
-                @Override
-                public int getCurrentTimeout() {
-                    return 50000;
-                }
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
 
-                @Override
-                public int getCurrentRetryCount() {
-                    return 50000;
-                }
-
-                @Override
-                public void retry(VolleyError error) throws VolleyError {
-
-                }
-            });
-
-            stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                    DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2,
-                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-            requestQueue.add(stringRequest);
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(Home.this,"Errorcode-125 Dashboard UploadSmsLog"+e.toString(),Toast.LENGTH_SHORT).show();
         }
     }
     public void displayNotification(){
+        try {
+            clickcount = clickcount + 1;
+            AlertDialog.Builder alert = new AlertDialog.Builder(Home.this);
+            LayoutInflater li = LayoutInflater.from(Home.this);
+            //Creating a view to get the dialog box
+            View confirmCall = li.inflate(R.layout.layout_notification, null);
+            recyclerViewNotification = confirmCall.findViewById(R.id.recyclerNotification);
+            alert.setView(confirmCall);
+            alertDialog = alert.create();
 
-        clickcount = clickcount + 1;
-        AlertDialog.Builder alert = new AlertDialog.Builder(Home.this);
-        LayoutInflater li = LayoutInflater.from(Home.this);
-        //Creating a view to get the dialog box
-        View confirmCall = li.inflate(R.layout.layout_notification, null);
-        recyclerViewNotification = confirmCall.findViewById(R.id.recyclerNotification);
-        alert.setView(confirmCall);
-        alertDialog = alert.create();
+            if (clickcount % 1 == 0) {
+                //  alert.setView(confirmCall);
 
-        if (clickcount % 1 == 0) {
-            //  alert.setView(confirmCall);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(Home.this);
+                layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                recyclerViewNotification.setLayoutManager(layoutManager);
+                //adapterNotification=new AdapterNotification(Home.this,arrayListNotification);
+                recyclerViewNotification.setAdapter(adapterNotification);
 
-            LinearLayoutManager layoutManager = new LinearLayoutManager(Home.this);
-            layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-            recyclerViewNotification.setLayoutManager(layoutManager);
-            //adapterNotification=new AdapterNotification(Home.this,arrayListNotification);
-            recyclerViewNotification.setAdapter(adapterNotification);
+                //Adding our dialog box to the view of alert dialog
 
-            //Adding our dialog box to the view of alert dialog
+                //Creating an alert dialog
 
-            //Creating an alert dialog
-
-            alertDialog.show();
-        } else {
-            alertDialog.dismiss();
+                alertDialog.show();
+            } else {
+                alertDialog.dismiss();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(Home.this,"Errorcode-126 Dashboard DisplayNotification "+e.toString(),Toast.LENGTH_SHORT).show();
         }
     }
 
     private class smsSuccess implements Response.Listener<JSONObject> {
         @Override
         public void onResponse(JSONObject response) {
-            Log.d("success", urlSMSDate);
-
-            Log.e("success", String.valueOf(response));
             try {
+                Log.d("success", urlSMSDate);
+                Log.e("success", String.valueOf(response));
+
                 JSONArray jsonArray = response.getJSONArray("data");
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    JSONObject jsonObject1=jsonObject.getJSONObject("dtSMSDate");
+                    JSONObject jsonObject1 = jsonObject.getJSONObject("dtSMSDate");
                     String mlastdate = jsonObject1.getString("date");
 
                     Log.d("lastdate", mlastdate);
                     smsDetailsFetch = new SMSDetailsFetch(mlastdate);
                     mUrlSMSArrayList.add(smsDetailsFetch);
 
-                   // txtsmslastdate.setText(mlastdate+"");
+                    // txtsmslastdate.setText(mlastdate+"");
                 }
                 Log.d("urlarrlensms", mUrlSMSArrayList.size() + "");
 
@@ -1133,10 +1363,10 @@ public class Home extends AppCompatActivity
                     } else {
                         String strCompareRecord = mUrlSMSArrayList.get(mUrlSMSArrayList.size() - 1).getmfthSMSDate();
                         Date dtMydate = sdfComapre.parse(strCompareRecord);
-                        String strUrlDate = sdfComapre.format(dtMydate).substring(0,17);
-                        Log.d("ddd",strUrlDate);
-                        strUrlDate=strUrlDate+sdfComapre.format(dtMydate).substring(18,20);
-                        Log.d("ddd1",strUrlDate);
+                        String strUrlDate = sdfComapre.format(dtMydate).substring(0, 17);
+                        Log.d("ddd", strUrlDate);
+                        strUrlDate = strUrlDate + sdfComapre.format(dtMydate).substring(18, 20);
+                        Log.d("ddd1", strUrlDate);
                         if (strUrlDate.compareTo(smsdate) < 0) {
                             Log.d("datematch", strUrlDate + " / " + smsdate);
                             smsDetails = new SMSDetails(smsno, smstype, smsdate, smsbody, smsimei1, smsimei2);
@@ -1145,96 +1375,104 @@ public class Home extends AppCompatActivity
                     }
                 }
                 Log.d("uploadsmsarraysize", mUploadSMSArrayList.size() + "");
-             //   txtnewsmsrecords.setText(mUploadSMSArrayList.size() + "");
-            } catch (ParseException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+                //   txtnewsmsrecords.setText(mUploadSMSArrayList.size() + "");
 
-            for (int i = 0; i < mUploadSMSArrayList.size(); i++) {
-                String smsno = mUploadSMSArrayList.get(i).getmSMSMobileNo();
-                String smstype = mUploadSMSArrayList.get(i).getmSMStype();
-                String smsdate = mUploadSMSArrayList.get(i).getmSMSdate();
-                String smsbody = mUploadSMSArrayList.get(i).getmSMSbody();
-                String smsimei1 = mUploadSMSArrayList.get(i).getmSMSIMEI1();
-                String smsimei2 = mUploadSMSArrayList.get(i).getmSMSIMEI2();
-                Log.d("recordsms", smsbody);
-                uploadSMS(smsno, smstype, smsdate, smsbody, smsimei1, smsimei2);
+
+                for (int i = 0; i < mUploadSMSArrayList.size(); i++) {
+                    String smsno = mUploadSMSArrayList.get(i).getmSMSMobileNo();
+                    String smstype = mUploadSMSArrayList.get(i).getmSMStype();
+                    String smsdate = mUploadSMSArrayList.get(i).getmSMSdate();
+                    String smsbody = mUploadSMSArrayList.get(i).getmSMSbody();
+                    String smsimei1 = mUploadSMSArrayList.get(i).getmSMSIMEI1();
+                    String smsimei2 = mUploadSMSArrayList.get(i).getmSMSIMEI2();
+                    Log.d("recordsms", smsbody);
+                    uploadSMS(smsno, smstype, smsdate, smsbody, smsimei1, smsimei2);
+                }
+                Toast.makeText(Home.this, "SMS Records Upload Successfully.", Toast.LENGTH_SHORT).show();
+                Log.d("recordsms", "sms upload");
+            } catch (Exception e) {
+                Toast.makeText(Home.this, "Errorcode-127 Dashboard UploadSmsResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
             }
-            Toast.makeText(Home.this, "SMS Records Upload Successfully.", Toast.LENGTH_SHORT).show();
-            Log.d("recordsms", "sms upload");
         }
     }
 
     private class smsFail implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
+            Toast.makeText(Home.this,"Errorcode-128 Dashboard UploadSms fail "+error.toString(),Toast.LENGTH_SHORT).show();
             Log.e("Fail", String.valueOf(error));
         }
     }
 
     private void prepareListData() {
-        listDataHeader = new ArrayList<String>();
-        listDataChild = new HashMap<String, List<String>>();
-
-        // Adding data header
-        listDataHeader.add("Lead Management");
-        //listDataHeader.add("Document Management");
-        listDataHeader.add("Reports");
-        //listDataHeader.add("Logout");
-
-
-
-        // Adding child data
-        List<String> heading1 = new ArrayList<String>();
-
-        heading1.add("Online Leads");
-        heading1.add("Dashboard");
-        heading1.add("New Lead");
-        heading1.add("Open Leads");
-        heading1.add("Reminder");
-        heading1.add("SMS Template");
-        heading1.add("Search");
-        heading1.add("Chat");
+        try {
+            listDataHeader = new ArrayList<String>();
+            listDataChild = new HashMap<String, List<String>>();
+            // Adding data header
+            listDataHeader.add("Lead Management");
+            listDataHeader.add("Document Management");
+            listDataHeader.add("Reports");
+            //listDataHeader.add("Logout");
+            // Adding child data
+            List<String> heading1 = new ArrayList<String>();
+            heading1.add("Online Leads");
+            heading1.add("Dashboard");
+            heading1.add("New Lead");
+            heading1.add("Open Leads");
+            heading1.add("Form Filled");
+            heading1.add("Reminder");
+            heading1.add("SMS Template");
+            // heading1.add("Mail Template");
+            heading1.add("Search");
+            heading1.add("Chat");
 
 
-      //  heading1.add("Send Bulk SMS");
-      /* List<String> heading3 = new ArrayList<String>();
-       heading3.add("New Client Entry");
-       heading3.add("Master Entry");*/
+            //  heading1.add("Send Bulk SMS");
+            List<String> heading3 = new ArrayList<String>();
+            //  heading3.add("New Client Entry");
+            heading3.add("Master Entry");
 
-        List<String> heading2 = new ArrayList<String>();
-        heading2.add("Lead Count");
-        heading2.add("Total Calls Made");
-        heading2.add("Reallocation Report");
-        heading2.add("Converted Online Lead");
-        heading2.add("First Call Report");
-        heading2.add("Call Report");
-        heading2.add("Message Report");
-        heading2.add("Status Report");
-        heading2.add("Status Report DataRefwise");
-        heading2.add("Remark Report");
-        heading2.add("Point Report");
-        heading2.add("Login Time Report");
-        heading2.add("Notifications");
-        heading2.add("Upload File");
+            List<String> heading2 = new ArrayList<String>();
+            heading2.add("Lead Count");
+            heading2.add("Total Calls Made");
+            heading2.add("Reallocation Report");
+            heading2.add("Converted Online Lead");
+            heading2.add("First Call Report");
+            heading2.add("Call Report");
+            heading2.add("Message Report");
+            heading2.add("Status Report");
+            heading2.add("Status Report DataRefwise");
+            heading2.add("Remark Report");
+            heading2.add("Point Report");
+            heading2.add("Login Time Report");
+            heading2.add("Notifications");
+            heading2.add("Upload File");
 
-        listDataChild.put(listDataHeader.get(0), heading1);// Header, Child data
-        //listDataChild.put(listDataHeader.get(1), heading3);
-        listDataChild.put(listDataHeader.get(1),heading2);
-
+            listDataChild.put(listDataHeader.get(0), heading1);// Header, Child data
+            listDataChild.put(listDataHeader.get(1), heading3);
+            listDataChild.put(listDataHeader.get(2), heading2);
+        }catch (Exception e)
+        {
+            Toast.makeText(Home.this,"Errorcode-129 Dashboard NavigationMenu "+e.toString(),Toast.LENGTH_SHORT).show();
         }
-
-    private void setupDrawerContent(NavigationView navigationView) {
+        }
+        private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        menuItem.setChecked(true);
-                        mDrawerLayout.closeDrawers();
+                        try {
+                            menuItem.setChecked(true);
+                            mDrawerLayout.closeDrawers();
+
+                        }catch (Exception e)
+                        {
+                            Toast.makeText(Home.this,"Errorcode-130 Dashboard NavigationItemSelected "+e.toString(),Toast.LENGTH_SHORT).show();
+                        }
                         return true;
                     }
+
                 });
     }
 
@@ -1244,9 +1482,9 @@ public class Home extends AppCompatActivity
 
         //Detects request codes
         if(requestCode==GET_FROM_GALLERY && resultCode == Activity.RESULT_OK) {
-            Uri selectedImage = data.getData();
-            Bitmap bitmap = null;
             try {
+                Uri selectedImage = data.getData();
+                Bitmap bitmap = null;
                 bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                 imgProfile.setImageBitmap(bitmap);
                 String path=selectedImage.getPath();
@@ -1271,58 +1509,351 @@ public class Home extends AppCompatActivity
                     }
                 }).start();
 
-            } catch (FileNotFoundException e) {
+            }  catch (Exception e) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
+                Toast.makeText(Home.this,"Errorcode-131 Dashboard OnActivityResult "+e.toString(),Toast.LENGTH_SHORT).show();
                 Log.d("Exception", String.valueOf(e));
             }
         }
     }
     public void getNotification() {
-        if(CheckInternet.checkInternet(Home.this)) {
+        //dialog = ProgressDialog.show(Home.this, "Loading", "Please wait.....", false, true);
+        try {
+            if(CheckServer.isServerReachable(Home.this)) {
+                url = clienturl + "?clientid=" + clientid + "&caseid=63&CounselorID=" + counselorid;
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                if (dialog.isShowing()) {
+                                    dialog.dismiss();
+                                }
+                                Log.d("getNotificationRes", response);
+                                try {
+                                    if (response.contains("[]")) {
+                                        imgNotification.setVisibility(View.VISIBLE);
+                                        imgNotification1.setVisibility(View.GONE);
+                                    } else {
+                                        imgNotification.setVisibility(View.GONE);
+                                        imgNotification1.setVisibility(View.VISIBLE);
+                                    }
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    // Log.d("Json",jsonObject.toString());
+                                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                        String notification = jsonObject1.getString("cNotification");
+                                        String srno = jsonObject1.getString("nSrNo");
+                                        String notificationId = jsonObject1.getString("nNotificationID");
+                                        DataNotification dataNotification = new DataNotification(notification, srno, notificationId);
+                                        arrayListNotification.add(dataNotification);
+                                    }
+                                    adapterNotification = new AdapterNotification(Home.this, arrayListNotification);
+                                    adapterNotification.notifyDataSetChanged();
+                                    Log.d("ArraylistNotification", String.valueOf(arrayListNotification.size()));
+                                    for (int i = 0; i < arrayListNotification.size(); i++) {
+                                        Log.d("entered", "Notification");
+                                        dataNotification = arrayListNotification.get(i);
+                                        createNotification(dataNotification, Home.this);
+                                    }
+
+                                } catch (Exception e) {
+                                    Toast.makeText(Home.this, "Errorcode-133 Dashboard GetNotificationResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+                                    Log.d("Exception", String.valueOf(e));
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                if (error == null || error.networkResponse == null)
+                                    return;
+                                final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                //get response body and parse with appropriate encoding
+                                if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                    // responsecode1="ServerError";
+                                    dialog.dismiss();
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
+                                    alertDialogBuilder.setTitle("Server Error!!!")
+
+
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                    Toast.makeText(Home.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    // showCustomPopupMenu();
+                                    Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                }
+
+                            }
+                        });
+                requestQueue.add(stringRequest);
+            }else {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
+
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(Home.this,"Errorcode-132 Dashboard getNotification "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
+
+        }
+
+
+    public void createNotification(DataNotification aMessage, Context context) {
+        try {
+            Random random = new Random();
+            int m = random.nextInt(9999 - 1000) + 1000;
+            final int NOTIFY_ID = m; // ID of notification
+            String id = context.getString(R.string.default_notification_channel_id); // default_channel_id
+            String title = context.getString(R.string.default_notification_channel_title); // Default Channel
+            Intent intent;
+            PendingIntent pendingIntent;
+            NotificationCompat.Builder builder;
+            final Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+            if (notificationManager == null) {
+                notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                int importance = NotificationManager.IMPORTANCE_HIGH;
+                NotificationChannel mChannel = notificationManager.getNotificationChannel(id);
+
+                if (mChannel == null) {
+                    mChannel = new NotificationChannel(id, title, importance);
+                    mChannel.enableVibration(true);
+                    mChannel.setVibrationPattern(new long[]{50, 0, 0, 0, 0, 0, 0, 0, 0});
+                    notificationManager.createNotificationChannel(mChannel);
+                }
+                builder = new NotificationCompat.Builder(context, id);
+                if (aMessage.getStrNotificaion().contains("Reminder")) {
+                    // editor.putString("SelectedSrNo",dataNotification.getSrno());
+                    //editor.commit();
+                    intent = new Intent(context, ReminderActivity.class);
+                    // intent.putExtra("ActivityName", "Home");
+                } else if (aMessage.getStrNotificaion().contains("_Client_uploaded") || aMessage.getStrNotificaion().contains("_Client_updated")) {
+                    intent = new Intent(context, MasterEntry.class);
+                    // startActivity(intent);
+                } else {
+                    editor.putString("SelectedSrNo", dataNotification.getSrno());
+                    Log.d("SrNo***", aMessage.getSrno());
+                    editor.putString("ActivityContact", "Home1");
+                    editor.commit();
+                    intent = new Intent(context, Home.class);
+                    // intent.putExtra("SelectedSrNo", aMessage.getSrno());
+                }
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+                builder.setContentTitle(aMessage.getStrNotificaion())                            // required
+                        .setSmallIcon(android.R.drawable.ic_popup_reminder)   // required
+                        .setContentText(context.getString(R.string.app_name)) // required
+                        .setAutoCancel(true)
+                        .setContentIntent(pendingIntent)
+                        .setTicker(aMessage.getStrNotificaion())
+                        .setSound(soundUri)
+                        .setVibrate(new long[]{100, 100, 100, 100, 100, 100, 100, 100, 100});
+            } else {
+                builder = new NotificationCompat.Builder(context, id);
+                if (aMessage.getStrNotificaion().contains("Reminder")) {
+                    // editor.putString("SelectedSrNo",aMessage.getSrno());
+                    //editor.commit();
+                    intent = new Intent(context, ReminderActivity.class);
+                    //  intent.putExtra("ActivityName", "Home");
+                } else if (aMessage.getStrNotificaion().contains("Client_uploaded") || aMessage.getStrNotificaion().contains("_Client_updated")) {
+                    intent = new Intent(Home.this, MasterEntry.class);
+                    startActivity(intent);
+                } else {
+                    editor.putString("SelectedSrNo", aMessage.getSrno());
+                    Log.d("SrNo***", aMessage.getSrno());
+                    editor.putString("ActivityContact", "Home1");
+                    editor.commit();
+                    intent = new Intent(context, Home.class);
+                    //intent.putExtra("SelectedSrNo", aMessage.getSrno());
+                }
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+                builder.setContentTitle(aMessage.getStrNotificaion())                            // required
+                        .setSmallIcon(android.R.drawable.ic_popup_reminder)   // required
+                        .setContentText(context.getString(R.string.app_name)) // required
+                        .setAutoCancel(true)
+                        .setContentIntent(pendingIntent)
+                        .setTicker(aMessage.getStrNotificaion())
+                        .setSound(soundUri)
+                        .setVibrate(new long[]{100, 100, 100, 100, 100, 100, 100, 100, 100});
+            }
+            notificationManager.notify(NOTIFY_ID, builder.build());
+        }catch (Exception e)
+        {
+            Toast.makeText(Home.this,"Errorcode-134 Dashboard createNotification "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void getReminderNotification() {
+        try {
             //dialog = ProgressDialog.show(Home.this, "Loading", "Please wait.....", false, true);
-            url = clienturl + "?clientid=" + clientid + "&caseid=63&CounselorID=" + counselorid;
+            if (CheckInternet.checkInternet(Home.this)) {
+                if (CheckServer.isServerReachable(Home.this)) {
+                    String urlNotification = clienturl + "?clientid=" + clientid + "&caseid=65&CounselorID=" + counselorid;
+                    StringRequest stringRequest = new StringRequest(Request.Method.POST, urlNotification,
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    Log.d("*******", response.toString());
+                                    try {
+                                        if (dialog.isShowing()) {
+                                            dialog.dismiss();
+                                        }
+                                        Log.d("reminderNotificationRes", response);
+                                        if (response.contains("[]")) {
+                                            imgNotification.setVisibility(View.VISIBLE);
+                                            imgNotification1.setVisibility(View.GONE);
+                                        } else {
+                                            imgNotification.setVisibility(View.GONE);
+                                            imgNotification1.setVisibility(View.VISIBLE);
+                                        }
+                                        JSONObject jsonObject = new JSONObject(response);
+                                        // Log.d("Json",jsonObject.toString());
+                                        JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                        for (int i = 0; i < jsonArray.length(); i++) {
+                                            JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                            String notification = jsonObject1.getString("cNotification");
+                                            String srno = jsonObject1.getString("nSrNo");
+                                            String nid = jsonObject1.getString("nNotificationID");
+                                            DataNotification dataNotification = new DataNotification(notification, srno, nid);
+                                            arrayListNotification.add(dataNotification);
+                                        }
+                                        adapterNotification = new AdapterNotification(Home.this, arrayListNotification);
+                                        adapterNotification.notifyDataSetChanged();
+                                        Log.d("ArraylistNotification", String.valueOf(arrayListNotification.size()));
+
+                                    } catch (Exception e) {
+                                        Toast.makeText(Home.this, "Errorcode-136 Dashboard ReminderNotificationResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                        Log.d("Exception", String.valueOf(e));
+                                    }
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    if (error == null || error.networkResponse == null)
+                                        return;
+                                    final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                    //get response body and parse with appropriate encoding
+                                    if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                        // responsecode1="ServerError";
+                                        dialog.dismiss();
+                                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
+                                        alertDialogBuilder.setTitle("Server Error!!!")
+                                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        //insertIMEI();
+                                                        //edtName.setText("");
+                                                        //edtPassword.setText("");
+                                                        dialog.dismiss();
+                                                    }
+                                                }).show();
+                                        Toast.makeText(Home.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                        // showCustomPopupMenu();
+                                        Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                    }
+
+                                }
+                            });
+                    requestQueue.add(stringRequest);
+                } else {
+                    dialog.dismiss();
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
+                    alertDialogBuilder.setTitle("No Internet connection!!!")
+                            .setMessage("Can't do further process")
+
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                    dialog.dismiss();
+
+                                }
+                            }).show();
+                }
+            }else {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
+
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(Home.this,"Errorcode-135 Dashboard getReminderNotification "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public void lastLoginDetails() {
+        //dialog = ProgressDialog.show(Home.this, "Loading", "Please wait.....", false, true);
+    try {
+        if(CheckServer.isServerReachable(Home.this)) {
+            url = clienturl + "?clientid=" + clientid + "&caseid=14&CounsellorId=" + counselorid;
+            arrayListTotal = new ArrayList<>();
             StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            if (dialog.isShowing()) {
-                                dialog.dismiss();
-                            }
-                            Log.d("getNotificationRes", response);
+
+                            Log.d("*******", response.toString());
                             try {
-                                if (response.contains("[]")) {
-                                    imgNotification.setVisibility(View.VISIBLE);
-                                    imgNotification1.setVisibility(View.GONE);
-                                } else {
-                                    imgNotification.setVisibility(View.GONE);
-                                    imgNotification1.setVisibility(View.VISIBLE);
+                                if (dialog.isShowing()) {
+                                    dialog.dismiss();
                                 }
+
                                 JSONObject jsonObject = new JSONObject(response);
                                 // Log.d("Json",jsonObject.toString());
                                 JSONArray jsonArray = jsonObject.getJSONArray("data");
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                    String notification = jsonObject1.getString("cNotification");
-                                    String srno = jsonObject1.getString("nSrNo");
-                                    String notificationId = jsonObject1.getString("nNotificationID");
-                                    DataNotification dataNotification = new DataNotification(notification, srno, notificationId);
-                                    arrayListNotification.add(dataNotification);
-
+                                    loginDate = jsonObject1.getString("dtLoginDate");
                                 }
-                                adapterNotification = new AdapterNotification(Home.this, arrayListNotification);
-                                adapterNotification.notifyDataSetChanged();
-                                Log.d("ArraylistNotification", String.valueOf(arrayListNotification.size()));
-                                for (int i = 0; i < arrayListNotification.size(); i++) {
-                                    Log.d("entered", "Notification");
-                                    dataNotification = arrayListNotification.get(i);
-                                    createNotification(dataNotification, Home.this);
-                                }
-
+                                TextView txtLastLogin = findViewById(R.id.txtLastLogin);
+                                txtLastLogin.setText(loginDate);
+                                Log.d("LastLoginResponse", response);
                             } catch (Exception e) {
-                                Toast.makeText(Home.this, "Volley error while getting notifications ", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Home.this, "Errorcode-138 Dashboard LastLoginDetails " + e.toString(), Toast.LENGTH_SHORT).show();
                                 dialog.dismiss();
                                 Log.d("Exception", String.valueOf(e));
                             }
@@ -1358,11 +1889,11 @@ public class Home extends AppCompatActivity
                         }
                     });
             requestQueue.add(stringRequest);
-        }else
-        {
+        }else {
+            dialog.dismiss();
             android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
-            alertDialogBuilder.setTitle("No Internet connection!!!")
-                    .setMessage("Can't do further process")
+            alertDialogBuilder.setTitle("Server Down!!!!")
+                    .setMessage("Try after some time!")
 
                     // Specifying a listener allows you to take an action before dismissing the dialog.
                     // The dialog is automatically dismissed when a dialog button is clicked.
@@ -1376,130 +1907,305 @@ public class Home extends AppCompatActivity
                         }
                     }).show();
         }
-        }
-
-
-    public void createNotification(DataNotification aMessage, Context context) {
-        Random random = new Random();
-
-        int m = random.nextInt(9999 - 1000) + 1000;
-        final int NOTIFY_ID = m; // ID of notification
-        String id = context.getString(R.string.default_notification_channel_id); // default_channel_id
-        String title = context.getString(R.string.default_notification_channel_title); // Default Channel
-        Intent intent;
-        PendingIntent pendingIntent;
-        NotificationCompat.Builder builder;
-        final Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-        if (notificationManager == null) {
-            notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel mChannel = notificationManager.getNotificationChannel(id);
-            if (mChannel == null) {
-                mChannel = new NotificationChannel(id, title, importance);
-                mChannel.enableVibration(true);
-                mChannel.setVibrationPattern(new long[]{50, 0, 0, 0, 0, 0, 0, 0, 0});
-                notificationManager.createNotificationChannel(mChannel);
-            }
-            builder = new NotificationCompat.Builder(context, id);
-            if(aMessage.getStrNotificaion().contains("Reminder")) {
-               // editor.putString("SelectedSrNo",dataNotification.getSrno());
-                //editor.commit();
-                intent = new Intent(context, ReminderActivity.class);
-               // intent.putExtra("ActivityName", "Home");
-            }else
-            {
-                editor.putString("SelectedSrNo",dataNotification.getSrno());
-                Log.d("SrNo***",aMessage.getSrno());
-                editor.putString("ActivityContact","Home1");
-                editor.commit();
-                intent = new Intent(context, Home.class);
-               // intent.putExtra("SelectedSrNo", aMessage.getSrno());
-            }
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-            builder.setContentTitle(aMessage.getStrNotificaion())                            // required
-                    .setSmallIcon(android.R.drawable.ic_popup_reminder)   // required
-                    .setContentText(context.getString(R.string.app_name)) // required
-                    .setAutoCancel(true)
-                    .setContentIntent(pendingIntent)
-                    .setTicker(aMessage.getStrNotificaion())
-                    .setSound(soundUri)
-                    .setVibrate(new long[]{100, 100, 100, 100, 100, 100, 100, 100, 100});
-        }
-        else {
-            builder = new NotificationCompat.Builder(context, id);
-            if(aMessage.getStrNotificaion().contains("Reminder")) {
-               // editor.putString("SelectedSrNo",aMessage.getSrno());
-                //editor.commit();
-                intent = new Intent(context, ReminderActivity.class);
-              //  intent.putExtra("ActivityName", "Home");
-            }else
-            {
-                editor.putString("SelectedSrNo",aMessage.getSrno());
-                Log.d("SrNo***",aMessage.getSrno());
-                editor.putString("ActivityContact","Home1");
-                editor.commit();
-                 intent = new Intent(context, Home.class);
-                //intent.putExtra("SelectedSrNo", aMessage.getSrno());
-            }
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-            builder.setContentTitle(aMessage.getStrNotificaion())                            // required
-                    .setSmallIcon(android.R.drawable.ic_popup_reminder)   // required
-                    .setContentText(context.getString(R.string.app_name)) // required
-                    .setAutoCancel(true)
-                    .setContentIntent(pendingIntent)
-                    .setTicker(aMessage.getStrNotificaion())
-                    .setSound(soundUri)
-                    .setVibrate(new long[]{100, 100, 100, 100, 100, 100, 100, 100, 100});
-        }
-        notificationManager.notify(NOTIFY_ID, builder.build());
+    }catch (Exception e)
+    {
+        Toast.makeText(Home.this,"Errorcode-137 Dashboard lastLoginDetails "+e.toString(),Toast.LENGTH_SHORT).show();
+    }
     }
 
-    public void getReminderNotification() {
-        //dialog = ProgressDialog.show(Home.this, "Loading", "Please wait.....", false, true);
-            if(CheckInternet.checkInternet(Home.this)) {
-                String urlNotification = clienturl + "?clientid=" + clientid + "&caseid=65&CounselorID=" + counselorid;
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, urlNotification,
+    public void getRefName() {
+        try {
+            if(CheckServer.isServerReachable(Home.this)) {
+                // arrayListRefrences=new ArrayList<>();
+                arrayList1 = new ArrayList<>();
+                arrayListRefId = new ArrayList<>();
+                arrayList1.add(0, "All");
+                url = clienturl + "?clientid=" + clientid + "&caseid=11&CounsellorId=" + counselorid;
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
-
-                                Log.d("*******", response.toString());
                                 try {
                                     if (dialog.isShowing()) {
                                         dialog.dismiss();
                                     }
-                                    Log.d("reminderNotificationRes", response);
-                                    if (response.contains("[]")) {
-                                        imgNotification.setVisibility(View.VISIBLE);
-                                        imgNotification1.setVisibility(View.GONE);
-                                    } else {
-                                        imgNotification.setVisibility(View.GONE);
-                                        imgNotification1.setVisibility(View.VISIBLE);
-                                    }
+                                    Log.d("RefNameUrl", response);
                                     JSONObject jsonObject = new JSONObject(response);
                                     // Log.d("Json",jsonObject.toString());
                                     JSONArray jsonArray = jsonObject.getJSONArray("data");
                                     for (int i = 0; i < jsonArray.length(); i++) {
                                         JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                        String notification = jsonObject1.getString("cNotification");
-                                        String srno = jsonObject1.getString("nSrNo");
-                                        String nid = jsonObject1.getString("nNotificationID");
-                                        DataNotification dataNotification = new DataNotification(notification, srno, nid);
-                                        arrayListNotification.add(dataNotification);
+                                        dataFrom = jsonObject1.getString("cDataFrom");
+                                        String dataRefName = jsonObject1.getString("DataRefName");
+                                        //    DataReference dataReference=new DataReference(dataRefName,dataFrom);
+                                        arrayList1.add(dataRefName);
+                                        arrayListRefId.add(dataFrom);
+                                        // arrayListRefrences.add(dataReference);
+                                        //  String total=jsonObject1.getString("Total No");
                                     }
-                                    adapterNotification = new AdapterNotification(Home.this, arrayListNotification);
-                                    adapterNotification.notifyDataSetChanged();
-                                    Log.d("ArraylistNotification", String.valueOf(arrayListNotification.size()));
+                                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter(Home.this, R.layout.spinner_item1, arrayList1);
+                                    // arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                    spinnerRef.setAdapter(arrayAdapter);
+                                    getCallDetails();
+                                    getSMSDetails();
+                                    getReminderNotification();
+                                    getNotification();
+                                    lastLoginDetails();
+                                    getPointCollection();
 
-                                } catch (Exception e) {
-                                    Toast.makeText(Home.this, "Volley error while getting reminder notifications ", Toast.LENGTH_SHORT).show();
+                                    if (activityname.contains("CounsellorData")) {
+                                        String dtfrom1 = getIntent().getStringExtra("RefName");
+                                        Log.d(":From***", dtfrom1);
+                                        for (int i = 0; i < arrayList1.size(); i++) {
+                                            if (arrayList1.get(i).matches(dtfrom1)) {
+                                                spinnerRef.setSelection(i);
+                                                pos = spinnerRef.getSelectedItemPosition();
+                                            }
+                                        }
+
+                                        //pos = position;
+
+
+                                        String texttoload = spinnerRef.getSelectedItem().toString();
+                                        editor = sp.edit();
+                                        editor.putString("DataRefName", texttoload);
+                                        editor.commit();
+                                        LayoutInflater li = LayoutInflater.from(getApplicationContext());
+                                        //Creating a view to get the dialog box
+                                        View confirmCall = li.inflate(R.layout.layout_confirm_loadtext, null);
+                                        TextView txtYes = (TextView) confirmCall.findViewById(R.id.txtYes);
+                                        TextView txtNo = (TextView) confirmCall.findViewById(R.id.txtNo);
+                                        TextView txtLoad = confirmCall.findViewById(R.id.txtConfirmLoad);
+                                        txtLoad.setText("Do you want to load " + texttoload + "?");
+                                        final AlertDialog.Builder alert = new AlertDialog.Builder(Home.this);
+                                        //Adding our dialog box to the view of alert dialog
+                                        alert.setView(confirmCall);
+                                        //Creating an alert dialog
+                                        alertRefName = alert.create();
+                                        //if (++check > 1) {
+                                        alertRefName.show();
+//                         }
+                                        txtYes.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                if (pos == 0) {
+                                                    editor = sp.edit();
+                                                    editor.putString("DtaFrom", "0");
+                                                    editor.commit();
+                                                    dialog = ProgressDialog.show(Home.this, "", "Loading all data...", true);
+                                                    alertRefName.dismiss();
+                                                    //getStatusCount();
+                                                    getAllRefName();
+
+
+                                                } else {
+                                                    alertRefName.dismiss();
+                                                    int p = pos - 1;
+
+                                                    // DataReference dataReference1=arrayListRefrences.get(position);
+                                                    dataFrom1 = arrayListRefId.get(p);
+                                                    Log.d("RefId", dataFrom1);
+                                                    editor = sp.edit();
+                                                    editor.putString("DtaFrom", dataFrom1);
+                                                    editor.commit();
+                                                    dialog = ProgressDialog.show(Home.this, "", "Loading data refnamewise...", true);
+                           /* new Thread(new Runnable() {
+                                public void run() {
+                                    runOnUiThread(new Runnable() {
+                                        public void run() {
+                                            //  Toast.makeText(Home.this,"uploading started.....",Toast.LENGTH_SHORT).show();
+                                        }
+                                    });*/
+
+                                                    //getStatusCount();
+                                                    alertRefName.dismiss();
+                                                    getRestRefName();
+                              /*  }
+                            }).start();*/
+
+                                                }
+                                            }
+                                        });
+
+                                        txtNo.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                alertRefName.dismiss();
+                                                if (++check == 1) {
+                                                    spinnerRef.setSelection(0);
+                                                    getAllRefName();
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        pos = 0;
+                                        String texttoload = spinnerRef.getSelectedItem().toString();
+                                        editor = sp.edit();
+                                        editor.putString("DataRefName", texttoload);
+                                        editor.commit();
+                                        LayoutInflater li = LayoutInflater.from(getApplicationContext());
+                                        //Creating a view to get the dialog box
+                                        View confirmCall = li.inflate(R.layout.layout_confirm_loadtext, null);
+                                        TextView txtYes = (TextView) confirmCall.findViewById(R.id.txtYes);
+                                        TextView txtNo = (TextView) confirmCall.findViewById(R.id.txtNo);
+                                        TextView txtLoad = confirmCall.findViewById(R.id.txtConfirmLoad);
+                                        txtLoad.setText("Do you want to load " + texttoload + "?");
+                                        final AlertDialog.Builder alert = new AlertDialog.Builder(Home.this);
+                                        //Adding our dialog box to the view of alert dialog
+                                        alert.setView(confirmCall);
+                                        //Creating an alert dialog
+                                        alertRefName = alert.create();
+                                        //if (++check > 1) {
+                                        alertRefName.show();
+//                         }
+
+                                        txtYes.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                if (pos == 0) {
+                                                    editor = sp.edit();
+                                                    editor.putString("DtaFrom", "0");
+                                                    editor.commit();
+                                                    dialog = ProgressDialog.show(Home.this, "", "Loading all data...", true);
+                                                    alertRefName.dismiss();
+                                                    //getStatusCount();
+                                                    getAllRefName();
+
+
+                                                } else {
+                                                    alertRefName.dismiss();
+                                                    int p = pos - 1;
+
+                                                    // DataReference dataReference1=arrayListRefrences.get(position);
+                                                    dataFrom1 = arrayListRefId.get(p);
+                                                    Log.d("RefId", dataFrom1);
+                                                    editor = sp.edit();
+                                                    editor.putString("DtaFrom", dataFrom1);
+                                                    editor.commit();
+                                                    dialog = ProgressDialog.show(Home.this, "", "Loading data refnamewise...", true);
+
+
+                                                    //getStatusCount();
+                                                    alertRefName.dismiss();
+                                                    getRestRefName();
+
+                                                }
+
+
+                                            }
+                                        });
+
+                                        txtNo.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                alertRefName.dismiss();
+                                                if (++check == 1) {
+                                                    spinnerRef.setSelection(0);
+                                                    getAllRefName();
+                                                }
+                                            }
+                                        });
+                                    }
+                                    arrayAdapter.notifyDataSetChanged();
+
+                                    Log.d("RefIdSize", String.valueOf(arrayListRefId.size()));
+                                } catch (JSONException e) {
+                                    Toast.makeText(Home.this, "Errorcode-140 Dashboard getRefResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                    Log.d("RefException", String.valueOf(e));
+                                }
+
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                if (error == null || error.networkResponse == null)
+                                    return;
+                                final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                //get response body and parse with appropriate encoding
+                                if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                    // responsecode1="ServerError";
                                     dialog.dismiss();
-                                    Log.d("Exception", String.valueOf(e));
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
+                                    alertDialogBuilder.setTitle("Server Error!!!")
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                    Toast.makeText(Home.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    // showCustomPopupMenu();
+                                    Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                }
+
+                            }
+                        });
+                requestQueue.add(stringRequest);
+            }else {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
+
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(Home.this,"Errorcode-139 Dashboard getRefNames "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
+        }
+
+        public void getAllRefName() {
+        try {
+            if(CheckServer.isServerReachable(Home.this)) {
+                url = clienturl + "?clientid=" + clientid + "&caseid=12&CounsellorId=" + counselorid;
+            /*if(CheckInternet.checkInternet(Home.this))
+            {*/
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+
+                                if (dialog.isShowing()) {
+                                    dialog.dismiss();
+                                }
+                                alertRefName.dismiss();
+                                Log.d("AllRefNameResponse", response);
+                                try {
+                                    arrayListTotal.clear();
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    // Log.d("Json",jsonObject.toString());
+                                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                        String status = jsonObject1.getString("cStatus");
+                                        String cstauts = jsonObject1.getString("currentstatus");
+                                        String total = jsonObject1.getString("Total No");
+                                        DataStatusTotal dataStatusTotal = new DataStatusTotal(status, cstauts, total);
+                                        arrayListTotal.add(dataStatusTotal);
+                                    }
+
+                                    adapterTotal = new AdapterStatusTotalCount(arrayListTotal, Home.this);
+                                    recyclerView = findViewById(R.id.recyclerStatusTotalCnt);
+                                    recyclerView.setLayoutManager(new GridLayoutManager(Home.this, 2));
+
+                                    recyclerView.setAdapter(adapterTotal);
+                                    adapterTotal.notifyDataSetChanged();
+                                } catch (JSONException e) {
+                                    dialog.dismiss();
+                                    Toast.makeText(Home.this, "Errorcode-142 Dashboard AllRefNamesResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                    Log.d("AllRefException", String.valueOf(e));
+                                    //  e.printStackTrace();
                                 }
                             }
                         },
@@ -1521,9 +2227,7 @@ public class Home extends AppCompatActivity
                                             // The dialog is automatically dismissed when a dialog button is clicked.
                                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
-                                                    //insertIMEI();
-                                                    //edtName.setText("");
-                                                    //edtPassword.setText("");
+
                                                     dialog.dismiss();
                                                 }
                                             }).show();
@@ -1535,12 +2239,11 @@ public class Home extends AppCompatActivity
                             }
                         });
                 requestQueue.add(stringRequest);
-            }else
-            {
+            }else {
                 dialog.dismiss();
                 android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
-                alertDialogBuilder.setTitle("No Internet connection!!!")
-                        .setMessage("Can't do further process")
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
 
                         // Specifying a listener allows you to take an action before dismissing the dialog.
                         // The dialog is automatically dismissed when a dialog button is clicked.
@@ -1554,432 +2257,88 @@ public class Home extends AppCompatActivity
                             }
                         }).show();
             }
-
-            }
-
-    public void lastLoginDetails() {
-        //dialog = ProgressDialog.show(Home.this, "Loading", "Please wait.....", false, true);
-        if(CheckInternet.checkInternet(Home.this))
+        }catch (Exception e)
         {
-        url=clienturl+"?clientid=" + clientid + "&caseid=14&CounsellorId=" + counselorid;
-        arrayListTotal = new ArrayList<>();
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
+            Toast.makeText(Home.this,"Errorcode-141 Dashboard getAllRefNames "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
+    }
 
-                            Log.d("*******", response.toString());
-                            try {
+    public void getRestRefName() {
+        try {
+            if(CheckServer.isServerReachable(Home.this)) {
+                url = clienturl + "?clientid=" + clientid + "&caseid=13&CounsellorId=" + counselorid + "&DataFrom=" + dataFrom1;
+
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
                                 if (dialog.isShowing()) {
                                     dialog.dismiss();
                                 }
-
-                                JSONObject jsonObject = new JSONObject(response);
-                                // Log.d("Json",jsonObject.toString());
-                                JSONArray jsonArray = jsonObject.getJSONArray("data");
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                    loginDate = jsonObject1.getString("dtLoginDate");
+                                if (alertRefName.isShowing()) {
+                                    alertRefName.dismiss();
                                 }
-                                TextView txtLastLogin = findViewById(R.id.txtLastLogin);
-                                txtLastLogin.setText(loginDate);
-                                Log.d("LastLoginResponse", response);
-                            } catch (Exception e)
-                            {
-                                Toast.makeText(Home.this,"Volley error while getting last login details ",Toast.LENGTH_SHORT).show();
-                                dialog.dismiss();
-                                Log.d("Exception", String.valueOf(e));
-                            }
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            if (error == null || error.networkResponse == null)
-                                return;
-                            final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                            //get response body and parse with appropriate encoding
-                            if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                                // responsecode1="ServerError";
-                                dialog.dismiss();
-                                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
-                                alertDialogBuilder.setTitle("Server Error!!!")
-
-
-                                        // Specifying a listener allows you to take an action before dismissing the dialog.
-                                        // The dialog is automatically dismissed when a dialog button is clicked.
-                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-
-                                                dialog.dismiss();
-                                            }
-                                        }).show();
-                                Toast.makeText(Home.this,"Server Error",Toast.LENGTH_SHORT).show();
-                                // showCustomPopupMenu();
-                                Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                            }
-
-                        }
-                    });
-            requestQueue.add(stringRequest);
-        }else
-        {
-            dialog.dismiss();
-            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
-            alertDialogBuilder.setTitle("No Internet connection!!!")
-                    .setMessage("Can't do further process")
-
-                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                    // The dialog is automatically dismissed when a dialog button is clicked.
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            //insertIMEI();
-                                        /*edtName.setText("");
-                                        edtPassword.setText("");*/
-                            dialog.dismiss();
-
-                        }
-                    }).show();
-        }
-
-    }
-
-    public void getRefName() {
-        // arrayListRefrences=new ArrayList<>();
-        if(CheckInternet.checkInternet(Home.this))
-        {
-            getCallDetails();
-            getSMSDetails();
-         arrayList1 = new ArrayList<>();
-        arrayListRefId = new ArrayList<>();
-        arrayList1.add(0, "All");
-        url=clienturl+"?clientid=" + clientid + "&caseid=11&CounsellorId=" + counselorid;
-        StringRequest stringRequest = new StringRequest(Request.Method.POST,url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            if (dialog.isShowing()) {
-                                dialog.dismiss();
-                            }
-                            Log.d("RefNameUrl", response);
-                            JSONObject jsonObject = new JSONObject(response);
-                            // Log.d("Json",jsonObject.toString());
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                dataFrom = jsonObject1.getString("cDataFrom");
-                                String dataRefName = jsonObject1.getString("DataRefName");
-                                //    DataReference dataReference=new DataReference(dataRefName,dataFrom);
-                                arrayList1.add(dataRefName);
-                                arrayListRefId.add(dataFrom);
-                                // arrayListRefrences.add(dataReference);
-                                //  String total=jsonObject1.getString("Total No");
-                            }
-                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter(Home.this, R.layout.spinner_item1, arrayList1);
-                            // arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            spinnerRef.setAdapter(arrayAdapter);
-
-                            getReminderNotification();
-                            getNotification();
-                            lastLoginDetails();
-                            getPointCollection();
-
-                            if(activityname.contains("CounsellorData")) {
-                                String dtfrom1 = getIntent().getStringExtra("RefName");
-                                 Log.d(":From***", dtfrom1);
-                                for (int i = 0; i < arrayList1.size(); i++) {
-                                    if (arrayList1.get(i).matches(dtfrom1)) {
-                                        spinnerRef.setSelection(i);
-                                        pos = spinnerRef.getSelectedItemPosition();
+                                Log.d("RestRefNameResponse", response);
+                                try {
+                                    arrayListTotal.clear();
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    // Log.d("Json",jsonObject.toString());
+                                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                        String status = jsonObject1.getString("cStatus");
+                                        String cstauts = jsonObject1.getString("currentstatus");
+                                        String total = jsonObject1.getString("Total No");
+                                        DataStatusTotal dataStatusTotal = new DataStatusTotal(status, cstauts, total);
+                                        arrayListTotal.add(dataStatusTotal);
                                     }
+                                    adapterTotal = new AdapterStatusTotalCount(arrayListTotal, Home.this);
+                                    recyclerView = findViewById(R.id.recyclerStatusTotalCnt);
+                                    recyclerView.setLayoutManager(new GridLayoutManager(Home.this, 2));
+                                    recyclerView.setAdapter(adapterTotal);
+                                    adapterTotal.notifyDataSetChanged();
+                                    //   Log.d("Size**", String.valueOf(arrayList.size()));
+                                } catch (JSONException e) {
+                                    Toast.makeText(Home.this, "Errorcode-144 Dashboard RestRefResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+                                    Log.d("RestRefException", String.valueOf(e));
                                 }
-
-                                //pos = position;
-
-
-                                String texttoload = spinnerRef.getSelectedItem().toString();
-                                editor = sp.edit();
-                                editor.putString("DataRefName", texttoload);
-                                editor.commit();
-                                LayoutInflater li = LayoutInflater.from(getApplicationContext());
-                                //Creating a view to get the dialog box
-                                View confirmCall = li.inflate(R.layout.layout_confirm_loadtext, null);
-                                TextView txtYes = (TextView) confirmCall.findViewById(R.id.txtYes);
-                                TextView txtNo = (TextView) confirmCall.findViewById(R.id.txtNo);
-                                TextView txtLoad = confirmCall.findViewById(R.id.txtConfirmLoad);
-                                txtLoad.setText("Do you want to load " + texttoload + "?");
-                                final AlertDialog.Builder alert = new AlertDialog.Builder(Home.this);
-                                //Adding our dialog box to the view of alert dialog
-                                alert.setView(confirmCall);
-                                //Creating an alert dialog
-                                alertRefName = alert.create();
-                                //if (++check > 1) {
-                                alertRefName.show();
-//                         }
-                                txtYes.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        if (pos == 0) {
-                                            editor = sp.edit();
-                                            editor.putString("DtaFrom", "0");
-                                            editor.commit();
-                                            dialog = ProgressDialog.show(Home.this, "", "Loading all data...", true);
-                                            alertRefName.dismiss();
-                                            //getStatusCount();
-                                            getAllRefName();
-
-
-                                        } else {
-                                            alertRefName.dismiss();
-                                            int p = pos - 1;
-
-                                            // DataReference dataReference1=arrayListRefrences.get(position);
-                                            dataFrom1 = arrayListRefId.get(p);
-                                            Log.d("RefId", dataFrom1);
-                                            editor = sp.edit();
-                                            editor.putString("DtaFrom", dataFrom1);
-                                            editor.commit();
-                                            dialog = ProgressDialog.show(Home.this, "", "Loading data refnamewise...", true);
-                           /* new Thread(new Runnable() {
-                                public void run() {
-                                    runOnUiThread(new Runnable() {
-                                        public void run() {
-                                            //  Toast.makeText(Home.this,"uploading started.....",Toast.LENGTH_SHORT).show();
-                                        }
-                                    });*/
-
-                                            //getStatusCount();
-                                            alertRefName.dismiss();
-                                            getRestRefName();
-                              /*  }
-                            }).start();*/
-
-                                        }
-                                    }
-                                });
-
-                                txtNo.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        alertRefName.dismiss();
-                                        if(++check==1)
-                                        {
-                                            spinnerRef.setSelection(0);
-                                            getAllRefName();
-                                        }
-                                    }
-                                });
                             }
-                            else
-                            {
-                                pos=0;
-                                String texttoload = spinnerRef.getSelectedItem().toString();
-                                editor = sp.edit();
-                                editor.putString("DataRefName", texttoload);
-                                editor.commit();
-                                LayoutInflater li = LayoutInflater.from(getApplicationContext());
-                                //Creating a view to get the dialog box
-                                View confirmCall = li.inflate(R.layout.layout_confirm_loadtext, null);
-                                TextView txtYes = (TextView) confirmCall.findViewById(R.id.txtYes);
-                                TextView txtNo = (TextView) confirmCall.findViewById(R.id.txtNo);
-                                TextView txtLoad = confirmCall.findViewById(R.id.txtConfirmLoad);
-                                txtLoad.setText("Do you want to load " + texttoload + "?");
-                                final AlertDialog.Builder alert = new AlertDialog.Builder(Home.this);
-                                //Adding our dialog box to the view of alert dialog
-                                alert.setView(confirmCall);
-                                //Creating an alert dialog
-                                alertRefName = alert.create();
-                                //if (++check > 1) {
-                                alertRefName.show();
-//                         }
-
-                                txtYes.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        if (pos == 0) {
-                                            editor = sp.edit();
-                                            editor.putString("DtaFrom", "0");
-                                            editor.commit();
-                                            dialog = ProgressDialog.show(Home.this, "", "Loading all data...", true);
-                                            alertRefName.dismiss();
-                                            //getStatusCount();
-                                            getAllRefName();
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                if (error == null || error.networkResponse == null)
+                                    return;
+                                final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                //get response body and parse with appropriate encoding
+                                if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                    // responsecode1="ServerError";
+                                    dialog.dismiss();
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
+                                    alertDialogBuilder.setTitle("Server Error!!!")
 
 
-                                        } else {
-                                            alertRefName.dismiss();
-                                            int p = pos - 1;
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
 
-                                            // DataReference dataReference1=arrayListRefrences.get(position);
-                                            dataFrom1 = arrayListRefId.get(p);
-                                            Log.d("RefId", dataFrom1);
-                                            editor = sp.edit();
-                                            editor.putString("DtaFrom", dataFrom1);
-                                            editor.commit();
-                                            dialog = ProgressDialog.show(Home.this, "", "Loading data refnamewise...", true);
-
-
-                                            //getStatusCount();
-                                            alertRefName.dismiss();
-                                            getRestRefName();
-
-                                            }
-
-
-                                    }
-                                });
-
-                                txtNo.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        alertRefName.dismiss();
-                                        if(++check==1)
-                                        {
-                                            spinnerRef.setSelection(0);
-                                            getAllRefName();
-                                        }
-                                    }
-                                });
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                    Toast.makeText(Home.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    // showCustomPopupMenu();
+                                    Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                }
                             }
-                            arrayAdapter.notifyDataSetChanged();
-
-                            Log.d("RefIdSize", String.valueOf(arrayListRefId.size()));
-                        } catch (JSONException e) {
-                            Toast.makeText(Home.this,"Got exception while getting Ref Name",Toast.LENGTH_SHORT).show();
-                            Log.d("RefException", String.valueOf(e));
-                        }
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            // responsecode1="ServerError";
-                            dialog.dismiss();
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
-
-
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                            dialog.dismiss();
-                                        }
-                                    }).show();
-                            Toast.makeText(Home.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
-
-                    }
-                });
-        requestQueue.add(stringRequest);
-        }else
-        {
-            dialog.dismiss();
-            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
-            alertDialogBuilder.setTitle("No Internet connection!!!")
-                    .setMessage("Can't do further process")
-
-                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                    // The dialog is automatically dismissed when a dialog button is clicked.
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            dialog.dismiss();
-
-                        }
-                    }).show();
-        }
-
-    }
-
-    public void getAllRefName() {
-            url=clienturl+"?clientid=" + clientid + "&caseid=12&CounsellorId=" + counselorid;
-            if(CheckInternet.checkInternet(Home.this))
-            {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                        if (dialog.isShowing()) {
-                            dialog.dismiss();
-                        }
-                        alertRefName.dismiss();
-                        Log.d("AllRefNameResponse", response);
-                        try {
-                            arrayListTotal.clear();
-                            JSONObject jsonObject = new JSONObject(response);
-                            // Log.d("Json",jsonObject.toString());
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                String status = jsonObject1.getString("cStatus");
-                                String cstauts = jsonObject1.getString("currentstatus");
-                                String total = jsonObject1.getString("Total No");
-                                DataStatusTotal dataStatusTotal = new DataStatusTotal(status, cstauts, total);
-                                arrayListTotal.add(dataStatusTotal);
-                            }
-
-                            adapterTotal = new AdapterStatusTotalCount(arrayListTotal, Home.this);
-                            recyclerView = findViewById(R.id.recyclerStatusTotalCnt);
-                            recyclerView.setLayoutManager(new GridLayoutManager(Home.this, 2));
-
-                            recyclerView.setAdapter(adapterTotal);
-                            adapterTotal.notifyDataSetChanged();
-                        } catch (JSONException e) {
-                            dialog.dismiss();
-                            Toast.makeText(Home.this,"Volley error while getting all RefNames ",Toast.LENGTH_SHORT).show();
-                            Log.d("AllRefException", String.valueOf(e));
-                            //  e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            // responsecode1="ServerError";
-                            dialog.dismiss();
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
-
-
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                            dialog.dismiss();
-                                        }
-                                    }).show();
-                            Toast.makeText(Home.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
-
-                    }
-                });
-        requestQueue.add(stringRequest);
-            }else
-            {
+                        });
+                requestQueue.add(stringRequest);
+            }else {
                 dialog.dismiss();
                 android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
-                alertDialogBuilder.setTitle("No Internet connection!!!")
-                        .setMessage("Can't do further process")
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
 
                         // Specifying a listener allows you to take an action before dismissing the dialog.
                         // The dialog is automatically dismissed when a dialog button is clicked.
@@ -1993,177 +2352,90 @@ public class Home extends AppCompatActivity
                             }
                         }).show();
             }
-
-    }
-    public void getRestRefName() {
-        url=clienturl+"?clientid=" + clientid + "&caseid=13&CounsellorId=" + counselorid + "&DataFrom=" + dataFrom1;
-       if(CheckInternet.checkInternet(Home.this))
-       {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (dialog.isShowing()) {
-                            dialog.dismiss();
-                        }
-                        if(alertRefName.isShowing())
-                        {
-                            alertRefName.dismiss();
-                        }
-                        Log.d("RestRefNameResponse", response);
-                        try {
-                            arrayListTotal.clear();
-                            JSONObject jsonObject = new JSONObject(response);
-                            // Log.d("Json",jsonObject.toString());
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                String status = jsonObject1.getString("cStatus");
-                                String cstauts = jsonObject1.getString("currentstatus");
-                                String total = jsonObject1.getString("Total No");
-                                DataStatusTotal dataStatusTotal = new DataStatusTotal(status, cstauts, total);
-                                arrayListTotal.add(dataStatusTotal);
-                            }
-                            adapterTotal = new AdapterStatusTotalCount(arrayListTotal, Home.this);
-                            recyclerView = findViewById(R.id.recyclerStatusTotalCnt);
-                            recyclerView.setLayoutManager(new GridLayoutManager(Home.this, 2));
-                            recyclerView.setAdapter(adapterTotal);
-                            adapterTotal.notifyDataSetChanged();
-                            //   Log.d("Size**", String.valueOf(arrayList.size()));
-                        } catch (JSONException e) {
-                            Toast.makeText(Home.this,"Volley error while getting rest RefName ",Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
-                            Log.d("RestRefException", String.valueOf(e));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            // responsecode1="ServerError";
-                            dialog.dismiss();
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
-
-
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                            dialog.dismiss();
-                                        }
-                                    }).show();
-                            Toast.makeText(Home.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
-
-                    }
-                });
-        requestQueue.add(stringRequest);
-       }else
-       {
-           dialog.dismiss();
-           android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
-           alertDialogBuilder.setTitle("No Internet connection!!!")
-                   .setMessage("Can't do further process")
-
-                   // Specifying a listener allows you to take an action before dismissing the dialog.
-                   // The dialog is automatically dismissed when a dialog button is clicked.
-                   .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                       public void onClick(DialogInterface dialog, int which) {
-                           //insertIMEI();
-                                        /*edtName.setText("");
-                                        edtPassword.setText("");*/
-                           dialog.dismiss();
-
-                       }
-                   }).show();
-       }
-
+        }catch (Exception e)
+        {
+            Toast.makeText(Home.this,"Errorcode-143 Dashboard getRestRefName "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
     }
     public void getPointCollection() {
-        url=clienturl+"?clientid=" + clientid + "&caseid=37&nCounsellorId=" + counselorid;
-        if(CheckInternet.checkInternet(Home.this))
-        {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
+        try {
+            if(CheckServer.isServerReachable(Home.this)) {
+                url = clienturl + "?clientid=" + clientid + "&caseid=37&nCounsellorId=" + counselorid;
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
 
-                        if (dialog.isShowing()) {
-                            dialog.dismiss();
-                        }
-                        Log.d("CoinResponse", response);
-                        try {
-                            arrayListTotal.clear();
-                            JSONObject jsonObject = new JSONObject(response);
-                            // Log.d("Json",jsonObject.toString());
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                String totalcoin = jsonObject1.getString("Total Coin");
-                                txtCoin.setText(totalcoin);
-                                editor = sp.edit();
-                                editor.putString("TotalCoin",totalcoin);
-                                editor.commit();
+                                if (dialog.isShowing()) {
+                                    dialog.dismiss();
+                                }
+                                Log.d("CoinResponse", response);
+                                try {
+                                    arrayListTotal.clear();
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    // Log.d("Json",jsonObject.toString());
+                                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                        String totalcoin = jsonObject1.getString("Total Coin");
+                                        txtCoin.setText(totalcoin);
+                                        editor = sp.edit();
+                                        editor.putString("TotalCoin", totalcoin);
+                                        editor.commit();
+                                    }
+                                } catch (JSONException e) {
+                                    Toast.makeText(Home.this, "Errorcode-146 Dashboard PointCollectionResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+                                    Log.d("PointCollectException", String.valueOf(e));
+                                }
                             }
-                        } catch (JSONException e) {
-                            Toast.makeText(Home.this,"Volley error while getting point collection ",Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
-                            Log.d("PointCollectException", String.valueOf(e));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            // responsecode1="ServerError";
-                            dialog.dismiss();
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                        }
-                                    }).show();
-                            Toast.makeText(Home.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                if (error == null || error.networkResponse == null)
+                                    return;
+                                final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                //get response body and parse with appropriate encoding
+                                if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                    // responsecode1="ServerError";
+                                    dialog.dismiss();
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
+                                    alertDialogBuilder.setTitle("Server Error!!!")
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                    Toast.makeText(Home.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    // showCustomPopupMenu();
+                                    Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                }
 
-                    }
-                });
-        requestQueue.add(stringRequest);
-        }else
-        {
-            dialog.dismiss();
-            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
-            alertDialogBuilder.setTitle("No Internet connection!!!")
-                    .setMessage("Can't do further process")
+                            }
+                        });
+                requestQueue.add(stringRequest);
+            }else {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Home.this);
+                alertDialogBuilder.setTitle("Server Down!!!!")
+                        .setMessage("Try after some time!")
 
-                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                    // The dialog is automatically dismissed when a dialog button is clicked.
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            //insertIMEI();
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
                                         /*edtName.setText("");
                                         edtPassword.setText("");*/
-                            dialog.dismiss();
+                                dialog.dismiss();
 
-                        }
-                    }).show();
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(Home.this,"Errorcode-145 Dashboard getPointCollection "+e.toString(),Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -2201,8 +2473,7 @@ public class Home extends AppCompatActivity
         back_pressed = System.currentTimeMillis();
         }catch (Exception e)
         {
-            Log.d("Exception", String.valueOf(e));
-        }
+            Toast.makeText(Home.this,"Errorcode-147 Dashboard OnBackpressed "+e.toString(),Toast.LENGTH_SHORT).show();        }
     }
 
 
@@ -2495,18 +2766,7 @@ public class Home extends AppCompatActivity
                         }
                     });
                 }
-               /* else
-                {
-                    runOnUiThread(new Runnable()
-                    {
-                        public void run()
-                        {
-                            Toast.makeText(SplashAfterCall.this, "File already exists.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-*/
+
                 //close the streams //
                 fileInputStream.close();
                 dos.flush();
@@ -2546,64 +2806,6 @@ public class Home extends AppCompatActivity
 
         } // End else block
     }
-
-
-
-
-    /*@Override
-    protected void onResume() {
-        super.onResume();
-        Log.e("Check", "onResume: ");
-        if(checkPermission())
-        {
-            Toast.makeText(getApplicationContext(), "Permission already granted", Toast.LENGTH_LONG).show();
-           *//* if(checkResume==false) {
-              //  setUi();
-                // this.callDetailsList=new DatabaseManager(this).getAllDetails();
-              //  rAdapter.notifyDataSetChanged();
-            }*//*
-        }
-    }*/
-   /* protected void onPause()
-    {
-        super.onPause();
-        SharedPreferences pref3=PreferenceManager.getDefaultSharedPreferences(this);
-        if(pref3.getBoolean("pauseStateVLC",false)) {
-            checkResume = true;
-            pref3.edit().putBoolean("pauseStateVLC",false).apply();
-        }
-        else
-            checkResume=false;
-    }*/
-
-   /* public boolean onCreateOptionsMenu(Menu menu)
-    {
-        getMenuInflater().inflate(R.menu.mainmenu,menu);
-        MenuItem item=menu.findItem(R.id.mySwitch);
-
-        View view = getLayoutInflater().inflate(R.layout.switch_layout,null,false) ;
-
-        final SharedPreferences pref1= PreferenceManager.getDefaultSharedPreferences(this);
-
-        SwitchCompat switchCompat = (SwitchCompat) view.findViewById(R.id.switchCheck);
-        switchCompat.setChecked(pref1.getBoolean("switchOn",true));
-        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                    Log.d("Switch", "onCheckedChanged: " +isChecked);
-                    Toast.makeText(getApplicationContext(), "Call Recorder ON", Toast.LENGTH_LONG).show();
-                    pref1.edit().putBoolean("switchOn",isChecked).apply();
-                }else{
-                    Log.d("Switch", "onCheckedChanged: " +isChecked);
-                    Toast.makeText(getApplicationContext(), "Call Recorder OFF", Toast.LENGTH_LONG).show();
-                    pref1.edit().putBoolean("switchOn",isChecked).apply();
-                }
-            }
-        });
-        item.setActionView(view);
-        return true;
-    }*/
 
     private boolean checkPermission() {
         int i = 0;

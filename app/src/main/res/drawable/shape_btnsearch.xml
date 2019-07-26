@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <gradient android:startColor="@android:color/black"
-        android:endColor="@android:color/black"/>
+    <gradient android:startColor="@color/dashboard_spinner_yellow"
+        android:endColor="@color/dashboard_spinner_yellow"/>
     <stroke android:width="5px" android:color="#bebebe" />
 </shape>

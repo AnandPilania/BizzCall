@@ -51,7 +51,7 @@ public class DetailsActivity extends AppCompatActivity {
     TextView txtSrno ,txtCourse,txtMobile,txtName, txtAddress,txtCity,txtState,txtPincode,txtEmail,txtParent;
     Button btnEdit,btnOk;
     ProgressDialog dialog;
-    String url;
+    String url,activityname;
     RequestQueue requestQueue;
     Vibrator vibrator;
 
@@ -82,10 +82,11 @@ public class DetailsActivity extends AppCompatActivity {
         clientid=sp.getString("ClientId",null);
         clienturl=sp.getString("ClientUrl",null);
         sr_no = sp.getString("SelectedSrNo", null);
+        activityname=sp.getString("ActivityContact",null);
         counselorid = sp.getString("Id", null);
         counselorid=counselorid.replace(" ","");
-        dialog = ProgressDialog.show(DetailsActivity.this, "", "Loading counselor information...", true);
-        getCounselorData(sr_no,counselorid);
+        loadCounselorData();
+
         //refreshWhenLoading();
 
             imgRefresh.setOnClickListener(new View.OnClickListener() {
@@ -122,8 +123,7 @@ public class DetailsActivity extends AppCompatActivity {
         });
         }catch (Exception e)
         {
-            Toast.makeText(DetailsActivity.this,"Got exception",Toast.LENGTH_SHORT).show();
-            dialog.dismiss();
+            Toast.makeText(DetailsActivity.this,"Errorcode-251 DetailsActivity onCreate "+e.toString(),Toast.LENGTH_SHORT).show();
             Log.d("Exception", String.valueOf(e));
         }
     }// oncreate closed
@@ -148,237 +148,188 @@ public class DetailsActivity extends AppCompatActivity {
     public void onBackPressed()
     {
         try{
-        Intent intent=new Intent(DetailsActivity.this,CounselorContactActivity.class);
-        intent.putExtra("ActivityName","Details Activity");
-        startActivity(intent);
+            Intent intent=new Intent(DetailsActivity.this,CounselorContactActivity.class);
+            if(activityname.contains("CounselorData"))
+            {
+                intent.putExtra("ActivityName","CounselorData");
+            }
+            else  if(activityname.contains("OnlineLead"))
+            {
+                intent.putExtra("ActivityName","OnlineLead");
+            }
+            else  if(activityname.contains("OpenLeads"))
+            {
+                intent.putExtra("ActivityName","OpenLeads");
+            }
+            else  if(activityname.contains("ConvertedOnlineLead"))
+            {
+                intent.putExtra("ActivityName","ConvertedOnlineLead");
+            }
+            else  if(activityname.contains("FormFilled"))
+            {
+                intent.putExtra("ActivityName","FormFilled");
+            }
+
+            startActivity(intent);
       //  super.onBackPressed();
         }catch (Exception e)
         {
+            Toast.makeText(DetailsActivity.this,"Errorcode-252 DetailsActivity onBackpressed "+e.toString(),Toast.LENGTH_SHORT).show();
             Log.d("Exception", String.valueOf(e));
+        }
+    }
+    public void loadCounselorData(){
+        try {
+            if (CheckInternetSpeed.checkInternet(DetailsActivity.this).contains("0")) {
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(DetailsActivity.this);
+                alertDialogBuilder.setTitle("No Internet connection!!!")
+                        .setMessage("Can't do further process")
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
+
+                            }
+                        }).show();
+            } else if (CheckInternetSpeed.checkInternet(DetailsActivity.this).contains("1")) {
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(DetailsActivity.this);
+                alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                        .setMessage("Can't do further process")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+            } else {
+
+                dialog = ProgressDialog.show(DetailsActivity.this, "", "Loading counselor information...", true);
+                getCounselorData(sr_no, counselorid);
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(DetailsActivity.this,"Errorcode-253 DetailsActivity loadCounselorData "+e.toString(),Toast.LENGTH_SHORT).show();
         }
     }
 
     public void getCounselorData(String serialno, String cid) {
+        try {
+            url = clienturl + "?clientid=" + clientid + "&caseid=32&nSrNo=" + serialno + "&cCounselorID=" + cid;
+            Log.d("CounselorDetailsUrl", url);
 
-        url=clienturl+"?clientid=" + clientid + "&caseid=32&nSrNo="+serialno+"&cCounselorID="+cid;
-        Log.d("CounselorDetailsUrl",url);
-        if(CheckInternet.checkInternet(DetailsActivity.this))
-        {
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        dialog.dismiss();
-                        Log.d("FetchedResponse", response);
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            dialog.dismiss();
+                            Log.d("FetchedResponse", response);
 
-                        try {
+                            try {
 
-                            JSONObject jsonObject = new JSONObject(response);
-                            Log.d("Json", jsonObject.toString());
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            Log.d("Length", String.valueOf(jsonArray.length()));
+                                JSONObject jsonObject = new JSONObject(response);
+                                Log.d("Json", jsonObject.toString());
+                                JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                Log.d("Length", String.valueOf(jsonArray.length()));
                    /* if(jsonArray.length()==0)
                     {
                         startActivity(new Intent(DetailsActivity.this,CounsellorData.class));
                         Toast.makeText(DetailsActivity.this,"This candidate is allocated to someone else",Toast.LENGTH_SHORT).show();
                     }*/
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                name = jsonObject1.getString("cCandidateName");
-                                course = jsonObject1.getString("cCourse");
-                                Log.d("Course&*",course);
-                                mbl = jsonObject1.getString("cMobile");
-                                adrs = jsonObject1.getString("cAddressLine");
-                                city = jsonObject1.getString("cCity");
-                                state1 = jsonObject1.getString("cState");
-                                pincode = jsonObject1.getString("cPinCode");
-                                parentno = jsonObject1.getString("cParantNo");
-                                email = jsonObject1.getString("cEmail");
-                                //  fetchedDataFrom = jsonObject1.getString("cDataFrom");
-                                // fetchedAllocatedTo = jsonObject1.getString("AllocatedTo");
-                                allocatedDate = jsonObject1.getString("AllocationDate");
-                                statusid = jsonObject1.getString("CurrentStatus");
-                                remark = jsonObject1.getString("cRemarks");
-                                //  fetchedCreatedDate = jsonObject1.getString("dtCreatedDate");
-                                status11 = jsonObject1.getString("cStatus");
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                    name = jsonObject1.getString("cCandidateName");
+                                    course = jsonObject1.getString("cCourse");
+                                    Log.d("Course&*", course);
+                                    mbl = jsonObject1.getString("cMobile");
+                                    adrs = jsonObject1.getString("cAddressLine");
+                                    city = jsonObject1.getString("cCity");
+                                    state1 = jsonObject1.getString("cState");
+                                    pincode = jsonObject1.getString("cPinCode");
+                                    parentno = jsonObject1.getString("cParantNo");
+                                    email = jsonObject1.getString("cEmail");
+                                    //  fetchedDataFrom = jsonObject1.getString("cDataFrom");
+                                    // fetchedAllocatedTo = jsonObject1.getString("AllocatedTo");
+                                    allocatedDate = jsonObject1.getString("AllocationDate");
+                                    statusid = jsonObject1.getString("CurrentStatus");
+                                    remark = jsonObject1.getString("cRemarks");
+                                    //  fetchedCreatedDate = jsonObject1.getString("dtCreatedDate");
+                                    status11 = jsonObject1.getString("cStatus");
 
-                            }
+                                }
+                                txtSrno.setText(sr_no);
+                                txtCourse.setText(course);
+                                txtMobile.setText(mbl);
+                                txtName.setText(name);
+                                txtAddress.setText(adrs);
+                                if (txtAddress.getText().toString().length() == 0) {
+                                    txtAddress.setText("NA");
+                                }
+                                txtCity.setText(city);
+                                if (txtCity.getText().toString().length() == 0) {
+                                    txtCity.setText("NA");
+                                }
+                                txtState.setText(state1);
+                                if (txtState.getText().toString().contains("-Select State-")) {
+                                    txtState.setText("NA");
+                                }
+                                txtPincode.setText(pincode);
+                                if (txtPincode.getText().toString().length() == 0) {
+                                    txtPincode.setText("NA");
+                                }
+                                txtEmail.setText(email);
+                                if (txtEmail.getText().toString().length() == 0) {
+                                    txtEmail.setText("NA");
+                                }
+                                txtParent.setText(parentno);
+                                if (txtParent.getText().toString().length() == 0) {
+                                    txtParent.setText("NA");
+                                }
 
-                            txtSrno.setText(sr_no);
-                            txtCourse.setText(course);
-                            txtMobile.setText(mbl);
-                            txtName.setText(name);
-                            txtAddress.setText(adrs);
-                            if (txtAddress.getText().toString().length() == 0) {
-                                txtAddress.setText("NA");
+                            } catch (Exception e) {
+                                Toast.makeText(DetailsActivity.this,"Errorcode-255 DetailsActivity CounselorDataResponse "+e.toString(),Toast.LENGTH_SHORT).show();                                dialog.dismiss();
+                                Log.d("Exception", String.valueOf(e));
                             }
-                            txtCity.setText(city);
-                            if (txtCity.getText().toString().length() == 0) {
-                                txtCity.setText("NA");
-                            }
-                            txtState.setText(state1);
-                            if (txtState.getText().toString().contains("-Select State-")) {
-                                txtState.setText("NA");
-                            }
-                            txtPincode.setText(pincode);
-                            if (txtPincode.getText().toString().length() == 0) {
-                                txtPincode.setText("NA");
-                            }
-                            txtEmail.setText(email);
-                            if (txtEmail.getText().toString().length() == 0) {
-                                txtEmail.setText("NA");
-                            }
-                            txtParent.setText(parentno);
-                            if (txtParent.getText().toString().length() == 0) {
-                                txtParent.setText("NA");
-                            }
-
-                        }catch (Exception e)
-                        {
-                            Toast.makeText(DetailsActivity.this,"Got exception",Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
-                            Log.d("Exception", String.valueOf(e));
                         }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
 
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(DetailsActivity.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
+                            if (error == null || error.networkResponse == null)
+                                return;
+                            final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                            //get response body and parse with appropriate encoding
+                            if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(DetailsActivity.this);
+                                alertDialogBuilder.setTitle("Server Error!!!")
+                                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                                        // The dialog is automatically dismissed when a dialog button is clicked.
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
 
-                                            dialog.dismiss();
-                                        }
-                                    }).show();
-                            dialog.dismiss();
-                            Toast.makeText(DetailsActivity.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                                dialog.dismiss();
+                                            }
+                                        }).show();
+                                dialog.dismiss();
+                                Toast.makeText(DetailsActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                // showCustomPopupMenu();
+                                Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                            }
                         }
-
-                    }
-                });
-        requestQueue.add(stringRequest);
-        } else {
-            dialog.dismiss();
-            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(DetailsActivity.this);
-            alertDialogBuilder.setTitle("No Internet connection!!!")
-                    .setMessage("Can't do further process")
-                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                    // The dialog is automatically dismissed when a dialog button is clicked.
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-
-                        }
-                    }).show();
+                    });
+            requestQueue.add(stringRequest);
+        }catch (Exception e)
+        {
+            Toast.makeText(DetailsActivity.this,"Errorcode-254 DetailsActivity getCounselorData "+e.toString(),Toast.LENGTH_SHORT).show();
         }
 
-      /*  urlRequest = UrlRequest.getObject();
-        urlRequest.setContext(getApplicationContext());
-        String url=clienturl+"?clientid=" + clientid + "&caseid=32&nSrNo="+serialno+"&cCounselorID="+cid;
-        urlRequest.setUrl(url);
-        Log.d("FetchedCounselorUrl", url);
-        urlRequest.getResponse(new ServerCallback() {
-            @Override
-            public void onSuccess(String response) throws JSONException {
-                 dialog.dismiss();
-                Log.d("FetchedResponse", response);
-
-                try {
-
-                    JSONObject jsonObject = new JSONObject(response);
-                    Log.d("Json", jsonObject.toString());
-                    JSONArray jsonArray = jsonObject.getJSONArray("data");
-                    Log.d("Length", String.valueOf(jsonArray.length()));
-                   *//* if(jsonArray.length()==0)
-                    {
-                        startActivity(new Intent(DetailsActivity.this,CounsellorData.class));
-                        Toast.makeText(DetailsActivity.this,"This candidate is allocated to someone else",Toast.LENGTH_SHORT).show();
-                    }*//*
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-
-
-                        name = jsonObject1.getString("cCandidateName");
-                        course = jsonObject1.getString("cCourse");
-                        Log.d("Course&*",course);
-                        mbl = jsonObject1.getString("cMobile");
-                        adrs = jsonObject1.getString("cAddressLine");
-                        city = jsonObject1.getString("cCity");
-                        state1 = jsonObject1.getString("cState");
-                        pincode = jsonObject1.getString("cPinCode");
-                        parentno = jsonObject1.getString("cParantNo");
-                        email = jsonObject1.getString("cEmail");
-                      //  fetchedDataFrom = jsonObject1.getString("cDataFrom");
-                       // fetchedAllocatedTo = jsonObject1.getString("AllocatedTo");
-                        allocatedDate = jsonObject1.getString("AllocationDate");
-                        statusid = jsonObject1.getString("CurrentStatus");
-                        remark = jsonObject1.getString("cRemarks");
-                      //  fetchedCreatedDate = jsonObject1.getString("dtCreatedDate");
-                        status11 = jsonObject1.getString("cStatus");
-
-                       *//* editor.putString("SelectedMobile", mbl);
-                        editor.putString("SelectedParentNo", parentno);
-                        editor.putString("SelectedName", name);
-                        editor.putString("SelectedCourse", course);
-                        // editor.putString("SelectedSrNo", dataCounselor.getSr_no());
-                        editor.putString("SelectedEmail", email);
-                        editor.putString("AllocatedDate", allocatedDate);
-                        editor.putString("SelectedAddress", adrs);
-                        editor.putString("SelectedCity", city);
-                        editor.putString("SelectedState", state1);
-                        editor.putString("SelectedPinCode", pincode);
-                        editor.putString("SelectedStatus", status11);
-                        editor.putString("SelectedStatusId", statusid);
-                        editor.putString("SelectedRemark", remark);
-                        editor.commit();*//*
-                    }
-
-                    txtSrno.setText(sr_no);
-                    txtCourse.setText(course);
-                    txtMobile.setText(mbl);
-                    txtName.setText(name);
-                    txtAddress.setText(adrs);
-                    if (txtAddress.getText().toString().length() == 0) {
-                        txtAddress.setText("NA");
-                    }
-                    txtCity.setText(city);
-                    if (txtCity.getText().toString().length() == 0) {
-                        txtCity.setText("NA");
-                    }
-                    txtState.setText(state1);
-                    if (txtState.getText().toString().contains("-Select State-")) {
-                        txtState.setText("NA");
-                    }
-                    txtPincode.setText(pincode);
-                    if (txtPincode.getText().toString().length() == 0) {
-                        txtPincode.setText("NA");
-                    }
-                    txtEmail.setText(email);
-                    if (txtEmail.getText().toString().length() == 0) {
-                        txtEmail.setText("NA");
-                    }
-                    txtParent.setText(parentno);
-                    if (txtParent.getText().toString().length() == 0) {
-                        txtParent.setText("NA");
-                    }
-
-                }catch (Exception e)
-                {
-                    Log.d("Exception", String.valueOf(e));
-                }
-            }
-        });*/
     }
 }

@@ -93,21 +93,53 @@ public class StatusReport extends AppCompatActivity {
             clientId = sp.getString("ClientId", null);
             id1 = sp.getString("Id", null);
             id1 = id1.replaceAll(" ", "");
-
-            dialog = ProgressDialog.show(StatusReport.this, "", "Loading status report", true);
             if (actname.equals("Status Report")) {
                 urlReportNo = clientUrl + "?clientid=" + clientId + "&CounselorID=" + id1 + "&caseid=306";
             } else {
                 urlReportNo = clientUrl + "?clientid=" + clientId + "&CounselorID=" + id1 + "&caseid=307";
             }
-            getStatusReport();
+            if(CheckInternetSpeed.checkInternet(StatusReport.this).contains("0")) {
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(StatusReport.this);
+                alertDialogBuilder.setTitle("No Internet connection!!!")
+                        .setMessage("Can't do further process")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
+
+                            }
+                        }).show();
+            }
+            else if(CheckInternetSpeed.checkInternet(StatusReport.this).contains("1")) {
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(StatusReport.this);
+                alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                        .setMessage("Can't do further process")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+            }
+            else {
+                dialog = ProgressDialog.show(StatusReport.this, "", "Loading status report", true);
+                getStatusReport();
+            }
             // refreshWhenLoading();
         } catch (Exception e) {
-            Toast.makeText(StatusReport.this, "Got exception can't load", Toast.LENGTH_SHORT).show();
+            Toast.makeText(StatusReport.this,"Errorcode-378 StatusReport onCreate "+e.toString(),Toast.LENGTH_SHORT).show();
             Log.d("StatusReportException", String.valueOf(e));
         }
     }
-
     public void refreshWhenLoading() {
         final Timer t = new Timer();
         t.schedule(new TimerTask() {
@@ -131,101 +163,88 @@ public class StatusReport extends AppCompatActivity {
     }
 
     public void getStatusReport() {
-        Log.d("StatusReportUrl",urlReportNo);
-        if(CheckInternet.checkInternet(StatusReport.this))
+        try {
+            Log.d("StatusReportUrl", urlReportNo);
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, urlReportNo,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                dialog.dismiss();
+                                String res = String.valueOf(response);
+                                if (res.contains("[]")) {
+                                    txtNoStatus.setVisibility(View.VISIBLE);
+                                    recyclerView.setVisibility(View.GONE);
+                                } else {
+                                    txtNoStatus.setVisibility(View.GONE);
+                                    recyclerView.setVisibility(View.VISIBLE);
+                                }
+
+                                JSONObject jsonObject = new JSONObject(response);
+                                JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                Log.d("StatusReportResponse", String.valueOf(response));
+                                for (int i = 0; i < jsonArray.length(); i++) {
+
+                                    JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                    int total_no = jsonObject1.getInt("Total No");
+                                    if (!actname.equals("Status Report")) {
+                                        String refname = jsonObject1.getString("DataRefName");
+                                        String status = jsonObject1.getString("cStatus");
+                                        DataStatusReport dataStatusReport = new DataStatusReport(refname, status, total_no);
+                                        arrayListStatus.add(dataStatusReport);
+                                    }
+                                    // Log.d("data fetch table", CallDate + " " + TotalCall + " ");
+                                    else {
+                                        String status = jsonObject1.getString("Status");
+                                        DataStatusReport sampleData = new DataStatusReport(status, total_no);
+                                        arrayListStatus.add(sampleData);
+                                    }
+                                }
+                                AdapterStatusReport adapterStatusReport = new AdapterStatusReport(arrayListStatus, getApplicationContext());
+                                LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext());
+                                recyclerView.setLayoutManager(manager);
+                                recyclerView.setAdapter(adapterStatusReport);
+                                adapterStatusReport.notifyDataSetChanged();
+                            } catch (Exception e) {
+                                Toast.makeText(StatusReport.this,"Errorcode-380 StatusReport StatusReportResponse "+e.toString(),Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                                Log.d("Exception", String.valueOf(e));
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                            if (error == null || error.networkResponse == null)
+                                return;
+                            final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                            //get response body and parse with appropriate encoding
+                            if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(StatusReport.this);
+                                alertDialogBuilder.setTitle("Server Error!!!")
+
+
+                                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                                        // The dialog is automatically dismissed when a dialog button is clicked.
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                                dialog.dismiss();
+                                            }
+                                        }).show();
+                                dialog.dismiss();
+                                Toast.makeText(StatusReport.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                // showCustomPopupMenu();
+                                Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                            }
+
+                        }
+                    });
+            requestQueue.add(stringRequest);
+        }catch (Exception e)
         {
-          StringRequest stringRequest = new StringRequest(Request.Method.POST, urlReportNo,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            dialog.dismiss();
-                            String res = String.valueOf(response);
-                            if (res.contains("[]")) {
-                                txtNoStatus.setVisibility(View.VISIBLE);
-                                recyclerView.setVisibility(View.GONE);
-                            } else {
-                                txtNoStatus.setVisibility(View.GONE);
-                                recyclerView.setVisibility(View.VISIBLE);
-                            }
-
-                            JSONObject jsonObject = new JSONObject(response);
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            Log.d("StatusReportResponse", String.valueOf(response));
-                            for (int i = 0; i < jsonArray.length(); i++) {
-
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                int total_no = jsonObject1.getInt("Total No");
-                                if (!actname.equals("Status Report")) {
-                                    String refname = jsonObject1.getString("DataRefName");
-                                    String status = jsonObject1.getString("cStatus");
-                                    DataStatusReport dataStatusReport = new DataStatusReport(refname, status, total_no);
-                                    arrayListStatus.add(dataStatusReport);
-                                }
-                                // Log.d("data fetch table", CallDate + " " + TotalCall + " ");
-                                else {
-                                    String status = jsonObject1.getString("Status");
-                                    DataStatusReport sampleData = new DataStatusReport(status, total_no);
-                                    arrayListStatus.add(sampleData);
-                                }
-                            }
-                            AdapterStatusReport adapterStatusReport = new AdapterStatusReport(arrayListStatus, getApplicationContext());
-                            LinearLayoutManager manager = new LinearLayoutManager(getApplicationContext());
-                            recyclerView.setLayoutManager(manager);
-                            recyclerView.setAdapter(adapterStatusReport);
-                            adapterStatusReport.notifyDataSetChanged();
-                        } catch (Exception e) {
-                            Toast.makeText(StatusReport.this,"Got exception",Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
-                            Log.d("Exception", String.valueOf(e));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(StatusReport.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
-
-
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-
-                                            dialog.dismiss();
-                                        }
-                                    }).show();
-                            dialog.dismiss();
-                            Toast.makeText(StatusReport.this, "Server Error", Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
-
-                    }
-                });
-        requestQueue.add(stringRequest);
-        }else {
-            dialog.dismiss();
-            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(StatusReport.this);
-            alertDialogBuilder.setTitle("No Internet connection!!!")
-                    .setMessage("Can't do further process")
-
-                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                    // The dialog is automatically dismissed when a dialog button is clicked.
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            dialog.dismiss();
-
-                        }
-                    }).show();
+            Toast.makeText(StatusReport.this,"Errorcode-379 StatusReport getStatusReport "+e.toString(),Toast.LENGTH_SHORT).show();
         }
 
     }

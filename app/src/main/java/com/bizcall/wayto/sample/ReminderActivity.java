@@ -160,20 +160,7 @@ public class ReminderActivity extends AppCompatActivity {
         //  t2 = new Thread(mthread2);
 
       //  t1.start();
-            dialog=ProgressDialog.show(ReminderActivity.this,"","Loading reminders",true);
-            url=clienturl+"?clientid=" + clientid + "&caseid=33&nCounsellorId="+counsellorid;
-            if(CheckInternet.checkInternet(ReminderActivity.this)) {
-                // dialog=ProgressDialog.show(ReminderActivity.this,"","Loading reminders",true);
-                RequestQueue requestQueue = Volley.newRequestQueue(ReminderActivity.this);
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,
-                        null, new success(), new fail());
-                requestQueue.add(jsonObjectRequest);
-
-
-                // refreshWhenLoading();
-               // t1.sleep(120000);
-            }else {
-                 dialog.dismiss();
+            if(CheckInternetSpeed.checkInternet(ReminderActivity.this).contains("0")) {
                 android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(ReminderActivity.this);
                 alertDialogBuilder.setTitle("No Internet connection!!!")
                         .setMessage("Can't do further process")
@@ -182,12 +169,38 @@ public class ReminderActivity extends AppCompatActivity {
                         // The dialog is automatically dismissed when a dialog button is clicked.
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
                                 dialog.dismiss();
 
                             }
                         }).show();
             }
+            else if(CheckInternetSpeed.checkInternet(ReminderActivity.this).contains("1")) {
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(ReminderActivity.this);
+                alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                        .setMessage("Can't do further process")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+            }
+            else {
+
+                dialog = ProgressDialog.show(ReminderActivity.this, "", "Loading reminders", true);
+                getReminders();
+            }
+
+                // refreshWhenLoading();
+               // t1.sleep(120000);
+
       imgBack.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
@@ -200,6 +213,15 @@ public class ReminderActivity extends AppCompatActivity {
             Toast.makeText(ReminderActivity.this,"Got exception can't load",Toast.LENGTH_SHORT).show();
             Log.d("ReminderException", String.valueOf(e));
         }
+    }
+    public void getReminders(){
+        url = clienturl + "?clientid=" + clientid + "&caseid=33&nCounsellorId=" + counsellorid;
+
+        // dialog=ProgressDialog.show(ReminderActivity.this,"","Loading reminders",true);
+        RequestQueue requestQueue = Volley.newRequestQueue(ReminderActivity.this);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,
+                null, new success(), new fail());
+        requestQueue.add(jsonObjectRequest);
     }
    /* public void refreshWhenLoading()
     {

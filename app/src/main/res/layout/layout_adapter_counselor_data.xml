@@ -39,7 +39,7 @@
                 <LinearLayout
                     android:id="@+id/linearCounselor"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginLeft="20dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
@@ -51,9 +51,8 @@
                         android:text="Candidate Name"
                         android:layout_marginTop="5dp"
                         android:textStyle="bold"
-
                         android:textColor="@color/black"
-                        android:textSize="15sp"></TextView>
+                        android:textSize="13sp"></TextView>
 
                     <TextView
                         android:id="@+id/txtMobile1"
@@ -62,7 +61,7 @@
                         android:layout_marginTop="5dp"
                         android:text="Mobile"
                         android:textColor="@color/black"
-                        android:textSize="15sp"></TextView>
+                        android:textSize="13sp"></TextView>
                     <TextView
                         android:id="@+id/txtParentNo"
                         android:layout_width="wrap_content"
@@ -71,9 +70,8 @@
                         android:layout_marginTop="5dp"
                         android:visibility="gone"
                         android:textStyle="bold"
-
                         android:textColor="@color/black"
-                        android:textSize="15sp"></TextView>
+                        android:textSize="13sp"></TextView>
                     <TextView
                         android:id="@+id/txtStatus"
                         android:layout_width="wrap_content"
@@ -96,10 +94,13 @@
                         android:id="@+id/txtSerial"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
                         android:text="Srno"
                         android:textColor="@color/red"
                         android:textSize="13sp"
+                        android:layout_marginRight="3dp"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_marginTop="3dp"
                         android:textStyle="bold"></TextView>
 
                     <TextView
@@ -107,9 +108,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Course"
-                        android:textAlignment="center"
+                        android:layout_marginRight="3dp"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_marginTop="3dp"
                         android:textColor="@color/black"
-                        android:textSize="15sp"></TextView>
+                        android:textSize="13sp"></TextView>
 
                 </LinearLayout>
             </LinearLayout>

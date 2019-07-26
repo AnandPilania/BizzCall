@@ -84,10 +84,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:id="@+id/linearSrNo">
+                android:id="@+id/linearUrl">
                 <TableLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -98,8 +98,52 @@
                         android:layout_height="wrap_content">
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="5dp"
+                            android:paddingLeft="5dp"
+                            android:paddingBottom="5dp"
+                            android:paddingRight="5dp"
+                            android:text="Url:"
+                            android:textSize="15dp"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:paddingTop="5dp"
+                            android:paddingLeft="5dp"
+                            android:paddingBottom="5dp"
+                            android:paddingRight="5dp"
+                            android:layout_marginLeft="0dp"
+                            android:textSize="15dp"
+                            android:textColor="@color/ocean_blue"
+                            android:textStyle="bold"
+                            android:text=""
+                            android:id="@+id/txtUrl"/>
+                    </TableRow>
+
+                </TableLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="visible"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:id="@+id/linearSrNo">
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:paddingTop="5dp"
                             android:paddingLeft="5dp"
                             android:paddingBottom="5dp"
@@ -108,8 +152,8 @@
                             android:textSize="15dp"
                             android:textColor="@color/black"/>
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:paddingTop="5dp"
                             android:paddingLeft="5dp"
@@ -132,17 +176,16 @@
                 android:gravity="center"
                 android:id="@+id/linearClientName">
                 <TableLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <TableRow
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
                             android:paddingTop="5dp"
                             android:paddingLeft="5dp"
                             android:paddingBottom="5dp"
@@ -151,9 +194,10 @@
                             android:textSize="15dp"
                             android:textColor="@color/black"/>
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:text=""
                             android:paddingTop="5dp"
                             android:paddingLeft="5dp"
                             android:paddingBottom="5dp"
@@ -167,8 +211,9 @@
                 </TableLayout>
             </LinearLayout>
 
+
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
@@ -179,12 +224,11 @@
                     android:orientation="horizontal">
 
                 <TableRow
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:paddingTop="5dp"
                 android:paddingLeft="5dp"
                 android:paddingBottom="5dp"
@@ -193,8 +237,8 @@
                 android:textSize="15dp"
                 android:textColor="@color/black"/>
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:paddingTop="5dp"
                 android:paddingLeft="5dp"
@@ -216,17 +260,16 @@
                 android:gravity="center"
                 android:layout_gravity="center">
                 <TableLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                 <TableRow
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
                     android:paddingTop="5dp"
                     android:paddingLeft="5dp"
                     android:paddingBottom="5dp"
@@ -235,8 +278,8 @@
                     android:textSize="15dp"
                     android:textColor="@color/black"/>
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingTop="5dp"
                     android:paddingLeft="5dp"
@@ -258,17 +301,16 @@
                 android:gravity="center"
                 android:id="@+id/linearActivityName">
                 <TableLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <TableRow
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
                             android:paddingTop="5dp"
                             android:paddingLeft="5dp"
                             android:paddingBottom="5dp"
@@ -277,8 +319,8 @@
                             android:textSize="15dp"
                             android:textColor="@color/black"/>
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:paddingTop="5dp"
                             android:paddingLeft="5dp"
@@ -292,7 +334,7 @@
                     </TableRow>
                 </TableLayout>
             </LinearLayout>
-            <LinearLayout
+           <!-- <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -328,7 +370,7 @@
                     android:textColor="@color/red"
                     android:textSize="15dp" />
 
-            </LinearLayout>
+            </LinearLayout>-->
 
 
             <LinearLayout
@@ -340,17 +382,16 @@
                 android:gravity="center"
                 android:id="@+id/linearCallDuration">
                 <TableLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                 <TableRow
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
                     android:paddingTop="5dp"
                     android:paddingLeft="5dp"
                     android:paddingBottom="5dp"
@@ -359,8 +400,8 @@
                     android:textSize="15dp"
                     android:textColor="@color/black"/>
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingTop="5dp"
                     android:paddingLeft="5dp"
@@ -424,6 +465,4 @@
         android:background="@drawable/lay_alert_btn"
         android:visibility="gone"
         android:id="@+id/btnOk"/>
-
-
 </LinearLayout>

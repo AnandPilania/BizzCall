@@ -23,6 +23,8 @@
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAPTURE_AUDIO_OUTPUT"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.STORAGE" />
@@ -52,6 +54,24 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
+        <activity android:name=".CollegeAttornyActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".PersonalInfoActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SummaryDetails"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".EducationalDetails"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ActivityUploadDocs"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".FormFilled"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <service
             android:name=".MyAccessibilityService"
             android:label="@string/app_name">
@@ -96,7 +116,6 @@
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
         </receiver>
-
         <!--
         <receiver
             android:name="com.bizcall.wayto.sample.ReminderBroadcastReceiver">
@@ -112,10 +131,20 @@
             android:enabled="true"
             android:exported="false"
             android:stopWithTask="false" />
-
-        <provider
+        <!--
+  <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.bizcall.provider.phonecallrecord"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+        -->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -213,8 +242,7 @@
             android:name=".ReportActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <!-- android:screenOrientation="landscape" -->
+            android:theme="@style/AppTheme.NoActionBar" /> <!-- android:screenOrientation="landscape" -->
         <activity
             android:name=".GraphReport"
             android:screenOrientation="portrait"
@@ -273,8 +301,9 @@
         <activity
             android:name=".MasterEntry"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MailActiivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".MailActiivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

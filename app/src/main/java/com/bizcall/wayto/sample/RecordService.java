@@ -11,6 +11,19 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import java.io.IOException;
 
 public class RecordService
@@ -20,8 +33,8 @@ public class RecordService
     public static AudioManager audioManager;
     public  static MediaMetadataRetriever mmr;
     public static SharedPreferences sp;
-    public static  String clientid, sr_no;
-   public static SharedPreferences.Editor editor;
+    public static  String clientid, sr_no,candidatename,mobile;
+    public static SharedPreferences.Editor editor;
     public static long timeInMilliseconds = 0L;
     public static long timeSwapBuff = 0L;
     public static long updatedTime = 0L;
@@ -29,6 +42,7 @@ public class RecordService
    public static String duration1, counselorid, phoneNumber, date,clienturl;
     ProgressDialog dialog;
     static Context context;
+    static RequestQueue requestQueue;
 
 
     public static long startHTime = 0L;
@@ -80,7 +94,9 @@ public class RecordService
         sp = context.getSharedPreferences("Settings", Context.MODE_PRIVATE);
         clientid = sp.getString("ClientId", null);
         clienturl=sp.getString("ClientUrl",null);
-        sr_no = sp.getString("Sr.No", null);
+        sr_no = sp.getString("SelectedSrNo", null);
+        candidatename=sp.getString("SelectedName",null);
+        mobile=sp.getString("SelectedMobile",null);
         counselorid=sp.getString("Id",null);
         counselorid=counselorid.replaceAll(" ","");
         recorder = new MediaRecorder();
@@ -91,23 +107,8 @@ public class RecordService
         //audioManager.setMode(AudioManager.MODE_IN_CALL);
         phoneNumber=PhoneStateReceiver.phoneNumber;
        Log.d("NumberAfter",phoneNumber+"mona");
-       /* phoneNumber=intent.getStringExtra("CNumber");
-        if(TextUtils.isEmpty(phoneNumber)){
-            phoneNumber=sp.getString("StateNumber",null);
 
-        }
-        Log.d("NumberPIE",phoneNumber+"mona");*/
-
-
-       /* if(!TextUtils.isEmpty(phoneNumber))
-        {
-            Log.d("Phone",phoneNumber);
-        }
-        else
-        {
-            phoneNumber="9096844152";
-        }*/
-         Log.d(TAGS, "Phone number in service: "+phoneNumber);
+       Log.d(TAGS, "Phone number in service: "+phoneNumber);
 
         String time = new CommonMethods().getTIme();
         time = time.replaceAll(" ", "");
@@ -167,19 +168,17 @@ catch (Exception e)
     Log.d("Exception", String.valueOf(e));
 }
         // onTaskRemoved(intent);
-
-
-    }
+   }
 
     public static void onStop() {
-
-        try {
+       try {
             Log.d("InStop","1");
           //  dialog = ProgressDialog.show(RecordService.this, "", "Loading...", true);
             recorder.stop();
             recorder.reset();
             recorder.release();
             recorder = null;
+                sendSms();
             /*counselorid = sp.getString("Id", null);
             counselorid = counselorid.replaceAll(" ", "");
             phoneNumber=phoneNumber.replace("+91","");*/
@@ -205,35 +204,56 @@ catch (Exception e)
                 Log.d("Exception", String.valueOf(ex));
         }
     }
+    public static void sendSms() {
+       requestQueue= Volley.newRequestQueue(context);
+        String url=clienturl+"?clientid=" + clientid + "&caseid=86&CandidateName=" +candidatename + "&Mobile="+mobile+"&SmsNo=1&SrNo="+sr_no+"&CounselorID=" + counselorid;
+        Log.d("SendSmsUrl",url);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
 
- /*   public void checkNumber(String cid, final String phoneNumber1) {
-        // dialog = ProgressDialog.show(RecordService.this, "Loading", "Please wait.....", false, true);
-        urlRequest = UrlRequest.getObject();
-        urlRequest.setContext(getApplicationContext());
-        urlRequest.setUrl(clienturl+"?clientid=" + clientid + "&caseid=9&CounselorId=" + cid + "&cMobile=" + phoneNumber1);
-        Log.d("CheckUrl", clienturl+"?clientid=" + clientid + "&caseid=9&CounselorId=" + cid + "&cMobile=" + phoneNumber1);
-        urlRequest.getResponse(new ServerCallback() {
-            @Override
-            public void onSuccess(String response) throws JSONException {
-               // dialog.dismiss();
+                        Log.d("*******", response.toString());
+                        try {
+                            Log.d("SendSMSResponse", response);
 
-                Log.d("CheckResponse", response);
-                if (response.contains("Present")) {
-                    Intent intent = new Intent(RecordService.this, CounselorContactActivity.class);
-                    intent.putExtra("ActivityName","ServiceRecord");
-                  //  intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    // PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(RecordService.this, SplashNumberNotPresent.class);
-                    intent.putExtra("Phone", phoneNumber1);
-                    intent.putExtra("Date", date);
-                  //  intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
-            }
-        });
-    }*/
+                        } catch (Exception e) {
+                            Log.d("Exception", String.valueOf(e));
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        if (error == null || error.networkResponse == null)
+                            return;
+                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                        //get response body and parse with appropriate encoding
+                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
+                           /* android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(context);
+                            alertDialogBuilder.setTitle("Server Error!!!")
+
+
+                                    // Specifying a listener allows you to take an action before dismissing the dialog.
+                                    // The dialog is automatically dismissed when a dialog button is clicked.
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                            dialog.dismiss();
+                                        }
+                                    }).show();*/
+
+                           // Toast.makeText(context,"Server Error",Toast.LENGTH_SHORT).show();
+                            // showCustomPopupMenu();
+                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                        }
+                    }
+                });
+        requestQueue.add(stringRequest);
+    }
+
+
   /*  @Override
     public void onTaskRemoved(Intent rootIntent)
     {

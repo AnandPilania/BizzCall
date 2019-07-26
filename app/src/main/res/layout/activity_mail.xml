@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/activity_background"
     tools:context="com.bizcall.wayto.sample.MailActiivity">
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar1"
@@ -21,7 +22,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/linerlayout_border_round"
                 android:orientation="horizontal">
 
@@ -38,21 +39,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:text="Mail Activity"
+                android:layout_marginTop="10dp"
+                android:text="Send Mail"
                 android:textColor="@color/white"
                 android:textSize="20dp" />
-
             <ImageView
-                android:id="@+id/imgCoin"
+                android:id="@+id/imgAttachment"
                 android:layout_width="35dp"
-                android:layout_height="47dp"
-                android:layout_marginLeft="40dp"
+                android:layout_height="55dp"
+                android:layout_marginLeft="100dp"
+                android:layout_marginTop="5dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="15dp"
-                android:visibility="gone"
-                android:src="@drawable/dollar" />
+                android:visibility="visible"
+                android:src="@drawable/ic_attachment_black_24dp" />
 
+            <ImageView
+                android:id="@+id/imgSend"
+                android:layout_width="35dp"
+                android:layout_height="55dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="15dp"
+                android:visibility="visible"
+                android:src="@drawable/ic_send_black_24dp"/>
             <TextView
                 android:id="@+id/txtCoin"
                 android:layout_width="wrap_content"
@@ -114,13 +126,13 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="Enter email address:" />
+                    android:text="Recipient mail id:" />
 
                 <EditText
                     android:id="@+id/email_address"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="7dp"
                     android:background="@drawable/border"
                     android:inputType="textEmailAddress"
                     android:padding="5dp"
@@ -131,13 +143,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:padding="5dp"
-                    android:text="Enter email Subject:" />
+                    android:text="Email Subject:" />
 
                 <EditText
                     android:id="@+id/email_subject"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="5dp"
                     android:background="@drawable/border"
                     android:padding="5dp"
                     android:textSize="15dp" />
@@ -147,19 +159,61 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:padding="5dp"
-                    android:text="Enter Text:" />
+                    android:text="Text:" />
 
                 <EditText
                     android:id="@+id/email_text"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="5dp"
                     android:background="@drawable/border"
                     android:padding="5dp"
                     android:textSize="15dp" />
-                <ListView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="7dp"
+                    android:visibility="gone"
+                    android:background="@drawable/round_edit_text"
+                    android:paddingRight="10dp">
+
+                    <Spinner
+                        android:id="@+id/spinnerMailTemplate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:backgroundTint="@color/black"
+                        android:gravity="center"
+                        android:textAlignment="center"></Spinner>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="7dp"
+                    android:visibility="gone"
+                    android:background="@drawable/round_edit_text"
+                    android:paddingRight="10dp">
+
+                    <Spinner
+                        android:id="@+id/spinnerSubjectTemplate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:backgroundTint="@color/black"
+                        android:gravity="center"
+                        android:textAlignment="center"></Spinner>
+                </LinearLayout>
+                <ListView
+                    android:layout_width="wrap_content"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone"
                     android:id="@+id/listImages"></ListView>
 
                 <TextView
@@ -175,12 +229,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/lay_alert_button_design"
-                    android:padding="10dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:paddingTop="3dp"
+                    android:paddingRight="3dp"
+                    android:paddingBottom="3dp"
+                    android:paddingLeft="3dp"
+                    android:background="@drawable/linerlayout_border_squre"
+                    android:textSize="15dp"
+                    android:textColor="@color/white"
                     android:text="Select Attachment"
                     android:textAllCaps="false"
-                    android:textColor="@color/white" />
+                   />
 
                 <!--<ImageView-->
                 <!--android:layout_width="250dp"-->
@@ -191,17 +252,24 @@
                 <!--android:background="@drawable/border"/>-->
 
                 <Button
-                    android:id="@+id/sendemail_intent"
+                    android:id="@+id/btnSendEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="20dp"
-                    android:layout_marginBottom="30dp"
-                    android:background="@drawable/lay_alert_button_design"
-                    android:padding="10dp"
-                    android:text=" Send Mail "
+                    android:background="@drawable/linerlayout_border_squre"
+                    android:gravity="center"
+                    android:paddingTop="3dp"
+                    android:paddingRight="3dp"
+                    android:paddingBottom="3dp"
+                    android:paddingLeft="3dp"
+                    android:visibility="gone"
+                    android:text="Send Mail "
                     android:textAllCaps="false"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="15dp" />
+
+
             </LinearLayout>
         </ScrollView>
 

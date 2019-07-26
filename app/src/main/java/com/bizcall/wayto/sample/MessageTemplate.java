@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,7 +34,7 @@ import java.util.TimerTask;
 
 public class MessageTemplate extends AppCompatActivity {
 
-    TextView edtMeggase;
+    EditText edtMeggase,edtMailSubject;
     Button btnSubmit;
     SharedPreferences sp;
     String counselorid, msg, clientid,clienturl;
@@ -43,8 +44,9 @@ public class MessageTemplate extends AppCompatActivity {
     int flag = 0;
     ImageView imageBack,imgRefresh;
     Vibrator vibrator;
-    String url;
+    String url,activity;
     RequestQueue requestQueue;
+    TextView txtActivity,txtTitle,txtSubjectTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,15 +56,30 @@ public class MessageTemplate extends AppCompatActivity {
             requestQueue=Volley.newRequestQueue(MessageTemplate.this);
             vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
             edtMeggase = findViewById(R.id.edtMessage1);
+            edtMailSubject=findViewById(R.id.edtSubject);
             btnSubmit = findViewById(R.id.btnSubmitMsg);
             imageBack = findViewById(R.id.img_back);
             imgRefresh=findViewById(R.id.imgRefresh);
+            txtActivity=findViewById(R.id.txtActivityName);
+            txtTitle=findViewById(R.id.txtTitle);
+            txtSubjectTitle=findViewById(R.id.txtTitleSubject);
             sp = getSharedPreferences("Settings", Context.MODE_PRIVATE);
             counselorid = sp.getString("Id", null);
             counselorid=counselorid.replaceAll(" ","");
             clientid = sp.getString("ClientId", null);
             clienturl=sp.getString("ClientUrl",clienturl);
             timeout=sp.getLong("TimeOut",0);
+
+            activity=getIntent().getStringExtra("Activity");
+            txtActivity.setText(activity+" "+"Template");
+            txtTitle.setText(activity);
+            if(activity.contains("Mail")) {
+                txtSubjectTitle.setVisibility(View.VISIBLE);
+                edtMeggase.setHint("Enter mail body here");
+                edtMailSubject.setVisibility(View.VISIBLE);
+                edtMailSubject.setHint("Enter mail subject here");
+                txtTitle.setText(activity+" "+"Body");
+            }
        /* SpannableString content = new SpannableString(mbl);
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         viewHolder.txtMobile.setText(content);*/
@@ -92,8 +109,44 @@ public class MessageTemplate extends AppCompatActivity {
                         flag = 1;
                     }
                     if (flag == 0) {
-                        dialog=ProgressDialog.show(MessageTemplate.this,"","Inserting message in template",true);
-                        insertMsgTemplate();
+                        if(activity.contains("Message")) {
+                            if(CheckInternetSpeed.checkInternet(MessageTemplate.this).contains("0")) {
+                                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(MessageTemplate.this);
+                                alertDialogBuilder.setTitle("No Internet connection!!!")
+                                        .setMessage("Can't do further process")
+
+                                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                                        // The dialog is automatically dismissed when a dialog button is clicked.
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                                dialog.dismiss();
+
+                                            }
+                                        }).show();
+                            }
+                            else if(CheckInternetSpeed.checkInternet(MessageTemplate.this).contains("1")) {
+                                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(MessageTemplate.this);
+                                alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                                        .setMessage("Can't do further process")
+
+                                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                                        // The dialog is automatically dismissed when a dialog button is clicked.
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                //insertIMEI();
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                        .show();
+                            }
+                            else {
+                                dialog = ProgressDialog.show(MessageTemplate.this, "", "Inserting message in template", true);
+                                insertMsgTemplate();
+                            }
+                        }
                       //  refreshWhenLoading();
                     }
                 }
@@ -123,9 +176,7 @@ public class MessageTemplate extends AppCompatActivity {
     public void insertMsgTemplate() {
         url=clienturl+"?clientid=" + clientid + "&caseid=8&cSmsText=" + msg + "&IsActive=1&nCounselorID=" + counselorid;
         Log.d("MsgTemplateUrl",url);
-        if(CheckInternet.checkInternet(MessageTemplate.this))
-        {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -174,28 +225,10 @@ public class MessageTemplate extends AppCompatActivity {
                             // showCustomPopupMenu();
                             Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
                         }
-
                     }
                 });
         requestQueue.add(stringRequest);
-        }else {
-            dialog.dismiss();
-            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(MessageTemplate.this);
-            alertDialogBuilder.setTitle("No Internet connection!!!")
-                    .setMessage("Can't do further process")
-
-                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                    // The dialog is automatically dismissed when a dialog button is clicked.
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            dialog.dismiss();
-
-                        }
-                    }).show();
         }
-
-    }
 
     @Override
     public void onBackPressed() {

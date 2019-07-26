@@ -116,7 +116,7 @@ public class SelectedFileList extends AppCompatActivity {
                             public void run() {
                                 runOnUiThread(new Runnable() {
                                     public void run() {
-                                        Toast.makeText(SelectedFileList.this, "uploading started.....", Toast.LENGTH_SHORT).show();
+                                     //   Toast.makeText(SelectedFileList.this, "uploading started.....", Toast.LENGTH_SHORT).show();
                                     }
                                 });
 
@@ -178,7 +178,7 @@ public class SelectedFileList extends AppCompatActivity {
             @Override
             public void onSuccess(String response) throws JSONException {
 
-                dialog.dismiss();
+              //  dialog.dismiss();
                 Log.d("InsertedStatus1", response);
                 if (response.contains("Data inserted successfully")) {
                     Toast.makeText(SelectedFileList.this, "Data inserted successfully", Toast.LENGTH_SHORT).show();
@@ -207,7 +207,7 @@ public class SelectedFileList extends AppCompatActivity {
         File sourceFile = new File(sourceFileUri);
 
         if (!sourceFile.exists()) {
-            dialog.dismiss();
+           dialog.dismiss();
 
             Log.d("uploadFileNotExist", "Source File not exist :"
                     + uploadFilePath + "" + uploadFileName);
@@ -284,6 +284,7 @@ public class SelectedFileList extends AppCompatActivity {
                 }*/
 
                 if (serverResponseCode == 200) {
+                    dialog.dismiss();
 
                     runOnUiThread(new Runnable() {
                         public void run() {
@@ -292,18 +293,7 @@ public class SelectedFileList extends AppCompatActivity {
                         }
                     });
                 }
-               /* else
-                {
-                    runOnUiThread(new Runnable()
-                    {
-                        public void run()
-                        {
-                            Toast.makeText(SplashAfterCall.this, "File already exists.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-*/
+
                 //close the streams //
                 fileInputStream.close();
                 dos.flush();
@@ -311,7 +301,7 @@ public class SelectedFileList extends AppCompatActivity {
 
             } catch (MalformedURLException ex) {
 
-                dialog.dismiss();
+               // dialog.dismiss();
                 ex.printStackTrace();
 
                 runOnUiThread(new Runnable() {
@@ -325,7 +315,7 @@ public class SelectedFileList extends AppCompatActivity {
                 Log.e("Uploadfiletoserver", "error: " + ex.getMessage(), ex);
             } catch (Exception e) {
 
-                dialog.dismiss();
+              //  dialog.dismiss();
                 e.printStackTrace();
 
                 runOnUiThread(new Runnable() {
@@ -338,7 +328,7 @@ public class SelectedFileList extends AppCompatActivity {
                 Log.d("Exception", "Exception : "
                         + e.getMessage(), e);
             }
-            dialog.dismiss();
+           // dialog.dismiss();
             return serverResponseCode;
 
         }

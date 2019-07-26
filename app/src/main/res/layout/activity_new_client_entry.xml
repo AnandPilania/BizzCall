@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewClientEntry"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar1"
@@ -99,6 +99,8 @@
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
+
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -108,8 +110,9 @@
             android:layout_height="wrap_content"
             android:descendantFocusability="beforeDescendants"
             android:focusableInTouchMode="true"
-            android:background="@color/activity_background"
+            android:background="@color/white"
             android:orientation="vertical">
+
 
             <LinearLayout
                 android:id="@+id/linearPD"
@@ -124,55 +127,69 @@
                     android:id="@+id/txtPersonalInfo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="0dp"
+                    android:background="@color/activity_background"
                     android:drawablePadding="30dp"
                     android:gravity="center"
                     android:paddingLeft="50dp"
                     android:paddingTop="10dp"
                     android:paddingRight="20dp"
+                    android:textStyle="italic"
                     android:paddingBottom="5dp"
-                    android:textColor="@color/cyan_text"
                     android:text="Personal Information"
+                    android:textColor="@color/white"
                     android:textSize="17dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="7dp"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginRight="7dp"
                     android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
                         android:gravity="center"
                         android:orientation="vertical">
 
-
-                        <TextView
-                            android:id="@+id/txtCounsellorNamem"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="5dp"
-                            android:paddingRight="5dp"
-                            android:paddingBottom="5dp"
-                            android:text="Counselor Name"
-                            android:textColor="@color/light_gray"
-                            android:textSize="15dp" />
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/txtCounsellorNamem"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="2.5"
+                                android:paddingTop="5dp"
+                                android:paddingBottom="5dp"
+                                android:text="Counselor Name :"
+                                android:textColor="@color/black"
+                                android:textSize="15dp"
+                                android:visibility="visible" />
+
+                            <TextView
+                                android:id="@+id/txtCounselorName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:paddingTop="5dp"
+                                android:paddingBottom="5dp"
+                                android:textColor="@color/black"
+                                android:textSize="15dp"
+                                android:visibility="visible" />
+                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/txtCounserlorNameError"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="5dp"
+                            android:gravity="center"
                             android:paddingTop="5dp"
-                            android:paddingRight="5dp"
                             android:paddingBottom="5dp"
                             android:text="Please select counsellor name"
                             android:textColor="@color/red"
@@ -182,549 +199,1420 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:gravity="center"
-                            android:background="@drawable/border">
-
-                            <Spinner
-                                android:id="@+id/spinnerCounselor"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp" />
-
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/txtFirstName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="5dp"
-                            android:paddingRight="5dp"
-                            android:paddingBottom="5dp"
-                            android:text="First Name"
-                            android:textColor="@color/light_gray"
-                            android:textSize="15dp" />
-
-                        <EditText
-                            android:id="@+id/edtFirstName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:backgroundTint="@color/blue_text"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:textColor="@color/black"
-                            android:textSize="15dp" />
-
-                        <TextView
-                            android:id="@+id/txtLastName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="5dp"
-                            android:paddingRight="5dp"
-                            android:paddingBottom="5dp"
-                            android:text="Last Name"
-                            android:textColor="@color/light_gray"
-                            android:textSize="15dp" />
-
-                        <EditText
-                            android:id="@+id/edtLastName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:backgroundTint="@color/blue_text"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:textColor="@color/black"
-                            android:textSize="15dp" />
-
-                        <TextView
-                            android:id="@+id/txtDOB"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:paddingTop="5dp"
-                            android:paddingRight="5dp"
-                            android:paddingBottom="5dp"
-                            android:text="DOB"
-                            android:textColor="@color/light_gray"
-                            android:textSize="15dp" />
-
-                        <LinearLayout
-                            android:id="@+id/linearSelectDate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="left"
                             android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/txtSelectedDate"
+                                android:id="@+id/txtSrNo."
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:text="-Select date-"
-                                android:textColor="@color/light_gray"
+                                android:layout_marginTop="5dp"
+                                android:layout_weight="1.5"
+                                android:inputType="number"
+                                android:paddingTop="5dp"
+                                android:paddingBottom="5dp"
+                                android:text="Sr.No :"
+                                android:textColor="@color/black"
                                 android:textSize="15dp" />
 
-                            <ImageView
-                                android:id="@+id/imgCalender"
-                                android:layout_width="wrap_content"
+                            <EditText
+                                android:id="@+id/edtSrNo"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
-                                android:layout_marginTop="10dp"
-                                android:src="@drawable/calendar1"></ImageView>
+                                android:layout_weight="1"
+                                android:backgroundTint="@color/light_blue"
+                                android:inputType="number"
+                                android:paddingTop="5dp"
+                                android:paddingBottom="5dp"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                android:textSize="15dp" />
 
+                            <TextView
+                                android:id="@+id/btnGetDetails"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:layout_weight="1.7"
+                                android:background="@color/activity_background"
+                                android:paddingTop="5dp"
+                                android:paddingBottom="5dp"
+                                android:text="Get Details"
+                                android:textColor="@color/white" />
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/txtSex"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="5dp"
-                            android:paddingRight="5dp"
-                            android:paddingBottom="5dp"
-                            android:text="Sex"
-                            android:textColor="#d3d3d3"
-                            android:textSize="15dp" />
-
-                        <RadioGroup
-                            android:id="@+id/radioGroupSex"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:orientation="horizontal">
-
-                            <RadioButton
-                                android:id="@+id/radioMale"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:checked="true"
-                                android:text="Male"
-                                android:textColor="@color/black"
-                                android:textSize="15dp" />
-
-                            <RadioButton
-                                android:id="@+id/radioFemale"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:checked="false"
-                                android:text="Female"
-                                android:textColor="@color/black"
-                                android:textSize="15dp" />
-                        </RadioGroup>
 
 
-                        <TextView
-                            android:id="@+id/txtParentName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:text="Parent Name"
-                            android:textColor="@color/light_gray"
-                            android:textSize="15dp" />
-
-                        <EditText
-                            android:id="@+id/edtParentName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:backgroundTint="@color/blue_text"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:textColor="@color/black"
-                            android:textSize="15dp" />
-
-                        <TextView
-                            android:id="@+id/txtPanNo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="5dp"
-                            android:paddingRight="5dp"
-                            android:paddingBottom="5dp"
-                            android:text="PAN No"
-                            android:textColor="@color/light_gray"
-                            android:textSize="15dp" />
-
-                        <EditText
-                            android:id="@+id/edtPanNo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:backgroundTint="@color/blue_text"
-                            android:maxLength="10"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="5dp"
-                            android:paddingRight="5dp"
-                            android:paddingBottom="5dp"
-                            android:textColor="@color/black"
-                            android:textSize="15dp" />
-
-                        <TextView
-                            android:id="@+id/txtAdharNo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:text="Adhar No"
-                            android:textColor="@color/light_gray"
-                            android:textSize="15dp" />
-
-                        <EditText
-                            android:id="@+id/edtAdharNo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:backgroundTint="@color/blue_text"
-                            android:inputType="number"
-                            android:maxLength="12"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:textColor="@color/black"
-                            android:textSize="15dp" />
-
-                        <TextView
-                            android:id="@+id/txtPasspportNo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="5dp"
-                            android:paddingRight="5dp"
-                            android:paddingBottom="5dp"
-                            android:text="Passport No"
-                            android:textColor="@color/light_gray"
-                            android:textSize="15dp" />
-
-                        <EditText
-                            android:id="@+id/edtPassportNo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:backgroundTint="@color/blue_text"
-                            android:inputType="number"
-                            android:maxLength="9"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="5dp"
-                            android:paddingRight="5dp"
-                            android:paddingBottom="5dp"
-                            android:textColor="@color/black"
-                            android:textSize="15dp" />
-
-                        <!-- <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">-->
-
-                        <TextView
-                            android:id="@+id/txtMobile1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:layout_weight="1"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:text="Mobile No."
-                            android:textColor="@color/light_gray"
-                            android:textSize="15dp" />
-
-                        <EditText
-                            android:id="@+id/edtMobile1"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:layout_weight="1"
-                            android:inputType="number"
-                            android:backgroundTint="@color/black"
-                            android:maxLength="10"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:textColor="@color/black"
-                            android:textSize="15dp" />
-
-                        <TextView
-                            android:id="@+id/txtMobile2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:layout_weight="1"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:text="Mobile No."
-                            android:textColor="@color/light_gray"
-                            android:textSize="15dp" />
-
-                        <EditText
-                            android:id="@+id/edtMobile2"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:layout_weight="1"
-                            android:backgroundTint="@color/blue_text"
-                            android:inputType="number"
-                            android:maxLength="10"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:textColor="@color/black"
-                            android:textSize="15dp" />
-
-                        <!-- </LinearLayout>-->
-
-                        <TextView
-                            android:id="@+id/txtEmail"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:text="Email ID"
-                            android:textColor="@color/light_gray"
-                            android:textSize="15dp" />
-
-                        <EditText
-                            android:id="@+id/edtEmail"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:backgroundTint="@color/blue_text"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:textColor="@color/black"
-                            android:textSize="15dp" />
-
-                        <TextView
-                            android:id="@+id/txtSrNo."
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:inputType="number"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:text="Sr.No"
-                            android:textColor="@color/light_gray"
-                            android:textSize="15dp" />
-
-                        <EditText
-                            android:id="@+id/edtSrNo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:backgroundTint="@color/blue_text"
-                            android:inputType="number"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:textColor="@color/black"
-                            android:textSize="15dp" />
-
-
-                        <TextView
-                            android:id="@+id/txtStatus"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:text="Status"
-                            android:textColor="@color/light_gray"
-                            android:textSize="15dp" />
 
                         <LinearLayout
+                            android:id="@+id/linearPersonalInfo"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/border">
+                            android:layout_marginTop="5dp"
+                            android:gravity="center"
+                            android:orientation="vertical">
 
-                            <Spinner
-                                android:id="@+id/spinnerStatus"
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:backgroundTint="@color/black" />
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/txtFirstName"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2.5"
+                                    android:text="First Name : "
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp" />
+
+                                <EditText
+                                    android:id="@+id/edtFirstName"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:backgroundTint="@color/light_blue"
+
+                                    android:paddingLeft="5dp"
+                                    android:paddingTop="5dp"
+                                    android:paddingRight="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/txtLastName"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2.5"
+                                    android:text="Last Name : "
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp" />
+
+                                <EditText
+                                    android:id="@+id/edtLastName"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:backgroundTint="@color/light_blue"
+
+                                    android:paddingLeft="5dp"
+                                    android:paddingTop="5dp"
+                                    android:paddingRight="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+                            <!--<LinearLayout
+                                android:id="@+id/linearSelectDate"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="50dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="DOB: "
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp" />
+
+                                <EditText
+                                    android:id="@+id/edtSelectedDate"
+                                    android:layout_width="150dp"
+                                    android:layout_height="wrap_content"
+                                    android:focusable="false"
+                                    android:paddingLeft="5dp"
+                                    android:paddingTop="5dp"
+                                    android:paddingRight="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:backgroundTint="@color/light_blue"
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="50dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:text="Sex : "
+                                    android:textColor="#000"
+                                    android:textSize="15dp" />
+
+                                <EditText
+                                    android:id="@+id/edtsex"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:focusable="false"
+                                    android:paddingLeft="5dp"
+                                    android:paddingTop="5dp"
+                                    android:paddingRight="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:backgroundTint="@color/light_blue"
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>-->
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/txtPanNo"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2.5"
+                                    android:paddingTop="5dp"
+                                    android:paddingRight="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:text="PAN No : "
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp" />
+
+                                <EditText
+                                    android:id="@+id/edtPanNo"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+
+                                    android:maxLength="10"
+                                    android:paddingLeft="5dp"
+                                    android:paddingTop="5dp"
+                                    android:paddingRight="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:backgroundTint="@color/light_blue"
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/txtAdharNo"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2.5"
+                                    android:paddingTop="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:text="Adhaar No : "
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp" />
+
+                                <EditText
+                                    android:id="@+id/edtAdharNo"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+
+                                    android:inputType="number"
+                                    android:maxLength="12"
+                                    android:paddingLeft="5dp"
+                                    android:paddingTop="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:backgroundTint="@color/light_blue"
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/txtPasspportNo"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2.5"
+                                    android:paddingTop="5dp"
+                                    android:paddingRight="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:text="Passport No : "
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp" />
+
+                                <EditText
+                                    android:id="@+id/edtPassportNo"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+
+                                    android:maxLength="9"
+                                    android:paddingLeft="5dp"
+                                    android:paddingTop="5dp"
+                                    android:paddingRight="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:backgroundTint="@color/light_blue"
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/txtMobile1"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2.5"
+                                    android:paddingTop="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:text="Mobile 1 : "
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp" />
+
+                                <EditText
+                                    android:id="@+id/edtMobile1"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+
+                                    android:maxLength="10"
+                                    android:paddingTop="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:backgroundTint="@color/light_blue"
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/txtEmail"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2.5"
+                                    android:paddingTop="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:text="Email ID : "
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp" />
+
+                                <EditText
+                                    android:id="@+id/edtEmail"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+
+                                    android:paddingLeft="5dp"
+                                    android:paddingTop="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:backgroundTint="@color/light_blue"
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
                         </LinearLayout>
 
 
-                        <TextView
-                            android:id="@+id/txtReference"
+
+                        <LinearLayout
+                            android:id="@+id/linearCommunication"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="5dp"
-                            android:paddingRight="5dp"
-                            android:paddingBottom="5dp"
-                            android:text="Reference No"
-                            android:textColor="@color/light_gray"
-                            android:textSize="15dp" />
+                            android:layout_marginTop="5dp"
+                            android:orientation="vertical">
 
-                        <EditText
-                            android:id="@+id/edtReference"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:backgroundTint="@color/blue_text"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="5dp"
-                            android:paddingRight="5dp"
-                            android:paddingBottom="5dp"
-                            android:textColor="@color/black"
-                            android:textSize="15dp" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
 
+                                <TextView
+                                    android:id="@+id/txtParentName"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2.5"
+                                    android:paddingTop="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:text="Parent Name : "
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp" />
+
+                                <EditText
+                                    android:id="@+id/edtParentName"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:focusable="false"
+                                    android:paddingTop="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:backgroundTint="@color/light_blue"
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/txtMobile2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2.5"
+                                    android:paddingTop="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:text="Parent Mobile : "
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp" />
+
+                                <EditText
+                                    android:id="@+id/edtMobile2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:focusable="false"
+                                    android:inputType="number"
+                                    android:maxLength="10"
+                                    android:paddingLeft="5dp"
+                                    android:paddingTop="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:backgroundTint="@color/light_blue"
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+
+                            <!--<LinearLayout-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:orientation="horizontal">-->
+
+                            <!--<TextView-->
+                            <!--android:id="@+id/txtAddress"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_weight="2.5"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingRight="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:text="Address : "-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+
+                            <!--<EditText-->
+                            <!--android:id="@+id/edtAddress"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_weight="1"-->
+                            <!--android:focusable="false"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingRight="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:backgroundTint="@color/light_blue"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp"-->
+                            <!--android:textStyle="bold" />-->
+
+                            <!--</LinearLayout>-->
+
+                            <!--<LinearLayout-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:orientation="horizontal">-->
+
+                            <!--<TextView-->
+                            <!--android:id="@+id/txtCity"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_weight="2.5"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingRight="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:text="City : "-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+
+                            <!--<EditText-->
+                            <!--android:id="@+id/edtCity"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_weight="1"-->
+                            <!--android:focusable="false"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingRight="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:backgroundTint="@color/light_blue"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp"-->
+                            <!--android:textStyle="bold" />-->
+
+                            <!--</LinearLayout>-->
+
+                            <!--<LinearLayout-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:orientation="horizontal">-->
+
+                            <!--<TextView-->
+                            <!--android:id="@+id/txtState"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_weight="2.5"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingRight="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:text="State : "-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+
+                            <!--<EditText-->
+                            <!--android:id="@+id/edtstate"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_weight="1"-->
+                            <!--android:focusable="false"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingRight="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:backgroundTint="@color/light_blue"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp"-->
+                            <!--android:textStyle="bold" />-->
+
+                            <!--</LinearLayout>-->
+
+
+
+                            <!--<LinearLayout-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:orientation="horizontal"-->
+                            <!--android:layout_weight="1">-->
+                            <!--<LinearLayout-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="match_parent"-->
+                            <!--android:orientation="vertical">-->
+
+
+                            <!--<TextView-->
+                            <!--android:id="@+id/txtFirstName"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+
+                            <!--android:layout_marginTop="0dp"-->
+                            <!--android:gravity="center"-->
+                            <!--android:paddingLeft="5dp"-->
+
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingRight="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:text="First Name:"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+                            <!--<TextView-->
+                            <!--android:id="@+id/txtLastName"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="0dp"-->
+                            <!--android:gravity="center"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingRight="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:text="Last Name:"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+                            <!--<TextView-->
+                            <!--android:id="@+id/txtParentName"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="0dp"-->
+                            <!--android:gravity="center"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:text="Parent Name:"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+                            <!--<TextView-->
+                            <!--android:id="@+id/txtMobile1"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+
+                            <!--android:gravity="center"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:text="Mobile No."-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+                            <!--<TextView-->
+                            <!--android:id="@+id/txtMobile2"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+                            <!--android:gravity="center"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingRight="5dp"-->
+                            <!--android:text="Parent No"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+                            <!--<TextView-->
+                            <!--android:id="@+id/txtEmail"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+                            <!--android:gravity="center"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:paddingRight="5dp"-->
+                            <!--android:text="Email ID"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+
+                            <!--<TextView-->
+                            <!--android:id="@+id/txtPanNo"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+                            <!--android:gravity="center"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingRight="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:text="PAN No"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+                            <!--<TextView-->
+                            <!--android:id="@+id/txtAdharNo"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+                            <!--android:gravity="center"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:text="Adhar No"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+                            <!--<TextView-->
+                            <!--android:id="@+id/txtPasspportNo"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+                            <!--android:gravity="center"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingRight="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:text="Passport No"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+
+                            <!--</LinearLayout>-->
+                            <!--<LinearLayout-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="match_parent"-->
+                            <!--android:orientation="vertical"-->
+                            <!--android:layout_weight="1">-->
+
+                            <!--<EditText-->
+                            <!--android:id="@+id/edtFirstName"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="0dp"-->
+                            <!--android:textStyle="bold"-->
+
+                            <!--android:backgroundTint="@color/edit_Tint"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="13dp" />-->
+
+                            <!--<EditText-->
+                            <!--android:id="@+id/edtLastName"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="0dp"-->
+                            <!--android:textStyle="bold"-->
+
+
+                            <!--android:backgroundTint="@color/edit_Tint"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="13dp" />-->
+
+                            <!--<EditText-->
+                            <!--android:id="@+id/edtParentName"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="0dp"-->
+                            <!--android:backgroundTint="@color/edit_Tint"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:textStyle="bold"-->
+
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+
+                            <!--<EditText-->
+                            <!--android:id="@+id/edtMobile1"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+                            <!--android:textStyle="bold"-->
+
+                            <!--android:backgroundTint="@color/edit_Tint"-->
+                            <!--android:inputType="number"-->
+                            <!--android:maxLength="13"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+
+                            <!--<EditText-->
+                            <!--android:id="@+id/edtMobile2"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+                            <!--android:textStyle="bold"-->
+
+                            <!--android:backgroundTint="@color/edit_Tint"-->
+                            <!--android:inputType="number"-->
+                            <!--android:maxLength="13"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+
+                            <!--<EditText-->
+                            <!--android:id="@+id/edtEmail"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+                            <!--android:textStyle="bold"-->
+
+                            <!--android:backgroundTint="@color/edit_Tint"-->
+                            <!--android:inputType="textEmailAddress"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+                            <!--<EditText-->
+                            <!--android:id="@+id/edtPanNo"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+                            <!--android:textStyle="bold"-->
+
+                            <!--android:backgroundTint="@color/edit_Tint"-->
+                            <!--android:maxLength="10"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingRight="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+                            <!--<EditText-->
+                            <!--android:id="@+id/edtAdharNo"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+                            <!--android:textStyle="bold"-->
+
+                            <!--android:backgroundTint="@color/edit_Tint"-->
+                            <!--android:inputType="number"-->
+                            <!--android:maxLength="12"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+                            <!--<EditText-->
+                            <!--android:id="@+id/edtPassportNo"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+                            <!--android:textStyle="bold"-->
+
+                            <!--android:backgroundTint="@color/edit_Tint"-->
+                            <!--android:maxLength="9"-->
+                            <!--android:gravity="center"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+                            <!--</LinearLayout>-->
+                            <!--</LinearLayout>-->
+                            <!--<LinearLayout-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:orientation="horizontal">-->
+
+                            <!--<TextView-->
+                            <!--android:id="@+id/txtFirstName"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_weight="0"-->
+                            <!--android:layout_marginTop="0dp"-->
+                            <!--android:gravity="center"-->
+                            <!--android:paddingLeft="5dp"-->
+
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingRight="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:text="First Name:"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+
+                            <!--<EditText-->
+                            <!--android:id="@+id/edtFirstName"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="0dp"-->
+                            <!--android:layout_marginLeft="15dp"-->
+                            <!--android:layout_weight="2"-->
+                            <!--android:backgroundTint="@color/edit_Tint"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="13dp" />-->
+                            <!--</LinearLayout>-->
+
+                            <!--<LinearLayout-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:orientation="horizontal">-->
+
+                            <!--<TextView-->
+                            <!--android:id="@+id/txtLastName"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="0dp"-->
+                            <!--android:gravity="center"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingRight="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:text="Last Name:"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+
+                            <!--<EditText-->
+                            <!--android:id="@+id/edtLastName"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="0dp"-->
+                            <!--android:layout_marginLeft="20dp"-->
+                            <!--android:layout_weight="2"-->
+
+                            <!--android:backgroundTint="@color/edit_Tint"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="13dp" />-->
+                            <!--</LinearLayout>-->
+
+
+
+                            <!--<LinearLayout-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:orientation="horizontal">-->
+
+                            <!--<TextView-->
+                            <!--android:id="@+id/txtParentName"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="0dp"-->
+                            <!--android:gravity="center"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:text="Parent Name:"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+
+                            <!--<EditText-->
+                            <!--android:id="@+id/edtParentName"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="0dp"-->
+                            <!--android:backgroundTint="@color/edit_Tint"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:layout_marginLeft="20dp"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+                            <!--</LinearLayout>-->
+                            <!--<LinearLayout-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:orientation="horizontal">-->
+
+                            <!--<TextView-->
+                            <!--android:id="@+id/txtMobile1"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+
+                            <!--android:gravity="center"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:text="Mobile No."-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+
+                            <!--<EditText-->
+                            <!--android:id="@+id/edtMobile1"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+                            <!--android:layout_marginLeft="30dp"-->
+                            <!--android:backgroundTint="@color/edit_Tint"-->
+                            <!--android:inputType="number"-->
+                            <!--android:maxLength="13"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+                            <!--</LinearLayout>-->
+
+                            <!--<LinearLayout-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:orientation="horizontal">-->
+
+                            <!--<TextView-->
+                            <!--android:id="@+id/txtMobile2"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+                            <!--android:gravity="center"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingRight="5dp"-->
+                            <!--android:text="Parent No"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+
+                            <!--<EditText-->
+                            <!--android:id="@+id/edtMobile2"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+                            <!--android:layout_marginLeft="15dp"-->
+                            <!--android:backgroundTint="@color/edit_Tint"-->
+                            <!--android:inputType="number"-->
+                            <!--android:maxLength="13"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+                            <!--</LinearLayout>-->
+
+                            <!--&lt;!&ndash; </LinearLayout>&ndash;&gt;-->
+                            <!--<LinearLayout-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:orientation="horizontal">-->
+
+                            <!--<TextView-->
+                            <!--android:id="@+id/txtEmail"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+                            <!--android:gravity="center"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:paddingRight="5dp"-->
+                            <!--android:text="Email ID"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+
+                            <!--<EditText-->
+                            <!--android:id="@+id/edtEmail"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+                            <!--android:layout_marginLeft="30dp"-->
+                            <!--android:backgroundTint="@color/edit_Tint"-->
+                            <!--android:inputType="textEmailAddress"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+
+                            <!--</LinearLayout>-->
+
+
+                            <!--<LinearLayout-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:orientation="horizontal">-->
+
+                            <!--<TextView-->
+                            <!--android:id="@+id/txtPanNo"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+                            <!--android:gravity="center"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingRight="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:text="PAN No"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+
+                            <!--<EditText-->
+                            <!--android:id="@+id/edtPanNo"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+                            <!--android:layout_marginLeft="30dp"-->
+                            <!--android:backgroundTint="@color/edit_Tint"-->
+                            <!--android:maxLength="10"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingRight="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+                            <!--</LinearLayout>-->
+
+                            <!--<LinearLayout-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:orientation="horizontal">-->
+
+                            <!--<TextView-->
+                            <!--android:id="@+id/txtAdharNo"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+                            <!--android:gravity="center"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:text="Adhar No"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+
+                            <!--<EditText-->
+                            <!--android:id="@+id/edtAdharNo"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+                            <!--android:layout_marginLeft="30dp"-->
+                            <!--android:backgroundTint="@color/edit_Tint"-->
+                            <!--android:inputType="number"-->
+                            <!--android:maxLength="12"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+                            <!--</LinearLayout>-->
+
+                            <!--<LinearLayout-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:orientation="horizontal">-->
+
+                            <!--<TextView-->
+                            <!--android:id="@+id/txtPasspportNo"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+                            <!--android:gravity="center"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingRight="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:text="Passport No"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+
+                            <!--<EditText-->
+                            <!--android:id="@+id/edtPassportNo"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="10dp"-->
+                            <!--android:layout_marginLeft="10dp"-->
+                            <!--android:backgroundTint="@color/edit_Tint"-->
+                            <!--android:maxLength="9"-->
+                            <!--android:gravity="center"-->
+                            <!--android:paddingLeft="5dp"-->
+                            <!--android:paddingTop="5dp"-->
+                            <!--android:paddingBottom="5dp"-->
+                            <!--android:textColor="@color/black"-->
+                            <!--android:textSize="15dp" />-->
+                            <!--</LinearLayout>-->
+
+
+
+
+
+
+
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/txtDOB"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2.5"
+                                    android:paddingTop="5dp"
+                                    android:paddingRight="5dp"
+                                    android:text="DOB :"
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp" />
+
+                                <LinearLayout
+                                    android:id="@+id/linearSelectDate"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:id="@+id/txtSelectedDate"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:gravity="center"
+                                        android:text="-Select date-"
+                                        android:textColor="@color/black"
+                                        android:textSize="15dp" />
+
+                                    <ImageView
+                                        android:id="@+id/imgCalender"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="3"
+                                        android:paddingBottom="5dp"
+                                        android:src="@drawable/calendar1"></ImageView>
+
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/txtSex"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2.5"
+                                    android:paddingTop="5dp"
+                                    android:paddingRight="5dp"
+                                    android:text="Gender :"
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp" />
+
+                                <RadioGroup
+                                    android:id="@+id/radioGroupSex"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:layout_weight="1"
+                                    android:orientation="horizontal">
+
+                                    <RadioButton
+                                        android:id="@+id/radioMale"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:checked="true"
+                                        android:text="Male"
+                                        android:textColor="@color/black"
+                                        android:textSize="15dp" />
+
+                                    <RadioButton
+                                        android:id="@+id/radioFemale"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:checked="false"
+                                        android:text="Female"
+                                        android:textColor="@color/black"
+                                        android:textSize="15dp" />
+                                </RadioGroup>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/txtStatus"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2.5"
+                                    android:paddingTop="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:text="Status :"
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp" />
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:layout_gravity="center"
+                                    android:background="@drawable/spinner_layout_border">
+                                    <Spinner
+                                        android:id="@+id/spinnerStatus"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:backgroundTint="@color/black" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/txtReference"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2.5"
+                                    android:paddingTop="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:text="Reference No :"
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp" />
+
+                                <EditText
+                                    android:id="@+id/edtReference"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:backgroundTint="@color/light_blue"
+                                    android:paddingTop="5dp"
+                                    android:paddingBottom="5dp"
+                                    android:textColor="@color/black"
+                                    android:textSize="15dp" />
+                            </LinearLayout>
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
-
                 <TextView
                     android:id="@+id/txtCommunication"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="0dp"
                     android:layout_marginTop="15dp"
-                    android:background="@color/white"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginRight="0dp"
+                    android:background="@color/activity_background"
                     android:drawablePadding="30dp"
                     android:gravity="center"
-                    android:text="Communication Details"
                     android:paddingLeft="50dp"
+                    android:textStyle="italic"
                     android:paddingTop="10dp"
                     android:paddingRight="20dp"
                     android:paddingBottom="5dp"
-                    android:textColor="@color/cyan_text"
+                    android:text="Communication Details"
+                    android:textColor="@color/white"
                     android:textSize="17dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginLeft="7dp"
                     android:layout_marginTop="15dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginRight="7dp"
                     android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/txtAddress"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:paddingLeft="5dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="5dp"
-                        android:paddingBottom="5dp"
-                        android:text="Address"
-                        android:textColor="@color/light_gray"
-                        android:textSize="15dp" />
-
-                    <EditText
-                        android:id="@+id/edtAddress"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:backgroundTint="@color/blue_text"
-                        android:textColor="@color/black"
-                        android:textSize="15dp" />
-
-                    <TextView
-                        android:id="@+id/txtCity"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:paddingLeft="5dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="5dp"
-                        android:paddingBottom="5dp"
-                        android:text="City"
-                        android:textColor="@color/light_gray"
-                        android:textSize="15dp" />
-
-                    <EditText
-                        android:id="@+id/edtCity"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:backgroundTint="@color/blue_text"
-                        android:textColor="@color/black"
-                        android:textSize="15dp" />
-
-
-                    <TextView
-                        android:id="@+id/txtState"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:paddingLeft="5dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="5dp"
-                        android:paddingBottom="5dp"
-                        android:text="State"
-                        android:textColor="@color/light_gray"
-                        android:textSize="15dp" />
-
-                    <TextView
-                        android:id="@+id/txtStateError"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="5dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="5dp"
-                        android:paddingBottom="5dp"
-                        android:text="Please select state"
-                        android:textColor="@color/red"
-                        android:textSize="10dp"
-                        android:visibility="gone" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/border">
+                        android:orientation="horizontal">
 
-                        <Spinner
-                            android:id="@+id/spinnerState"
+                        <TextView
+                            android:id="@+id/txtAddress"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp" />
+                            android:layout_weight="2.5"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:text="Address :"
+                            android:textColor="@color/black"
+                            android:textSize="15dp" />
+
+                        <EditText
+                            android:id="@+id/edtAddress"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:textStyle="bold"
+                            android:backgroundTint="@color/light_blue"
+                            android:textColor="@color/black"
+                            android:textSize="15dp" />
                     </LinearLayout>
 
-
-                    <TextView
-                        android:id="@+id/txtPin"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:paddingLeft="5dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="5dp"
-                        android:paddingBottom="5dp"
-                        android:text="Pincode"
-                        android:textColor="@color/light_gray"
-                        android:textSize="15dp" />
+                        android:orientation="horizontal">
 
-                    <EditText
-                        android:id="@+id/edtPin"
+                        <TextView
+                            android:id="@+id/txtCity"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2.5"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:text="City :"
+                            android:textColor="@color/black"
+                            android:textSize="15dp" />
+
+                        <EditText
+                            android:id="@+id/edtCity"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:textStyle="bold"
+                            android:backgroundTint="@color/light_blue"
+                            android:textColor="@color/black"
+                            android:textSize="15dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:backgroundTint="@color/blue_text"
-                        android:inputType="number"
-                        android:maxLength="6"
-                        android:textColor="@color/black"
-                        android:textSize="15dp" />
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/txtState"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2.5"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:text="State :"
+                            android:textColor="@color/black"
+                            android:textSize="15dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:background="@drawable/spinner_layout_border">
+                            <Spinner
+                                android:id="@+id/spinnerState"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"/>
+                        </LinearLayout>
+                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/txtStateError"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingTop="5dp"
+                            android:layout_marginTop="7dp"
+                            android:paddingBottom="5dp"
+                            android:layout_gravity="center"
+                            android:text="Please select state"
+                            android:textColor="@color/red"
+                            android:textSize="10dp"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/txtPin"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2.5"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:text="Pincode :"
+                            android:textColor="@color/black"
+                            android:textSize="15dp" />
+
+                        <EditText
+                            android:id="@+id/edtPin"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:textStyle="bold"
+                            android:backgroundTint="@color/light_blue"
+                            android:inputType="number"
+                            android:maxLength="6"
+                            android:textColor="@color/black"
+                            android:textSize="15dp" />
+                    </LinearLayout>
 
                     <Button
                         android:id="@+id/btnNext"
@@ -753,16 +1641,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:background="@color/white"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
+                    android:background="@color/activity_background"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="0dp"
                     android:drawablePadding="30dp"
                     android:gravity="center"
                     android:paddingLeft="50dp"
                     android:paddingTop="10dp"
                     android:paddingRight="20dp"
                     android:paddingBottom="5dp"
-                    android:textColor="@color/cyan_text"
+                    android:textColor="@color/white"
                     android:text="Educational Details"
                     android:textSize="17dp" />
 
@@ -785,9 +1673,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginRight="15dp"
                     android:orientation="vertical">
 
 
@@ -799,57 +1684,51 @@
                         android:paddingTop="5dp"
                         android:paddingBottom="5dp"
                         android:text="Select qualification"
-                        android:textColor="@color/light_gray"
+                        android:textColor="@color/black"
                         android:textSize="15dp" />
-
-                    <TextView
-                        android:id="@+id/txtQualificationError"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="5dp"
-                        android:paddingTop="5dp"
-                        android:paddingRight="5dp"
-                        android:paddingBottom="5dp"
-                        android:text="Please select qualification"
-                        android:textColor="@color/red"
-                        android:textSize="10dp"
-                        android:visibility="gone" />
-
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/border"
                         android:orientation="vertical">
-
-
                         <Spinner
                             android:id="@+id/spinnerQualification"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
                             android:layout_weight="1"
                             android:backgroundTint="@color/black" />
+
+
+                        <TextView
+                            android:id="@+id/txtQualificationError"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:text="Please select qualification"
+                            android:textColor="@color/red"
+                            android:textSize="10dp"
+                            android:visibility="gone" />
                     </LinearLayout>
 
                     <TextView
                         android:id="@+id/txtCoursename"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:paddingLeft="5dp"
                         android:paddingTop="5dp"
-                        android:paddingRight="5dp"
                         android:paddingBottom="5dp"
-                        android:text="Course Name"
-                        android:textColor="@color/light_gray"
+                        android:text="Course Name :"
+                        android:textColor="@color/black"
                         android:textSize="15dp" />
 
                     <EditText
                         android:id="@+id/edtCoursename"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@color/blue_text"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:backgroundTint="@color/light_blue"
                         android:textColor="@color/black"
                         android:textSize="15dp" />
 
@@ -858,50 +1737,48 @@
                         android:id="@+id/txtCollegeName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:paddingLeft="5dp"
                         android:paddingTop="5dp"
-                        android:paddingRight="5dp"
                         android:paddingBottom="5dp"
-                        android:text="College name"
-                        android:textColor="@color/light_gray"
+                        android:text="College name :"
+                        android:textColor="@color/black"
                         android:textSize="15dp" />
 
                     <EditText
                         android:id="@+id/edtCollegeName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:backgroundTint="@color/blue_text"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:backgroundTint="@color/light_blue"
                         android:textColor="@color/black"
                         android:textSize="15dp" />
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
                         android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/txtPassingYear"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:paddingLeft="5dp"
+                            android:layout_weight="1"
                             android:paddingTop="5dp"
-                            android:paddingRight="5dp"
                             android:paddingBottom="5dp"
-                            android:text="Passing year"
-                            android:textColor="@color/light_gray"
+                            android:text="Passing year :"
+                            android:textColor="@color/black"
                             android:textSize="15dp" />
 
                         <EditText
                             android:id="@+id/edtPassingYear"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:backgroundTint="@color/blue_text"
+                            android:backgroundTint="@color/light_blue"
                             android:hint="passing"
+                            android:layout_weight="1"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
                             android:inputType="number"
                             android:maxLength="4"
                             android:textColor="@color/black"
@@ -911,27 +1788,25 @@
 
                         <TextView
                             android:id="@+id/txtMarks"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginTop="10dp"
-                            android:paddingLeft="5dp"
+                            android:layout_weight="1"
                             android:paddingTop="5dp"
-                            android:paddingRight="5dp"
                             android:paddingBottom="5dp"
-                            android:text="Marks "
-                            android:textColor="@color/light_gray"
+                            android:text="Marks :"
+                            android:textColor="@color/black"
                             android:textSize="15dp" />
 
 
                         <EditText
                             android:id="@+id/edtMarks"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="30dp"
-                            android:layout_marginTop="10dp"
-                            android:backgroundTint="@color/blue_text"
+                            android:backgroundTint="@color/light_blue"
                             android:hint="marks"
+                            android:layout_weight="1"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
                             android:inputType="number"
                             android:textColor="@color/black"
                             android:textColorHint="@color/white"
@@ -939,31 +1814,31 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
                         android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/txtOutof"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="5dp"
+                            android:layout_weight="1"
                             android:paddingTop="5dp"
-                            android:paddingRight="5dp"
                             android:paddingBottom="5dp"
-                            android:text="Out of"
-                            android:textColor="@color/light_gray"
+                            android:text="Out of :"
+                            android:textColor="@color/black"
                             android:textSize="15dp" />
 
                         <EditText
                             android:id="@+id/edtOutof"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="40dp"
-                            android:layout_marginTop="10dp"
-                            android:backgroundTint="@color/blue_text"
+                            android:backgroundTint="@color/light_blue"
                             android:hint="passing"
+                            android:layout_weight="1"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
                             android:inputType="number"
                             android:textColor="@color/black"
                             android:textColorHint="@color/white"
@@ -971,25 +1846,24 @@
 
                         <TextView
                             android:id="@+id/txtPercentage"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginTop="10dp"
-                            android:paddingLeft="5dp"
+                            android:layout_weight="1"
                             android:paddingTop="5dp"
-                            android:paddingRight="5dp"
                             android:paddingBottom="5dp"
-                            android:text="Percentage"
-                            android:textColor="@color/light_gray"
+                            android:text="Percentage :"
+                            android:textColor="@color/black"
                             android:textSize="15dp" />
 
                         <EditText
                             android:id="@+id/edtPercentage"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:backgroundTint="@color/blue_text"
+                            android:backgroundTint="@color/light_blue"
                             android:hint="passing"
+                            android:layout_weight="1"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
                             android:inputType="number"
                             android:textColor="@color/black"
                             android:textColorHint="@color/white"

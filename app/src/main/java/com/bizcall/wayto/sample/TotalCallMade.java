@@ -76,16 +76,50 @@ public class TotalCallMade extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        dialog = ProgressDialog.show(TotalCallMade.this, "", "Loading Total Calls Details", false, true);
-        sp = getSharedPreferences("Settings", Context.MODE_PRIVATE);
-        counselorid = sp.getString("Id", null);
-        counselorid = counselorid.replaceAll(" ", "");
-        clientid = sp.getString("ClientId", null);
-        clienturl=sp.getString("ClientUrl",null);
-        totalcoins=sp.getString("TotalCoin",null);
-        Log.d("CID", clientid);
-        getTotalCallNo();
-        getTotalCallMade();
+            sp = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+            counselorid = sp.getString("Id", null);
+            counselorid = counselorid.replaceAll(" ", "");
+            clientid = sp.getString("ClientId", null);
+            clienturl = sp.getString("ClientUrl", null);
+            totalcoins = sp.getString("TotalCoin", null);
+            Log.d("CID", clientid);
+            if(CheckInternetSpeed.checkInternet(TotalCallMade.this).contains("0")) {
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(TotalCallMade.this);
+                alertDialogBuilder.setTitle("No Internet connection!!!")
+                        .setMessage("Can't do further process")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
+
+                            }
+                        }).show();
+            }
+            else if(CheckInternetSpeed.checkInternet(TotalCallMade.this).contains("1")) {
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(TotalCallMade.this);
+                alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                        .setMessage("Can't do further process")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+            }
+            else {
+                dialog = ProgressDialog.show(TotalCallMade.this, "", "Loading Total Calls Details", false, true);
+                getTotalCallNo();
+            }
+
        // refreshWhenLoading();
         txtCoin.setText(totalcoins);
             imgRefresh.setOnClickListener(new View.OnClickListener() {
@@ -104,7 +138,7 @@ public class TotalCallMade extends AppCompatActivity {
             }
         });
         } catch (Exception e) {
-            Toast.makeText(TotalCallMade.this,"Got exception,can't load",Toast.LENGTH_SHORT).show();
+            Toast.makeText(TotalCallMade.this,"Errorcode-350 TotalCallMade onCreate "+e.toString(),Toast.LENGTH_SHORT).show();
             Log.d("TotalCallsException", String.valueOf(e));
         }
     }
@@ -131,202 +165,211 @@ public class TotalCallMade extends AppCompatActivity {
         startActivity(intent);
         super.onBackPressed();
         } catch (Exception e) {
+            Toast.makeText(TotalCallMade.this,"Errorcode-351 TotalCallMade onBackpressed "+e.toString(),Toast.LENGTH_SHORT).show();
             Log.d("Exception", String.valueOf(e));
         }
     }
 
     public void getTotalCallMade()
     {
-        arrayList = new ArrayList<>();
-        url=clienturl+"?clientid=" + clientid + "&caseid=15&CounsellorId=" + counselorid;
-        Log.d("TotalCallUrl",url);
-        if(CheckInternet.checkInternet(TotalCallMade.this))
-        {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-            new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    linearLayout.setVisibility(View.VISIBLE);
-                    if (dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
-                    Log.d("TotalCallResponse", response);
+        try {
+            arrayList = new ArrayList<>();
+            url = clienturl + "?clientid=" + clientid + "&caseid=15&CounsellorId=" + counselorid;
+            Log.d("TotalCallUrl", url);
+            if (CheckInternet.checkInternet(TotalCallMade.this)) {
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                linearLayout.setVisibility(View.VISIBLE);
+                                if (dialog.isShowing()) {
+                                    dialog.dismiss();
+                                }
+                                Log.d("TotalCallResponse", response);
 
-                    if (response.contains("[]")) {
-                        linearLayout.setVisibility(View.GONE);
-                        txtMsg.setVisibility(View.VISIBLE);
-                    } else {
-                        linearLayout.setVisibility(View.VISIBLE);
-                        txtMsg.setVisibility(View.GONE);
-                        try {
+                                if (response.contains("[]")) {
+                                    linearLayout.setVisibility(View.GONE);
+                                    txtMsg.setVisibility(View.VISIBLE);
+                                } else {
+                                    linearLayout.setVisibility(View.VISIBLE);
+                                    txtMsg.setVisibility(View.GONE);
+                                    try {
 
-                            JSONObject jsonObject = new JSONObject(response);
-                            // Log.d("Json",jsonObject.toString());
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-                                String srno = jsonObject1.getString("nSrNo");
-                                String duration = jsonObject1.getString("cCallDuration");
-                                String cdate = jsonObject1.getString("Call date");
-                                String filename = jsonObject1.getString("cFileName");
-                                DataTotalCallMade dataTotalCallMade = new DataTotalCallMade(srno, duration, cdate, filename);
-                                arrayList.add(dataTotalCallMade);
-                            }
-                            adapterTotalCallMade = new AdapterTotalCallMade(TotalCallMade.this, arrayList);
-                            recyclerView = findViewById(R.id.recycleTotalCallMade);
-                            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-                            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                                        JSONObject jsonObject = new JSONObject(response);
+                                        // Log.d("Json",jsonObject.toString());
+                                        JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                        for (int i = 0; i < jsonArray.length(); i++) {
+                                            JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                            String srno = jsonObject1.getString("nSrNo");
+                                            String duration = jsonObject1.getString("cCallDuration");
+                                            String cdate = jsonObject1.getString("Call date");
+                                            String filename = jsonObject1.getString("cFileName");
+                                            DataTotalCallMade dataTotalCallMade = new DataTotalCallMade(srno, duration, cdate, filename);
+                                            arrayList.add(dataTotalCallMade);
+                                        }
+                                        adapterTotalCallMade = new AdapterTotalCallMade(TotalCallMade.this, arrayList);
+                                        recyclerView = findViewById(R.id.recycleTotalCallMade);
+                                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+                                        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
-                            recyclerView.setLayoutManager(linearLayoutManager);
-                            recyclerView.setAdapter(adapterTotalCallMade);
-                            adapterTotalCallMade.notifyDataSetChanged();
+                                        recyclerView.setLayoutManager(linearLayoutManager);
+                                        recyclerView.setAdapter(adapterTotalCallMade);
+                                        adapterTotalCallMade.notifyDataSetChanged();
 
-                            Log.d("Size**", String.valueOf(arrayList.size()));
-                        } catch (Exception e) {
-                            Log.d("Exception", String.valueOf(e));
-                        }
-                    }
-                }
-            },
-            new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-
-                    if (error == null || error.networkResponse == null)
-                        return;
-                    final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                    //get response body and parse with appropriate encoding
-                    if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(TotalCallMade.this);
-                        alertDialogBuilder.setTitle("Server Error!!!")
-
-
-                                // Specifying a listener allows you to take an action before dismissing the dialog.
-                                // The dialog is automatically dismissed when a dialog button is clicked.
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                        dialog.dismiss();
+                                        Log.d("Size**", String.valueOf(arrayList.size()));
+                                    } catch (Exception e) {
+                                        Toast.makeText(TotalCallMade.this,"Errorcode-353 TotalCallMade TotalCallMadeDetailsResponse "+e.toString(),Toast.LENGTH_SHORT).show();
+                                        Log.d("Exception", String.valueOf(e));
                                     }
-                                }).show();
-                        dialog.dismiss();
-                        Toast.makeText(TotalCallMade.this,"Server Error",Toast.LENGTH_SHORT).show();
-                        // showCustomPopupMenu();
-                        Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                    }
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
 
-                }
-            });
-        requestQueue.add(stringRequest);
-        }else {
-            dialog.dismiss();
-            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(TotalCallMade.this);
-            alertDialogBuilder.setTitle("No Internet connection!!!")
-                    .setMessage("Can't do further process")
+                                if (error == null || error.networkResponse == null)
+                                    return;
+                                final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                //get response body and parse with appropriate encoding
+                                if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(TotalCallMade.this);
+                                    alertDialogBuilder.setTitle("Server Error!!!")
 
-                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                    // The dialog is automatically dismissed when a dialog button is clicked.
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
 
-                            dialog.dismiss();
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
 
-                        }
-                    }).show();
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                    dialog.dismiss();
+                                    Toast.makeText(TotalCallMade.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    // showCustomPopupMenu();
+                                    Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                }
+
+                            }
+                        });
+                requestQueue.add(stringRequest);
+            } else {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(TotalCallMade.this);
+                alertDialogBuilder.setTitle("No Internet connection!!!")
+                        .setMessage("Can't do further process")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                dialog.dismiss();
+
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(TotalCallMade.this,"Errorcode-352 TotalCallMade getTotalCallMadeDetails "+e.toString(),Toast.LENGTH_SHORT).show();
         }
 
     }
 
     public void getTotalCallNo() {
         // dialog = ProgressDialog.show(TotalCallMade.this, "Loading", "Please wait.....", false, true);
-
-        arrayList = new ArrayList<>();
-                url=clienturl+"?clientid=" + clientid + "&caseid=17&CounsellorId=" + counselorid;
-                 Log.d("CallNoUrl", url);
-                 if(CheckInternet.checkInternet(TotalCallMade.this))
-                 {
+        try {
+            arrayList = new ArrayList<>();
+            url = clienturl + "?clientid=" + clientid + "&caseid=17&CounsellorId=" + counselorid;
+            Log.d("CallNoUrl", url);
+            if (CheckInternet.checkInternet(TotalCallMade.this)) {
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
 
-                        Log.d("*******", response.toString());
-                        try {
-                            if (dialog.isShowing()) {
-                                dialog.dismiss();
-                            }
-                            Log.d("CallNoResponse", response);
-
-                            if (response.contains("[]")) {
-                                txtTotalCallNo.setText("0");
-                            } else {
+                                Log.d("*******", response.toString());
                                 try {
+                           /* if (dialog.isShowing()) {
+                                dialog.dismiss();
+                            }*/
+                                    Log.d("CallNoResponse", response);
 
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    Log.d("Json", jsonObject.toString());
-                                    JSONArray jsonArray = jsonObject.getJSONArray("data");
-                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                        JSONObject object = jsonArray.getJSONObject(i);
-                                        String cnt = object.getString("");
-                                        txtTotalCallNo.setText(cnt);
+                                    if (response.contains("[]")) {
+                                        txtTotalCallNo.setText("0");
+                                    } else {
+                                        try {
+                                            JSONObject jsonObject = new JSONObject(response);
+                                            Log.d("Json", jsonObject.toString());
+                                            JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                            for (int i = 0; i < jsonArray.length(); i++) {
+                                                JSONObject object = jsonArray.getJSONObject(i);
+                                                String cnt = object.getString("");
+                                                txtTotalCallNo.setText(cnt);
+                                            }
+                                            getTotalCallMade();
+
+                                        } catch (Exception e) {
+                                            Log.d("Exception", String.valueOf(e));
+                                        }
                                     }
-
                                 } catch (Exception e) {
+                                    Toast.makeText(TotalCallMade.this,"Errorcode-355 TotalCallMade TotalCalledNoResponse "+e.toString(),Toast.LENGTH_SHORT).show();
                                     Log.d("Exception", String.valueOf(e));
                                 }
                             }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
 
-                        } catch (Exception e) {
-                            Log.d("Exception", String.valueOf(e));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                                if (error == null || error.networkResponse == null)
+                                    return;
 
-                        if (error == null || error.networkResponse == null)
-                            return;
-                        final String statusCode = String.valueOf(error.networkResponse.statusCode);
-                        //get response body and parse with appropriate encoding
-                        if (error.networkResponse != null||error instanceof TimeoutError ||error instanceof NoConnectionError ||error instanceof AuthFailureError ||error instanceof ServerError ||error instanceof NetworkError ||error instanceof ParseError) {
-                            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(TotalCallMade.this);
-                            alertDialogBuilder.setTitle("Server Error!!!")
+                                //get response body and parse with appropriate encoding
+                                if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(TotalCallMade.this);
+                                    alertDialogBuilder.setTitle("Server Error!!!")
 
 
-                                    // Specifying a listener allows you to take an action before dismissing the dialog.
-                                    // The dialog is automatically dismissed when a dialog button is clicked.
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
+                                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                                            // The dialog is automatically dismissed when a dialog button is clicked.
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
 
-                                            dialog.dismiss();
-                                        }
-                                    }).show();
-                            dialog.dismiss();
-                            Toast.makeText(TotalCallMade.this,"Server Error",Toast.LENGTH_SHORT).show();
-                            // showCustomPopupMenu();
-                            Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
-                        }
+                                                    dialog.dismiss();
+                                                }
+                                            }).show();
+                                    dialog.dismiss();
+                                    Toast.makeText(TotalCallMade.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    // showCustomPopupMenu();
+                                    Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                }
 
-                    }
-                });
-        requestQueue.add(stringRequest);
-                 }else {
-                     dialog.dismiss();
-                     android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(TotalCallMade.this);
-                     alertDialogBuilder.setTitle("No Internet connection!!!")
-                             .setMessage("Can't do further process")
+                            }
+                        });
+                requestQueue.add(stringRequest);
+            } else {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(TotalCallMade.this);
+                alertDialogBuilder.setTitle("No Internet connection!!!")
+                        .setMessage("Can't do further process")
 
-                             // Specifying a listener allows you to take an action before dismissing the dialog.
-                             // The dialog is automatically dismissed when a dialog button is clicked.
-                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                 public void onClick(DialogInterface dialog, int which) {
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
 
-                                     dialog.dismiss();
+                                dialog.dismiss();
 
-                                 }
-                             }).show();
-                 }
+                            }
+                        }).show();
+            }
+        }catch (Exception e)
+        {
+            Toast.makeText(TotalCallMade.this,"Errorcode-354 TotalCallMade getTotalCalledNo "+e.toString(),Toast.LENGTH_SHORT).show();
+        }
     }
 
 }
