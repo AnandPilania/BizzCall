@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/activity_background"
-    tools:context="com.bizcall.wayto.sample.MailActiivity">
+    tools:context="com.bizcall.wayto.mentebit.MailActiivity">
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar1"
         android:layout_width="fill_parent"

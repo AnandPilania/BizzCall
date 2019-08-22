@@ -25,7 +25,7 @@
 
 
     <string-array name="Gender">
-        <item><font size="13">-Select State-</font></item>
+        <item><font size="13">-Select-</font></item>
         <item><font size="13">Male</font></item>
         <item> <font size="13">Female</font></item>
         <item> <font size="13">Other</font></item>

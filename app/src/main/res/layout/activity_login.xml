@@ -163,17 +163,18 @@
                             />
                             </TableRow>
                             <TableRow>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Website:  http://www.bizcallcrm.com"
-                            android:textColor="@color/red"
-                            android:textStyle="italic"
-                            android:textSize="16dp"
-                            android:paddingRight="3dp"
-                            android:paddingBottom="5dp"
-                            android:paddingLeft="3dp"
-                            />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/txtWebsite"
+                                    android:paddingLeft="3dp"
+                                    android:paddingRight="3dp"
+                                    android:paddingBottom="5dp"
+                                    android:text="Website:  http://www.bizcallcrm.com"
+                                    android:textColor="@color/red"
+                                    android:textSize="16dp"
+                                    android:textStyle="italic" />
                             </TableRow>
                         </TableLayout>
                     </LinearLayout>
@@ -230,8 +231,6 @@
 
                     </LinearLayout>
 
-
-
                     <android.support.v7.widget.AppCompatButton
                         android:id="@+id/btnLogin"
                         android:layout_width="140dp"
@@ -246,7 +245,7 @@
                         android:paddingBottom="0dp"
                         android:text="Login"
                         android:textColor="@color/white"
-                        android:textSize="20dp" />
+                        android:textSize="20dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -291,7 +290,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingTop="10dp"
-            android:text="Version:1.5.4"
+            android:text="Version:1.6"
             android:textColor="@color/white"
             android:textSize="10dp" />
 

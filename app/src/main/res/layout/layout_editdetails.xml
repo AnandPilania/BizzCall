@@ -195,7 +195,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:inputType="number"
-                                android:maxLength="10"
+                                android:maxLength="14"
                                 android:padding="5dp"
                                 android:textColor="@color/editdetails_edittext"
                                 android:textSize="15dp"

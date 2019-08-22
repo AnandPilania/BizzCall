@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.bizcall.wayto.sample">
+    package="com.bizcall.wayto.mentebit">
 
     <supports-screens
         android:anyDensity="true"
@@ -23,7 +23,8 @@
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.CAPTURE_AUDIO_OUTPUT"
+    <uses-permission
+        android:name="android.permission.CAPTURE_AUDIO_OUTPUT"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -41,6 +42,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
@@ -54,26 +56,40 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
-        <activity android:name=".CollegeAttornyActivity"
+        <activity android:name="com.bizcall.wayto.mentebit.IVRMissedTollFree"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name="com.bizcall.wayto.mentebit.MapsActivity" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <receiver
+            android:name="com.bizcall.wayto.mentebit.MyAlarm"
+            android:enabled="true"
+            android:exported="true"></receiver>
+
         <activity
-            android:name=".PersonalInfoActivity"
+            android:name="com.bizcall.wayto.mentebit.CollegeAttornyActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SummaryDetails"
+            android:name="com.bizcall.wayto.mentebit.PersonalInfoActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".EducationalDetails"
+            android:name="com.bizcall.wayto.mentebit.SummaryDetails"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ActivityUploadDocs"
+            android:name="com.bizcall.wayto.mentebit.EducationalDetails"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".FormFilled"
+            android:name="com.bizcall.wayto.mentebit.ActivityUploadDocs"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.bizcall.wayto.mentebit.FormFilled"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service
-            android:name=".MyAccessibilityService"
+            android:name="com.bizcall.wayto.mentebit.MyAccessibilityService"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
@@ -85,7 +101,7 @@
         </service>
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.bizcall.wayto.mentebit.MainActivity"
             android:screenOrientation="portrait">
 
             <!--
@@ -97,18 +113,18 @@
             -->
         </activity>
         <activity
-            android:name=".Login"
+            android:name="com.bizcall.wayto.mentebit.Login"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".Home"
+            android:name="com.bizcall.wayto.mentebit.Home"
             android:label=""
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <receiver
-            android:name=".PhoneStateReceiver"
+            android:name="com.bizcall.wayto.mentebit.PhoneStateReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -126,11 +142,6 @@
             </intent-filter>
         </receiver>
         -->
-        <service
-            android:name=".RecordService"
-            android:enabled="true"
-            android:exported="false"
-            android:stopWithTask="false" />
         <!--
   <provider
             android:name="android.support.v4.content.FileProvider"
@@ -153,11 +164,11 @@
         </provider>
 
         <activity
-            android:name=".SplashAfterCall"
+            android:name="com.bizcall.wayto.mentebit.SplashAfterCall"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".FileListActivity"
+            android:name="com.bizcall.wayto.mentebit.FileListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
 
@@ -170,11 +181,11 @@
             -->
         </activity>
         <activity
-            android:name=".SelectedFileList"
+            android:name="com.bizcall.wayto.mentebit.SelectedFileList"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Splash"
+            android:name="com.bizcall.wayto.mentebit.Splash"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -184,32 +195,32 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MessageTemplate"
+            android:name="com.bizcall.wayto.mentebit.MessageTemplate"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SplashNumberNotPresent"
+            android:name="com.bizcall.wayto.mentebit.SplashNumberNotPresent"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".StatusTotalCount" />
+        <activity android:name="com.bizcall.wayto.mentebit.StatusTotalCount" />
         <activity
-            android:name=".CounsellorData"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".TotalCallMade"
+            android:name="com.bizcall.wayto.mentebit.CounsellorData"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ApplyOnline"
+            android:name="com.bizcall.wayto.mentebit.TotalCallMade"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".BrowseActivity"
+            android:name="com.bizcall.wayto.mentebit.ApplyOnline"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".CounselorContactActivity"
+            android:name="com.bizcall.wayto.mentebit.BrowseActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.bizcall.wayto.mentebit.CounselorContactActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
@@ -218,91 +229,95 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SearchAllActivity"
+            android:name="com.bizcall.wayto.mentebit.SearchAllActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".NewActivity" />
+        <activity android:name="com.bizcall.wayto.mentebit.NewActivity" />
         <activity
-            android:name=".DetailsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".EditDetails"
+            android:name="com.bizcall.wayto.mentebit.DetailsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ReminderActivity"
+            android:name="com.bizcall.wayto.mentebit.EditDetails"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".PointCollectionDetails"
+            android:name="com.bizcall.wayto.mentebit.ReminderActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ReportActivity"
+            android:name="com.bizcall.wayto.mentebit.PointCollectionDetails"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.bizcall.wayto.mentebit.ReportActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- android:screenOrientation="landscape" -->
         <activity
-            android:name=".GraphReport"
+            android:name="com.bizcall.wayto.mentebit.GraphReport"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".GraphDetails"
+            android:name="com.bizcall.wayto.mentebit.GraphDetails"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".NewClientEntry"
+            android:name="com.bizcall.wayto.mentebit.NewClientEntry"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ChatActivity"
+            android:name="com.bizcall.wayto.mentebit.ChatActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".AllRecords" />
+        <activity android:name="com.bizcall.wayto.mentebit.AllRecords" />
         <activity
-            android:name=".MessageActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".AllocationReport"
+            android:name="com.bizcall.wayto.mentebit.MessageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".LastLoginDetails"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".NavigationViewActivity" />
-        <activity
-            android:name=".ReportDetails"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ReadLog" />
-        <activity
-            android:name=".OnlineLead"
+            android:name="com.bizcall.wayto.mentebit.AllocationReport"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".AllNotifications"
+            android:name="com.bizcall.wayto.mentebit.LastLoginDetails"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name="com.bizcall.wayto.mentebit.NavigationViewActivity" />
+        <activity
+            android:name="com.bizcall.wayto.mentebit.ReportDetails"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name="com.bizcall.wayto.mentebit.ReadLog" />
+        <activity
+            android:name="com.bizcall.wayto.mentebit.OnlineLead"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".StatusReport"
+            android:name="com.bizcall.wayto.mentebit.AllNotifications"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".FirstCallReport"
+            android:name="com.bizcall.wayto.mentebit.StatusReport"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".OpenLeads"
+            android:name="com.bizcall.wayto.mentebit.FirstCallReport"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".LeadCount"
+            android:name="com.bizcall.wayto.mentebit.OpenLeads"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MasterEntry"
+            android:name="com.bizcall.wayto.mentebit.LeadCount"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MailActiivity"
+            android:name="com.bizcall.wayto.mentebit.MasterEntry"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.bizcall.wayto.mentebit.MailActiivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
