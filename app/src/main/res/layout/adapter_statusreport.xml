@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+    <TableLayout
+        android:id="@+id/table"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/table_border"
+                android:layout_weight="1"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:id="@+id/txtRefName"
+                android:paddingTop="5dp"
+                android:paddingBottom="10dp"
+                android:hint="DataRef"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="12dp" />
+
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="match_parent"
+                android:id="@+id/txtStatus"
+                android:background="@drawable/table_border"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:layout_weight="1"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:gravity="center"
+                android:hint="Status"
+                android:textColor="@color/black"
+                android:textSize="12dp" />
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="match_parent"
+                android:id="@+id/txtTotalNo"
+                android:background="@drawable/table_border"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:layout_weight="1"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:gravity="center"
+                android:hint="Total No"
+                android:textColor="@color/black"
+                android:textSize="12dp" />
+
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>
