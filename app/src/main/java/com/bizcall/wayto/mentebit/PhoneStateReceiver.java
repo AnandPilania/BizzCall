@@ -65,8 +65,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, final Intent intent)
-    {
-       // context=context1;
+    {// context=context1;
         final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         sp=context.getSharedPreferences("Settings",Context.MODE_PRIVATE);
         requestQueue= Volley.newRequestQueue(context);

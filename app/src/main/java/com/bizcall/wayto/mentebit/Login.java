@@ -676,44 +676,176 @@ public class Login extends AppCompatActivity /*implements GoogleApiClient.Connec
                             strImei1 = response.substring(response.indexOf("[IMEI1] =>") + 10, response.indexOf("[IMEI2]")).trim();
                             strImei2 = response.substring(response.indexOf("[IMEI2] =>") + 10);
                             strImei2 = strImei2.substring(1, strImei2.length() - 4).trim();
+                            role=role.replace(" ","");
 
-                            String role1 = "";
+                            Log.d("Role",role);
+                            if(role.contains("2"))
+                            {
+                                intent=new Intent(Login.this,ActivityHome.class);
+                                startActivity(intent);
+                            }
+                            else {
 
-                            if (strImei1.equals("0") || strImei2.equals("0")) {
-                                Log.d("IMEI", strImei1 + " " + strImei2);
-                                int condition = 0;
-                                try {
-                                    if (IMEINumber1.length() > 4 || IMEINumber2.length() > 4) {
-                                        condition = 1;
-                                    } else {
-                                        condition = 0;
+                                if (strImei1.equals("0") || strImei2.equals("0")) {
+                                    Log.d("IMEI", strImei1 + " " + strImei2);
+                                    int condition = 0;
+                                    try {
+                                        if (IMEINumber1.length() > 4 || IMEINumber2.length() > 4) {
+                                            condition = 1;
+                                        } else {
+                                            condition = 0;
+                                        }
+
+                                    } catch (Exception e) {
+                                        Toast.makeText(Login.this, "Errorcode-110 Login LoginResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                        Log.d("Exception", String.valueOf(e));
+                                        //condition = 0;
                                     }
 
-                                } catch (Exception e) {
-                                    Toast.makeText(Login.this, "Errorcode-110 Login LoginResponse " + e.toString(), Toast.LENGTH_SHORT).show();
-                                    Log.d("Exception", String.valueOf(e));
-                                    //condition = 0;
-                                }
+                                    if (condition == 1) {
+                                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Login.this);
+                                        alertDialogBuilder.setTitle("Your IMEI No is:" + IMEINumber1 + " " + IMEINumber2)
 
-                                if (condition == 1) {
+                                                .setMessage("No mobile attached with this ID.  Do you want to add this device as Primary device?")
+
+                                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        insertIMEI();
+                                                        edtName.setText("");
+                                                        edtPassword.setText("");
+                                                        dialog.dismiss();
+                                                    }
+                                                })
+
+                                                // A null listener allows the button to dismiss the dialog and take no further action.
+                                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                        linearClientVerify.setVisibility(View.VISIBLE);
+                                                        linearLogin.setVisibility(View.GONE);
+                                                        edtName.setText("");
+                                                        edtPassword.setText("");
+                                                    }
+                                                })
+                                                .show();
+                                    } else {
+                                        Log.d("Alert", "ALert111");
+                                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Login.this);
+                                        alertDialogBuilder.setTitle("Phone permission is not allowed for BizcallCRM")
+                                                .setMessage("Goto->Settings->App Permission->Bizcall and allow phone permission")
+
+                                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                        intent = new Intent(Intent.ACTION_MAIN);
+                                                        intent.addCategory(Intent.CATEGORY_HOME);
+                                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                        startActivity(intent);
+                                                        finish();
+                                                    }
+                                                })
+
+                                                // A null listener allows the button to dismiss the dialog and  take no further action.
+
+                                                .show();
+
+                                    }
+                                } else if (strImei1.equals(IMEINumber1) || strImei2.equals(IMEINumber2)) {
+                                    editor.putString("Name", uname);
+                                    editor.putString("Id", counselorId);
+                                    editor.putString("EmailId", emailID);
+                                    editor.putString("Role", role);
+                                    editor.putString("MobileNo", mobile);
+                                    editor.putString("StatusId", statusid);
+                                    editor.commit();
+                                    try {
+                                        ip = URLEncoder.encode(ip, "UTF-8");
+                                    } catch (UnsupportedEncodingException e) {
+                                        e.printStackTrace();
+                                    }
+                                    counselorId = counselorId.replace(" ", "");
+                                    if (CheckInternetSpeed.checkInternet(Login.this).contains("0")) {
+                                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Login.this);
+                                        alertDialogBuilder.setTitle("No Internet connection!!!")
+                                                .setMessage("Can't do further process")
+
+                                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                                        dialog.dismiss();
+
+                                                    }
+                                                }).show();
+                                    } else if (CheckInternetSpeed.checkInternet(Login.this).contains("1")) {
+                                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Login.this);
+                                        alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                                                .setMessage("Can't do further process")
+
+                                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        //insertIMEI();
+                                                        dialog.dismiss();
+                                                    }
+                                                })
+                                                .show();
+                                    } else {
+
+                                        insertLoginInfo();
+                                        insertPointCollection();
+                                    }
+
+                                    Log.d("Logincount", String.valueOf(loginCount));
+
+                                    //Log.d("Role1111", role1);
+                                    if (Splash.flag == 0) {
+                                        timer.scheduleAtFixedRate(new TimerTask() {
+                                            @Override
+                                            public void run() {
+                                                setAlarm();
+                                                Log.d("flagLogin", ":flagLogin");
+                                            }
+                                        }, 0, TIME_INTERVAL);
+                                    }
+                                    Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
+                                    //getCallDetails();
+                                    //getSMSDetails();
+                                    // getUserLocation();
+                                    editor = sp.edit();
+                                    editor.putString("CheckPermission", "Granted");
+                                    editor.commit();
+                                    intent = new Intent(Login.this, Home.class);
+                                    intent.putExtra("Activity", "Login");
+                                    startActivity(intent);
+                                    finish();
+                                } else {
                                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Login.this);
-                                    alertDialogBuilder.setTitle("Your IMEI No is:" + IMEINumber1 + " " + IMEINumber2)
-
-                                            .setMessage("No mobile attached with this ID.  Do you want to add this device as Primary device?")
+                                    alertDialogBuilder.setTitle("Device Authorization Failed")
+                                            .setMessage("Your ID is registered on device IMEI ending with" + strImei1.substring(strImei1.length() - 4, strImei1.length()))
 
                                             // Specifying a listener allows you to take an action before dismissing the dialog.
                                             // The dialog is automatically dismissed when a dialog button is clicked.
-                                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
-                                                    insertIMEI();
-                                                    edtName.setText("");
-                                                    edtPassword.setText("");
+                                                    //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
                                                     dialog.dismiss();
                                                 }
                                             })
 
                                             // A null listener allows the button to dismiss the dialog and take no further action.
-                                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                            /*.setNegativeButton("No", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     dialog.dismiss();
@@ -722,134 +854,9 @@ public class Login extends AppCompatActivity /*implements GoogleApiClient.Connec
                                                     edtName.setText("");
                                                     edtPassword.setText("");
                                                 }
-                                            })
+                                            })*/
                                             .show();
-                                } else {
-                                    Log.d("Alert", "ALert111");
-                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Login.this);
-                                    alertDialogBuilder.setTitle("Phone permission is not allowed for BizcallCRM")
-                                            .setMessage("Goto->Settings->App Permission->Bizcall and allow phone permission")
-
-                                            // Specifying a listener allows you to take an action before dismissing the dialog.
-                                            // The dialog is automatically dismissed when a dialog button is clicked.
-                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.dismiss();
-                                                    intent = new Intent(Intent.ACTION_MAIN);
-                                                    intent.addCategory(Intent.CATEGORY_HOME);
-                                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                    startActivity(intent);
-                                                    finish();
-                                                }
-                                            })
-
-                                            // A null listener allows the button to dismiss the dialog and  take no further action.
-
-                                            .show();
-
                                 }
-                            } else if (strImei1.equals(IMEINumber1) || strImei2.equals(IMEINumber2)) {
-                                editor.putString("Name", uname);
-                                editor.putString("Id", counselorId);
-                                editor.putString("EmailId", emailID);
-                                editor.putString("Role", role1);
-                                editor.putString("MobileNo", mobile);
-                                editor.putString("StatusId", statusid);
-                                editor.commit();
-                                try {
-                                    ip = URLEncoder.encode(ip, "UTF-8");
-                                } catch (UnsupportedEncodingException e) {
-                                    e.printStackTrace();
-                                }
-                                counselorId = counselorId.replace(" ", "");
-                                if (CheckInternetSpeed.checkInternet(Login.this).contains("0")) {
-                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Login.this);
-                                    alertDialogBuilder.setTitle("No Internet connection!!!")
-                                            .setMessage("Can't do further process")
-
-                                            // Specifying a listener allows you to take an action before dismissing the dialog.
-                                            // The dialog is automatically dismissed when a dialog button is clicked.
-                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    //insertIMEI();
-                                        /*edtName.setText("");
-                                        edtPassword.setText("");*/
-                                                    dialog.dismiss();
-
-                                                }
-                                            }).show();
-                                } else if (CheckInternetSpeed.checkInternet(Login.this).contains("1")) {
-                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(Login.this);
-                                    alertDialogBuilder.setTitle("Slow Internet speed!!!")
-                                            .setMessage("Can't do further process")
-
-                                            // Specifying a listener allows you to take an action before dismissing the dialog.
-                                            // The dialog is automatically dismissed when a dialog button is clicked.
-                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    //insertIMEI();
-                                                    dialog.dismiss();
-                                                }
-                                            })
-                                            .show();
-                                } else {
-
-                                    insertLoginInfo();
-                                    insertPointCollection();
-                                }
-
-                                Log.d("Logincount", String.valueOf(loginCount));
-
-                                Log.d("Role1111", role1);
-                                if(Splash.flag == 0)
-                                {
-                                    timer.scheduleAtFixedRate(new TimerTask() {
-                                        @Override
-                                        public void run() {
-                                            setAlarm();
-                                            Log.d("flagLogin", ":flagLogin");
-                                        }
-                                    }, 0, TIME_INTERVAL);
-                                }
-                                Toast.makeText(Login.this, "Login successful", Toast.LENGTH_SHORT).show();
-                                //getCallDetails();
-                                //getSMSDetails();
-                                // getUserLocation();
-                                editor=sp.edit();
-                                editor.putString("CheckPermission","Granted");
-                                editor.commit();
-                                intent = new Intent(Login.this, Home.class);
-                                intent.putExtra("Activity", "Login");
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Login.this);
-                                alertDialogBuilder.setTitle("Device Authorization Failed")
-                                        .setMessage("Your ID is registered on device IMEI ending with" + strImei1.substring(strImei1.length() - 4, strImei1.length()))
-
-                                        // Specifying a listener allows you to take an action before dismissing the dialog.
-                                        // The dialog is automatically dismissed when a dialog button is clicked.
-                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                //insertIMEI();
-                                        /*edtName.setText("");
-                                        edtPassword.setText("");*/
-                                                dialog.dismiss();
-                                            }
-                                        })
-
-                                        // A null listener allows the button to dismiss the dialog and take no further action.
-                                        /*.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                                linearClientVerify.setVisibility(View.VISIBLE);
-                                                linearLogin.setVisibility(View.GONE);
-                                                edtName.setText("");
-                                                edtPassword.setText("");
-                                            }
-                                        })*/
-                                        .show();
                             }
                         } else {
                             Toast.makeText(Login.this, "Login failed", Toast.LENGTH_SHORT).show();

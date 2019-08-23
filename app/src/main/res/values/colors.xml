@@ -17,6 +17,18 @@
     <color name="activity_background">#00b8d7</color>
     <color name="background_yellow">#ffc809</color>
 
+
+
+    <color name="circleLayout1">#d2efee</color>
+    <color name="circleText1">#5b0136</color>
+    <color name="circleLayout2">#cbffcb</color>
+    <color name="circleText2">#e1ad21</color>
+    <color name="circleLayout3">#ffe4e1</color>
+    <color name="circleText3">#af8b63</color>
+    <color name="circleLayout4">#915f6d</color>
+    <color name="circleText4">#ecd8d9</color>
+
+
     <color name="off_white">#f2f2f2</color>
     <color name="off_white1">#e6e7e9</color>
 
