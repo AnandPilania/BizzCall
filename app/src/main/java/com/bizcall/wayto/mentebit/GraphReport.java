@@ -134,6 +134,7 @@ public class GraphReport extends AppCompatActivity {
     TextView txtDate,txtTotal,txtCallType;
     String id1;
     boolean success;
+    LinearLayout linearSpinner,linearUnderSpinner;
 
 
     @Override
@@ -159,6 +160,10 @@ public class GraphReport extends AppCompatActivity {
             imgRefresh=findViewById(R.id.imgRefresh);
             txtCallType=findViewById(R.id.txtCallType);
             id1 = sp.getString("Id", null).trim();
+            linearSpinner=findViewById(R.id.linearSpinner);
+            linearUnderSpinner=findViewById(R.id.linearUnderCounselor);
+            linearUnderSpinner.setVisibility(View.VISIBLE);
+            linearSpinner.setVisibility(View.GONE);
 
           //  mArrayList=new ArrayList<>();
             mRadioGroup = findViewById(R.id.radio);

@@ -12,8 +12,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,67 +32,72 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class TotalCallMade extends AppCompatActivity {
+public class ActivityTotalCallMade extends AppCompatActivity {
     RecyclerView recyclerView;
     AdapterTotalCallMade adapterTotalCallMade;
     ArrayList<DataTotalCallMade> arrayList;
     ProgressDialog dialog;
-    UrlRequest urlRequest;
     TextView txtTotalCallNo;
-    ImageView imgBack,imgCoin,imgRefresh;
+    ImageView imgBack, imgCoin, imgRefresh;
     SharedPreferences sp;
-    String counselorid, clientid,clienturl,totalcoins;
+    String counselorid, clientid, clienturl, totalcoins;
     TextView txtMsg;
     LinearLayout linearLayout;
-    TextView txtCoin,txtDiamond;
+    TextView txtCoin, txtDiamond;
     Vibrator vibrator;
     String url;
     RequestQueue requestQueue;
-    LinearLayout linearSpinner,linearUnderSpinner;
+    Spinner spinnerCounselor;
+    LinearLayout linearUnderCounselorName;
+    ArrayList<String> arrayListCounselorId, arrayListCounselorName;
+    SharedPreferences.Editor editor;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_total_call_made);
-        try{
+        try {
             vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-            requestQueue=Volley.newRequestQueue(TotalCallMade.this);
-            txtCoin=findViewById(R.id.txtCoin);
-      //  txtDiamond=findViewById(R.id.txtDiamond);
-        txtTotalCallNo = findViewById(R.id.txtTotalCallNo);
-        imgBack = findViewById(R.id.img_back);
-        imgRefresh=findViewById(R.id.imgRefresh);
-        txtMsg = findViewById(R.id.txtNoCallMadeMsg);
-        linearSpinner=findViewById(R.id.linearSpinner);
-        linearUnderSpinner=findViewById(R.id.linearUnderCounselor);
-        linearUnderSpinner.setVisibility(View.VISIBLE);
-        linearSpinner.setVisibility(View.GONE);
-        linearLayout = findViewById(R.id.linearCallColumns);
-        imgCoin=findViewById(R.id.imgCoin);
-        imgBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                vibrator.vibrate(100);
-                onBackPressed();
-            }
-        });
+            requestQueue = Volley.newRequestQueue(ActivityTotalCallMade.this);
+            txtCoin = findViewById(R.id.txtCoin);
+            //  txtDiamond=findViewById(R.id.txtDiamond);
+            txtTotalCallNo = findViewById(R.id.txtTotalCallNo);
+            imgBack = findViewById(R.id.img_back);
+            imgRefresh = findViewById(R.id.imgRefresh);
+            txtMsg = findViewById(R.id.txtNoCallMadeMsg);
+            linearLayout = findViewById(R.id.linearCallColumns);
+            spinnerCounselor = findViewById(R.id.spinner_counselor);
+            linearUnderCounselorName = findViewById(R.id.linearUnderCounselor);
+            imgCoin = findViewById(R.id.imgCoin);
+            imgBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    vibrator.vibrate(100);
+                    onBackPressed();
+                    Animatoo.animateSlideRight(ActivityTotalCallMade.this);
+                }
+            });
             sp = getSharedPreferences("Settings", Context.MODE_PRIVATE);
-            counselorid = sp.getString("Id", null);
-            counselorid = counselorid.replaceAll(" ", "");
+            // counselorid = "3"/*sp.getString("Id", null)*/;
+            //counselorid = counselorid.replaceAll(" ", "");
             clientid = sp.getString("ClientId", null);
             clienturl = sp.getString("ClientUrl", null);
-            totalcoins = sp.getString("TotalCoin", null);
+            // totalcoins = sp.getString("TotalCoin", null);
             Log.d("CID", clientid);
-            if(CheckInternetSpeed.checkInternet(TotalCallMade.this).contains("0")) {
-                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(TotalCallMade.this);
+
+            if (CheckInternetSpeed.checkInternet(ActivityTotalCallMade.this).contains("0")) {
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(ActivityTotalCallMade.this);
                 alertDialogBuilder.setTitle("No Internet connection!!!")
                         .setMessage("Can't do further process")
 
@@ -104,9 +112,8 @@ public class TotalCallMade extends AppCompatActivity {
 
                             }
                         }).show();
-            }
-            else if(CheckInternetSpeed.checkInternet(TotalCallMade.this).contains("1")) {
-                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(TotalCallMade.this);
+            } else if (CheckInternetSpeed.checkInternet(ActivityTotalCallMade.this).contains("1")) {
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(ActivityTotalCallMade.this);
                 alertDialogBuilder.setTitle("Slow Internet speed!!!")
                         .setMessage("Can't do further process")
 
@@ -119,14 +126,37 @@ public class TotalCallMade extends AppCompatActivity {
                             }
                         })
                         .show();
+            } else {
+                dialog = ProgressDialog.show(ActivityTotalCallMade.this, "", "Loading Counselor List", false, true);
+                getCounselorList();
+                //getTotalCallNo();
             }
-            else {
-                dialog = ProgressDialog.show(TotalCallMade.this, "", "Loading Total Calls Details", false, true);
-                getTotalCallNo();
-            }
+            spinnerCounselor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    counselorid = arrayListCounselorId.get(position);
+                    editor = sp.edit();
+                    editor.putString("Id", counselorid);
+                    editor.commit();
 
-       // refreshWhenLoading();
-        txtCoin.setText(totalcoins);
+                    if (counselorid.equals("0")) {
+                        linearUnderCounselorName.setVisibility(View.GONE);
+                        Toast.makeText(ActivityTotalCallMade.this, "Select counselor", Toast.LENGTH_SHORT).show();
+                    } else {
+                        linearUnderCounselorName.setVisibility(View.VISIBLE);
+                        dialog = ProgressDialog.show(ActivityTotalCallMade.this, "", "Loading Total Call No", true);
+                        getTotalCallNo();
+                    }
+                    //loadAllReport();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+
+            // refreshWhenLoading();
+        /*txtCoin.setText(totalcoins);
             imgRefresh.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -141,20 +171,127 @@ public class TotalCallMade extends AppCompatActivity {
                 vibrator.vibrate(100);
                 startActivity(new Intent(TotalCallMade.this,PointCollectionDetails.class));
             }
-        });
+        });*/
         } catch (Exception e) {
-            Toast.makeText(TotalCallMade.this,"Errorcode-350 TotalCallMade onCreate "+e.toString(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(ActivityTotalCallMade.this, "Errorcode-350 TotalCallMade onCreate " + e.toString(), Toast.LENGTH_SHORT).show();
             Log.d("TotalCallsException", String.valueOf(e));
         }
     }
-    public void refreshWhenLoading()
-    {
+
+    public void getCounselorList() {
+        try {
+            String CounselorUrl = clienturl + "?clientid=" + clientid + "&caseid=30";
+            Log.d("CounselorUrl", CounselorUrl);
+
+            if (CheckInternet.checkInternet(ActivityTotalCallMade.this)) {
+                if (CheckServer.isServerReachable(ActivityTotalCallMade.this)) {
+                    StringRequest stringRequest = new StringRequest(Request.Method.POST, CounselorUrl,
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    dialog.dismiss();
+                                    arrayListCounselorId = new ArrayList<>();
+                                    arrayListCounselorName = new ArrayList<>();
+
+                                    arrayListCounselorName.add(0, "Select Counselor");
+                                    arrayListCounselorId.add(0, "0");
+                                    Log.d("CounselorResponse1", response);
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(response);
+                                        Log.d("Json", jsonObject.toString());
+                                        JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                        for (int i = 0; i < jsonArray.length(); i++) {
+                                            JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                            String id = String.valueOf(jsonObject1.getInt("cCounselorID"));
+                                            String name = jsonObject1.getString("cCounselorName");
+                                            arrayListCounselorName.add(name);
+                                            arrayListCounselorId.add(id);
+                                        }
+                                        ArrayAdapter<String> dataAdapterState = new ArrayAdapter(ActivityTotalCallMade.this, R.layout.spinner_item1, arrayListCounselorName);
+                                        spinnerCounselor.setAdapter(dataAdapterState);
+                                        dataAdapterState.notifyDataSetChanged();
+
+                                    } catch (JSONException e) {
+                                        Toast.makeText(ActivityTotalCallMade.this, "Errorcode-189 CounselorContact counselorDetailsResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                        Log.d("CounselorDetailExceptio", String.valueOf(e));
+                                    }
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+
+                                    if (error == null || error.networkResponse == null)
+                                        return;
+                                    final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                    //get response body and parse with appropriate encoding
+                                    if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(ActivityTotalCallMade.this);
+                                        alertDialogBuilder.setTitle("Server Error!!!")
+
+                                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                        dialog.dismiss();
+                                                    }
+                                                }).show();
+                                        dialog.dismiss();
+                                        Toast.makeText(ActivityTotalCallMade.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                        // showCustomPopupMenu();
+                                        Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                    }
+                                }
+                            });
+                    requestQueue.add(stringRequest);
+                } else {
+                    dialog.dismiss();
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(ActivityTotalCallMade.this);
+                    alertDialogBuilder.setTitle("Server Down!!!!")
+                            .setMessage("Try after some time!")
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    CheckServer.temp = 0;
+
+                                }
+                            }).show();
+                }
+            } else {
+                dialog.dismiss();
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(ActivityTotalCallMade.this);
+                alertDialogBuilder.setTitle("No Internet connection!!!")
+                        .setMessage("Can't do further process")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
+
+                            }
+                        }).show();
+
+            }
+        } catch (Exception e) {
+            Toast.makeText(ActivityTotalCallMade.this, "Errorcode-371 GraphReport getAllReport " + e.toString(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void refreshWhenLoading() {
         final Timer t = new Timer();
         t.schedule(new TimerTask() {
             public void run() {
-                if(dialog.isShowing()) {
-                    Intent intent = new Intent(TotalCallMade.this, TotalCallMade.class);
-                   // intent.putExtra("Activity",strActivity);
+                if (dialog.isShowing()) {
+                    Intent intent = new Intent(ActivityTotalCallMade.this, ActivityTotalCallMade.class);
+                    // intent.putExtra("Activity",strActivity);
                     startActivity(intent);// when the task active then close the dialog
                     t.cancel(); // also just top the timer thread, otherwise, you may receive a crash report
                 }
@@ -162,27 +299,29 @@ public class TotalCallMade extends AppCompatActivity {
         }, 12000); // after 12 second (or 2000 miliseconds), the task will be active.
 
     }
+
     @Override
     public void onBackPressed() {
-        try{
-        Intent intent=new Intent(TotalCallMade.this,Home.class);
-        intent.putExtra("Activity","TotalCallMade");
-        startActivity(intent);
-        super.onBackPressed();
+        try {
+            Intent intent = new Intent(ActivityTotalCallMade.this, ActivityHome.class);
+            intent.putExtra("Activity", "TotalCallMade");
+            startActivity(intent);
+            finish();
+            super.onBackPressed();
+            Animatoo.animateSlideRight(ActivityTotalCallMade.this);
         } catch (Exception e) {
-            Toast.makeText(TotalCallMade.this,"Errorcode-351 TotalCallMade onBackpressed "+e.toString(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(ActivityTotalCallMade.this, "Errorcode-351 TotalCallMade onBackpressed " + e.toString(), Toast.LENGTH_SHORT).show();
             Log.d("Exception", String.valueOf(e));
         }
     }
 
-    public void getTotalCallMade()
-    {
+    public void getTotalCallMade() {
         try {
             arrayList = new ArrayList<>();
             url = clienturl + "?clientid=" + clientid + "&caseid=15&CounsellorId=" + counselorid;
             Log.d("TotalCallUrl", url);
-            if (CheckInternet.checkInternet(TotalCallMade.this)) {
-                if(CheckServer.isServerReachable(TotalCallMade.this)) {
+            if (CheckInternet.checkInternet(ActivityTotalCallMade.this)) {
+                if (CheckServer.isServerReachable(ActivityTotalCallMade.this)) {
                     StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                             new Response.Listener<String>() {
                                 @Override
@@ -213,7 +352,7 @@ public class TotalCallMade extends AppCompatActivity {
                                                 DataTotalCallMade dataTotalCallMade = new DataTotalCallMade(srno, duration, cdate, filename);
                                                 arrayList.add(dataTotalCallMade);
                                             }
-                                            adapterTotalCallMade = new AdapterTotalCallMade(TotalCallMade.this, arrayList);
+                                            adapterTotalCallMade = new AdapterTotalCallMade(ActivityTotalCallMade.this, arrayList);
                                             recyclerView = findViewById(R.id.recycleTotalCallMade);
                                             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
                                             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -224,7 +363,7 @@ public class TotalCallMade extends AppCompatActivity {
 
                                             Log.d("Size**", String.valueOf(arrayList.size()));
                                         } catch (Exception e) {
-                                            Toast.makeText(TotalCallMade.this, "Errorcode-353 TotalCallMade TotalCallMadeDetailsResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(ActivityTotalCallMade.this, "Errorcode-353 TotalCallMade TotalCallMadeDetailsResponse " + e.toString(), Toast.LENGTH_SHORT).show();
                                             Log.d("Exception", String.valueOf(e));
                                         }
                                     }
@@ -239,7 +378,7 @@ public class TotalCallMade extends AppCompatActivity {
                                     final String statusCode = String.valueOf(error.networkResponse.statusCode);
                                     //get response body and parse with appropriate encoding
                                     if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
-                                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(TotalCallMade.this);
+                                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(ActivityTotalCallMade.this);
                                         alertDialogBuilder.setTitle("Server Error!!!")
 
 
@@ -252,7 +391,7 @@ public class TotalCallMade extends AppCompatActivity {
                                                     }
                                                 }).show();
                                         dialog.dismiss();
-                                        Toast.makeText(TotalCallMade.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ActivityTotalCallMade.this, "Server Error", Toast.LENGTH_SHORT).show();
                                         // showCustomPopupMenu();
                                         Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
                                     }
@@ -260,11 +399,11 @@ public class TotalCallMade extends AppCompatActivity {
                                 }
                             });
                     requestQueue.add(stringRequest);
-                }else {
+                } else {
                     if (dialog.isShowing()) {
                         dialog.dismiss();
                     }
-                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(TotalCallMade.this);
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(ActivityTotalCallMade.this);
                     alertDialogBuilder.setTitle("Server Down!!!!")
                             .setMessage("Try after some time!")
 
@@ -282,7 +421,7 @@ public class TotalCallMade extends AppCompatActivity {
                 }
             } else {
                 dialog.dismiss();
-                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(TotalCallMade.this);
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(ActivityTotalCallMade.this);
                 alertDialogBuilder.setTitle("No Internet connection!!!")
                         .setMessage("Can't do further process")
 
@@ -296,9 +435,8 @@ public class TotalCallMade extends AppCompatActivity {
                             }
                         }).show();
             }
-        }catch (Exception e)
-        {
-            Toast.makeText(TotalCallMade.this,"Errorcode-352 TotalCallMade getTotalCallMadeDetails "+e.toString(),Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(ActivityTotalCallMade.this, "Errorcode-352 TotalCallMade getTotalCallMadeDetails " + e.toString(), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -309,8 +447,8 @@ public class TotalCallMade extends AppCompatActivity {
             arrayList = new ArrayList<>();
             url = clienturl + "?clientid=" + clientid + "&caseid=17&CounsellorId=" + counselorid;
             Log.d("CallNoUrl", url);
-            if (CheckInternet.checkInternet(TotalCallMade.this)) {
-                if(CheckServer.isServerReachable(TotalCallMade.this)) {
+            if (CheckInternet.checkInternet(ActivityTotalCallMade.this)) {
+                if (CheckServer.isServerReachable(ActivityTotalCallMade.this)) {
                     StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                             new Response.Listener<String>() {
                                 @Override
@@ -342,7 +480,7 @@ public class TotalCallMade extends AppCompatActivity {
                                             }
                                         }
                                     } catch (Exception e) {
-                                        Toast.makeText(TotalCallMade.this, "Errorcode-355 TotalCallMade TotalCalledNoResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ActivityTotalCallMade.this, "Errorcode-355 TotalCallMade TotalCalledNoResponse " + e.toString(), Toast.LENGTH_SHORT).show();
                                         Log.d("Exception", String.valueOf(e));
                                     }
                                 }
@@ -356,7 +494,7 @@ public class TotalCallMade extends AppCompatActivity {
 
                                     //get response body and parse with appropriate encoding
                                     if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
-                                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(TotalCallMade.this);
+                                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(ActivityTotalCallMade.this);
                                         alertDialogBuilder.setTitle("Server Error!!!")
 
 
@@ -369,7 +507,7 @@ public class TotalCallMade extends AppCompatActivity {
                                                     }
                                                 }).show();
                                         dialog.dismiss();
-                                        Toast.makeText(TotalCallMade.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ActivityTotalCallMade.this, "Server Error", Toast.LENGTH_SHORT).show();
                                         // showCustomPopupMenu();
                                         Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
                                     }
@@ -377,11 +515,11 @@ public class TotalCallMade extends AppCompatActivity {
                                 }
                             });
                     requestQueue.add(stringRequest);
-                }else {
+                } else {
                     if (dialog.isShowing()) {
                         dialog.dismiss();
                     }
-                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(TotalCallMade.this);
+                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(ActivityTotalCallMade.this);
                     alertDialogBuilder.setTitle("Server Down!!!!")
                             .setMessage("Try after some time!")
 
@@ -393,13 +531,14 @@ public class TotalCallMade extends AppCompatActivity {
                                         /*edtName.setText("");
                                         edtPassword.setText("");*/
                                     dialog.dismiss();
+                                    CheckServer.temp = 0;
 
                                 }
                             }).show();
                 }
             } else {
                 dialog.dismiss();
-                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(TotalCallMade.this);
+                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(ActivityTotalCallMade.this);
                 alertDialogBuilder.setTitle("No Internet connection!!!")
                         .setMessage("Can't do further process")
 
@@ -413,9 +552,8 @@ public class TotalCallMade extends AppCompatActivity {
                             }
                         }).show();
             }
-        }catch (Exception e)
-        {
-            Toast.makeText(TotalCallMade.this,"Errorcode-354 TotalCallMade getTotalCalledNo "+e.toString(),Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(ActivityTotalCallMade.this, "Errorcode-354 TotalCallMade getTotalCalledNo " + e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 

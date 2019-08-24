@@ -681,6 +681,13 @@ public class Login extends AppCompatActivity /*implements GoogleApiClient.Connec
                             Log.d("Role",role);
                             if(role.contains("2"))
                             {
+                                editor.putString("Name", uname);
+                                editor.putString("Id", counselorId);
+                                editor.putString("EmailId", emailID);
+                                editor.putString("Role", role);
+                                editor.putString("MobileNo", mobile);
+                                editor.putString("StatusId", statusid);
+                                editor.commit();
                                 intent=new Intent(Login.this,ActivityHome.class);
                                 startActivity(intent);
                             }

@@ -39,7 +39,7 @@ public class Splash extends AppCompatActivity {
     android.app.AlertDialog.Builder builder;
     android.app.AlertDialog alert;
    // final int TIME_INTERVAL = 1800000; //half hour.1800000
-    String clienturl, clientid, checkPer;
+    String clienturl, clientid, checkPer,role;
     public static int flag = 0;
     GoogleMap googleMap;
     MapsActivity mapsActivity;
@@ -57,6 +57,7 @@ public class Splash extends AppCompatActivity {
         clientid = sp.getString("ClientId", null);
         clienturl = sp.getString("ClientUrl", null);
         checkPer = sp.getString("CheckPermission", null);
+        role=sp.getString("Role",null);
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.fadeout);
         iv = findViewById(R.id.imageSplash);
         iv.setAnimation(anim);
@@ -77,9 +78,17 @@ public class Splash extends AppCompatActivity {
                             }
                         }, 0, TIME_INTERVAL);
                     }
-                    Intent i = new Intent(Splash.this, Home.class);
-                    i.putExtra("Activity", "Splash");
-                    startActivity(i);
+                    if(role.contains("2"))
+                    {
+                        Intent i = new Intent(Splash.this, ActivityHome.class);
+                       // i.putExtra("Activity", "Splash");
+                        startActivity(i);
+                    }
+                    else {
+                        Intent i = new Intent(Splash.this, Home.class);
+                        i.putExtra("Activity", "Splash");
+                        startActivity(i);
+                    }
                 }
                 // close this activity
                 finish();

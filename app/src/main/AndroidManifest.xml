@@ -23,8 +23,7 @@
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission
-        android:name="android.permission.CAPTURE_AUDIO_OUTPUT"
+    <uses-permission android:name="android.permission.CAPTURE_AUDIO_OUTPUT"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -56,14 +55,14 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
+
         <activity android:name="com.bizcall.wayto.mentebit.IVRMissedTollFree"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name="com.bizcall.wayto.mentebit.MapsActivity" />
 
+        <activity android:name="com.bizcall.wayto.mentebit.MapsActivity" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
         <receiver
             android:name="com.bizcall.wayto.mentebit.MyAlarm"
             android:enabled="true"
@@ -72,17 +71,27 @@
         <activity android:name=".ActivityTotalLeadReport"
             android:theme="@style/AppTheme.NoActionBar"/>
 
+        <activity android:name=".ActivityGraphReport"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".ActivityStatusReport"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity android:name=".ActivityHome"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".ActivityCounselorwiseLeads"
             android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity android:name=".ActivityDatewiseLeads"
             android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity android:name=".ActivityLeadsDetailsReport"
             android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity android:name=".ActivityStatuswiseLeads"
             android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity android:name=".ActivityStatuswiseLeadDetailRecords"
             android:theme="@style/AppTheme.NoActionBar"/>
 
@@ -97,6 +106,18 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.bizcall.wayto.mentebit.EducationalDetails"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.bizcall.wayto.mentebit.ActivityTotalCallMade"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.bizcall.wayto.mentebit.ActivityAllocationReport"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.bizcall.wayto.mentebit.ActivityMapLocations"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="com.bizcall.wayto.mentebit.ActivityLastLoginDetails"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.bizcall.wayto.mentebit.ActivityUploadDocs"

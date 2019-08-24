@@ -22,11 +22,14 @@ import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +45,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -62,7 +66,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class ActivityMapLocations extends FragmentActivity implements OnMapReadyCallback {
 
     public static GoogleMap mMap;
     private Timer timer = new Timer();
@@ -84,10 +88,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static  SupportMapFragment mapFragment;
     TextView txtMin,txtMax,txtShowInfo;
     Button btnNext,btnPrevious;
-    String clienturl,clientid,counselorid,IMEINumber1,IMEINumber2,strMin,strMax;
-    SharedPreferences sp;
+    String clienturl,clientid,IMEINumber1,IMEINumber2,strMin,strMax;
     ImageView imgBack,imgRefresh;
-    LinearLayout linearSpinner,linearUnderSpinner;
+    Spinner spinnerCounselor;
+    String id1, seleIMEI1, seleIMEI2, clientUrl, clientId;
+    ArrayList<String> arrayListCounselorId;
+    ArrayList<String> arrayListCounselorName;
+    SharedPreferences sp;
+    SharedPreferences.Editor editor;
+    LinearLayout linearUnderSpinner;
 
     @SuppressLint("HardwareIds")
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -102,17 +111,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         txtShowInfo=findViewById(R.id.txtShowInfo);
         imgBack=findViewById(R.id.img_back);
         imgRefresh=findViewById(R.id.imgRefresh);
-        linearSpinner=findViewById(R.id.linearSpinner);
+        spinnerCounselor = findViewById(R.id.spinner_counselor);
         linearUnderSpinner=findViewById(R.id.linearUnderCounselor);
-        linearUnderSpinner.setVisibility(View.VISIBLE);
-        linearSpinner.setVisibility(View.GONE);
 
         sp=getSharedPreferences("Settings", Context.MODE_PRIVATE);
         clientid=sp.getString("ClientId",null);
         clienturl=sp.getString("ClientUrl",null);
         IMEINumber1 = sp.getString("IMEI1", null);
         IMEINumber2 = sp.getString("IMEI2", null);
-        counselorid = sp.getString("Id", null);
 
         strMin="1";
         strMax="25";
@@ -121,20 +127,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         txtShowInfo.setText("Displaying "+txtMin.getText().toString()+"-"+txtMax.getText().toString());
 
 
-        if (ContextCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                ActivityCompat.requestPermissions(MapsActivity.this, new String[]
+        if (ContextCompat.checkSelfPermission(ActivityMapLocations.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(ActivityMapLocations.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                ActivityCompat.requestPermissions(ActivityMapLocations.this, new String[]
                         {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION}, PackageManager.PERMISSION_GRANTED);
             } else {
-                ActivityCompat.requestPermissions(MapsActivity.this, new String[]
+                ActivityCompat.requestPermissions(ActivityMapLocations.this, new String[]
                         {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_COARSE_LOCATION}, PackageManager.PERMISSION_GRANTED);
             }
         }
 
-
         edtDatePicker = findViewById(R.id.edt_datepicker);
         btnSearchMarker = findViewById(R.id.btn_markers);
         listPoints = new ArrayList<>();
+
+        sp = getSharedPreferences("Settings", Context.MODE_PRIVATE);
+        clientUrl = sp.getString("ClientUrl", null);
+        clientId = sp.getString("ClientId", null);
 
         calendar = Calendar.getInstance();
 
@@ -145,19 +154,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MapsActivity.this,Home.class);
+                Intent intent=new Intent(ActivityMapLocations.this,ActivityHome.class);
                 intent.putExtra("Activity","Location");
                 startActivity(intent);
+                Animatoo.animateSlideRight(ActivityMapLocations.this);
             }
         });
+
         imgRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MapsActivity.this,MapsActivity.class);
+                Intent intent=new Intent(ActivityMapLocations.this, ActivityMapLocations.class);
                // intent.putExtra("Activity","Location");
                 startActivity(intent);
             }
         });
+
+        requestQueue = Volley.newRequestQueue(ActivityMapLocations.this);
+        getCounselorList();
+
+        spinnerCounselor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                id1 = arrayListCounselorId.get(position);
+                editor = sp.edit();
+                editor.putString("Id", id1);
+                editor.commit();
+                Log.d("spinnerselect", id1);
+                linearUnderSpinner.setVisibility(View.VISIBLE);
+                // dialog = ProgressDialog.show(GraphReport.this, "", "Loading report", true);
+                //loadAllReport();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
         edtDatePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -179,7 +211,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         }
                     }
                 };
-                DatePickerDialog dpDialog = new DatePickerDialog(MapsActivity.this, listener, year, month, day);
+                DatePickerDialog dpDialog = new DatePickerDialog(ActivityMapLocations.this, listener, year, month, day);
                 dpDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
                 dpDialog.show();
             }
@@ -188,49 +220,52 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         btnSearchMarker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestQueue = Volley.newRequestQueue(MapsActivity.this);
+                if(id1.equals("0")) {
+                    Toast.makeText(ActivityMapLocations.this,"Select counselor",Toast.LENGTH_SHORT).show();
+                }
+                else {
                 listPoints.clear();
+                mMap.clear();
                   if (edtDatePicker.getText().toString().isEmpty()) {
                     //edtDatePicker.setError("Select date first");
-                    Toast.makeText(MapsActivity.this, "Select date first", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ActivityMapLocations.this, "Select date first", Toast.LENGTH_SHORT).show();
                    // progressBar.dismiss();
                 } else {
-                    if(CheckInternetSpeed.checkInternet(MapsActivity.this).contains("0")) {
-                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(MapsActivity.this);
-                        alertDialogBuilder.setTitle("No Internet connection!!!")
-                                .setMessage("Can't do further process")
+                      if (CheckInternetSpeed.checkInternet(ActivityMapLocations.this).contains("0")) {
+                          AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ActivityMapLocations.this);
+                          alertDialogBuilder.setTitle("No Internet connection!!!")
+                                  .setMessage("Can't do further process")
 
-                                // Specifying a listener allows you to take an action before dismissing the dialog.
-                                // The dialog is automatically dismissed when a dialog button is clicked.
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //insertIMEI();
+                                  // Specifying a listener allows you to take an action before dismissing the dialog.
+                                  // The dialog is automatically dismissed when a dialog button is clicked.
+                                  .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                      public void onClick(DialogInterface dialog, int which) {
+                                          //insertIMEI();
                                         /*edtName.setText("");
                                         edtPassword.setText("");*/
-                                        dialog.dismiss();
+                                          dialog.dismiss();
 
-                                    }
-                                }).show();
-                    }
-                    else if(CheckInternetSpeed.checkInternet(MapsActivity.this).contains("1")) {
-                        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(MapsActivity.this);
-                        alertDialogBuilder.setTitle("Slow Internet speed!!!")
-                                .setMessage("Can't do further process")
+                                      }
+                                  }).show();
+                      } else if (CheckInternetSpeed.checkInternet(ActivityMapLocations.this).contains("1")) {
+                          AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ActivityMapLocations.this);
+                          alertDialogBuilder.setTitle("Slow Internet speed!!!")
+                                  .setMessage("Can't do further process")
 
-                                // Specifying a listener allows you to take an action before dismissing the dialog.
-                                // The dialog is automatically dismissed when a dialog button is clicked.
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //insertIMEI();
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .show();
-                    }
-                    else {
-                        progressBar =ProgressDialog.show(MapsActivity.this,""," Fetching Records...",true);
-                        getLocation(strMin, strMax);
-                    }
+                                  // Specifying a listener allows you to take an action before dismissing the dialog.
+                                  // The dialog is automatically dismissed when a dialog button is clicked.
+                                  .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                      public void onClick(DialogInterface dialog, int which) {
+                                          //insertIMEI();
+                                          dialog.dismiss();
+                                      }
+                                  })
+                                  .show();
+                      } else {
+                          //progressBar =ProgressDialog.show(MapsActivity.this,""," Fetching Records...",true);
+                          getLocation(strMin, strMax);
+                      }
+                  }
                    /* String strFetchUrl = "http://anilsahasrabuddhe.in/rohit-testing/locationshownew.php";
                     JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, strFetchUrl,
                             null, new success(), new fail());
@@ -298,6 +333,118 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         stopService(serviceIntent);
     }*/
     //--------------------------------------------------------------------------------------------
+
+    public void getCounselorList() {
+        try {
+            String CounselorUrl = clientUrl + "?clientid=" + clientId + "&caseid=30";
+            Log.d("CounselorUrl", CounselorUrl);
+            progressBar =ProgressDialog.show(ActivityMapLocations.this,""," Fetching Counselors...",true);
+
+            if (CheckInternet.checkInternet(ActivityMapLocations.this)) {
+                if (CheckServer.isServerReachable(ActivityMapLocations.this)) {
+                    StringRequest stringRequest = new StringRequest(Request.Method.POST, CounselorUrl,
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    //dialog.dismiss();
+                                    arrayListCounselorId = new ArrayList<>();
+                                    arrayListCounselorName = new ArrayList<>();
+
+                                    arrayListCounselorName.add(0, "Select Counselor");
+                                    arrayListCounselorId.add(0,"0");
+                                    Log.d("CounselorResponse1", response);
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(response);
+                                        Log.d("Json", jsonObject.toString());
+                                        JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                        for (int i = 0; i < jsonArray.length(); i++) {
+                                            JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                                            String id = String.valueOf(jsonObject1.getInt("cCounselorID"));
+                                            String name = jsonObject1.getString("cCounselorName");
+                                            String strIMEI1 = jsonObject1.getString("IMEI1");
+                                            String strIMEI2 = jsonObject1.getString("IMEI2");
+
+                                            arrayListCounselorName.add(name);
+                                            arrayListCounselorId.add(id);
+                                        }
+                                        progressBar.dismiss();
+                                        ArrayAdapter<String> dataAdapterState = new ArrayAdapter(ActivityMapLocations.this, R.layout.spinner_item1, arrayListCounselorName);
+                                        spinnerCounselor.setAdapter(dataAdapterState);
+                                        dataAdapterState.notifyDataSetChanged();
+
+                                    } catch (JSONException e) {
+                                        progressBar.dismiss();
+                                        Toast.makeText(ActivityMapLocations.this, "Errorcode-189 CounselorContact counselorDetailsResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                        //dialog.dismiss();
+                                        Log.d("CounselorDetailExceptio", String.valueOf(e));
+                                    }
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+
+                                    if (error == null || error.networkResponse == null)
+                                        return;
+                                    final String statusCode = String.valueOf(error.networkResponse.statusCode);
+                                    //get response body and parse with appropriate encoding
+                                    if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
+                                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ActivityMapLocations.this);
+                                        alertDialogBuilder.setTitle("Server Error!!!")
+
+                                                // Specifying a listener allows you to take an action before dismissing the dialog.
+                                                // The dialog is automatically dismissed when a dialog button is clicked.
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                        dialog.dismiss();
+                                                    }
+                                                }).show();
+                                        //dialog.dismiss();
+                                        Toast.makeText(ActivityMapLocations.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                        // showCustomPopupMenu();
+                                        Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
+                                    }
+                                }
+                            });
+                    requestQueue.add(stringRequest);
+                } else {
+                    //dialog.dismiss();
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ActivityMapLocations.this);
+                    alertDialogBuilder.setTitle("Server Down!!!!")
+                            .setMessage("Try after some time!")
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+
+                                }
+                            }).show();
+                }
+            } else {
+                //dialog.dismiss();
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ActivityMapLocations.this);
+                alertDialogBuilder.setTitle("No Internet connection!!!")
+                        .setMessage("Can't do further process")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //insertIMEI();
+                                        /*edtName.setText("");
+                                        edtPassword.setText("");*/
+                                dialog.dismiss();
+
+                            }
+                        }).show();
+
+            }
+        } catch (Exception e) {
+            Toast.makeText(ActivityMapLocations.this, "Errorcode-371 GraphReport getAllReport " + e.toString(), Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @SuppressLint("HardwareIds")
     @TargetApi(Build.VERSION_CODES.M)
@@ -384,8 +531,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         orderboolAs=searchAs + " ASC";*/
 
             txtShowInfo.setText("Displaying " + txtMin.getText().toString() + "-" + txtMax.getText().toString());
-            if(CheckInternetSpeed.checkInternet(MapsActivity.this).contains("0")) {
-                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(MapsActivity.this);
+            if(CheckInternetSpeed.checkInternet(ActivityMapLocations.this).contains("0")) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ActivityMapLocations.this);
                 alertDialogBuilder.setTitle("No Internet connection!!!")
                         .setMessage("Can't do further process")
 
@@ -401,8 +548,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             }
                         }).show();
             }
-            else if(CheckInternetSpeed.checkInternet(MapsActivity.this).contains("1")) {
-                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(MapsActivity.this);
+            else if(CheckInternetSpeed.checkInternet(ActivityMapLocations.this).contains("1")) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ActivityMapLocations.this);
                 alertDialogBuilder.setTitle("Slow Internet speed!!!")
                         .setMessage("Can't do further process")
 
@@ -417,23 +564,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .show();
             }
             else {
-                progressBar =ProgressDialog.show(MapsActivity.this,""," Fetching Records...",true);
                 getLocation(txtMin.getText().toString(), txtMax.getText().toString());
             }
         }catch (Exception e)
         {
-            Toast.makeText(MapsActivity.this,"Errorcode-392 SearchAllActivity btnPreviousClicked "+e.toString(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(ActivityMapLocations.this,"Errorcode-392 SearchAllActivity btnPreviousClicked "+e.toString(),Toast.LENGTH_SHORT).show();
         }
     }
     public void  btnNextClicked() {
         try {
-
             strMin = String.valueOf(Integer.parseInt(txtMin.getText().toString()) + 25);
                 strMax = String.valueOf(Integer.parseInt(txtMax.getText().toString()) + 25);
                 txtMin.setText(strMin);
                 txtMax.setText(strMax);
-                if(CheckInternetSpeed.checkInternet(MapsActivity.this).contains("0")) {
-                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(MapsActivity.this);
+                if(CheckInternetSpeed.checkInternet(ActivityMapLocations.this).contains("0")) {
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ActivityMapLocations.this);
                     alertDialogBuilder.setTitle("No Internet connection!!!")
                             .setMessage("Can't do further process")
 
@@ -449,8 +594,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 }
                             }).show();
                 }
-                else if(CheckInternetSpeed.checkInternet(MapsActivity.this).contains("1")) {
-                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(MapsActivity.this);
+                else if(CheckInternetSpeed.checkInternet(ActivityMapLocations.this).contains("1")) {
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ActivityMapLocations.this);
                     alertDialogBuilder.setTitle("Slow Internet speed!!!")
                             .setMessage("Can't do further process")
 
@@ -465,7 +610,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             .show();
                 }
                 else {
-                    progressBar =ProgressDialog.show(MapsActivity.this,""," Fetching Records...",true);
+                    //progressBar =ProgressDialog.show(MapsActivity.this,""," Fetching Records...",true);
                     getLocation(txtMin.getText().toString(), txtMax.getText().toString());
                 }
 
@@ -476,18 +621,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             txtShowInfo.setText("Displaying " + txtMin.getText().toString() + "-" + txtMax.getText().toString());
         }catch (Exception e)
         {
-            Toast.makeText(MapsActivity.this,"Errorcode-393 SearchAllActivity btnNextClicked "+e.toString(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(ActivityMapLocations.this,"Errorcode-393 SearchAllActivity btnNextClicked "+e.toString(),Toast.LENGTH_SHORT).show();
         }
     }
 
-
     public void getLocation(  String strMin, String strMax) {
         try {
-            if(CheckServer.isServerReachable(MapsActivity.this)) {
+            if(CheckServer.isServerReachable(ActivityMapLocations.this)) {
                 //dialog = ProgressDialog.show(CounsellorData.this, "Loading", "Please wait.....", false, true);
 
-               String url = clienturl + "?clientid=" + clientid + "&caseid=92&CounselorID="+counselorid+"&CreatedDate="+stredtDate+"&MinVal=" + strMin + "&MaxVal=" + strMax;
+               String url = clienturl + "?clientid=" + clientid + "&caseid=92&CounselorID="+id1+"&CreatedDate="+stredtDate+"&MinVal=" + strMin + "&MaxVal=" + strMax;
                 Log.d("GetLocationurl",url);
+                progressBar =ProgressDialog.show(ActivityMapLocations.this,""," Fetching Records...",true);
+
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                         new Response.Listener<String>() {
                             @Override
@@ -497,11 +643,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                // int count = 0;
                                 try {
                                     txtShowInfo.setVisibility(View.VISIBLE);
-                                    progressBar.dismiss();
                                     if(response.contains("[]"))
                                     {
                                         txtShowInfo.setText("No Record Found");
-                                        Toast.makeText(MapsActivity.this, "Record not found", Toast.LENGTH_SHORT).show();
+                                        progressBar.dismiss();
+                                        Toast.makeText(ActivityMapLocations.this, "Record not found", Toast.LENGTH_SHORT).show();
                                     }
                                     else {
                                         txtShowInfo.setText("Displaying "+txtMin.getText().toString()+"-"+txtMax.getText().toString());
@@ -512,14 +658,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                             JSONObject jsonObject = jsonArray.getJSONObject(i);
                                             String strLatitude = jsonObject.getString("latitude");
                                             String strLongitude = jsonObject.getString("longitude");
+                                            String strDate = jsonObject.getString("CreatedDate");
                                             // String mIMEI1 = jsonObject.getString("IMEI1");
                                             //String mIMEI2 = jsonObject.getString("IMEI2");
+                                            Log.d("getloc", strLatitude+" "+strLongitude+" "+strDate);
 
-                                      /*  JSONObject mjsonDate = jsonObject.getJSONObject("dtcreatedDate");
-                                        String strDate = mjsonDate.getString("date");*/
-
-                                       /* String mDate = strDate.substring(0, 10);
-                                        String mFulldate = strDate.substring(0, 19);*/
                                             if (!strLatitude.equals("") && !strLongitude.equals("")) {
                                                 double mLatitude = Double.valueOf(strLatitude);
                                                 double mLongitude = Double.valueOf(strLongitude);
@@ -528,14 +671,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                                 latlang = new LatLng(mLatitude, mLongitude);
                                                 Log.d("matchlatlong", latlang + " / " + strIMEI1);
 
-                                                mMap.addMarker(new MarkerOptions().position(latlang));//.title(mFulldate));
+                                                mMap.addMarker(new MarkerOptions().position(latlang).title(strDate));//.title(mFulldate));
                                                 mMap.moveCamera(CameraUpdateFactory.newLatLng(latlang));
 
                                                 listPoints.add(latlang);
                                                 //count++;
                                                 // }
-                                                //progressBar.dismiss();
                                             }
+                                            progressBar.dismiss();
                                         }
                                         // Log.d("matchrecords", count + "");
                                         Log.d("listpoints", listPoints.size() + "");
@@ -561,7 +704,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     //Log.d("Size**", String.valueOf(arrayList.size()));
                                 } catch (JSONException e) {
                                     progressBar.dismiss();
-                                    Toast.makeText(MapsActivity.this, "Errorcode-156 CounselorData getCounselorResponse " + e.toString(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ActivityMapLocations.this, "Errorcode-156 CounselorData getCounselorResponse " + e.toString(), Toast.LENGTH_SHORT).show();
                                     Log.d("AllCounselorException", String.valueOf(e));
                                 }
                             }
@@ -575,7 +718,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 final String statusCode = String.valueOf(error.networkResponse.statusCode);
                                 //get response body and parse with appropriate encoding
                                 if (error.networkResponse != null || error instanceof TimeoutError || error instanceof NoConnectionError || error instanceof AuthFailureError || error instanceof ServerError || error instanceof NetworkError || error instanceof ParseError) {
-                                    android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(MapsActivity.this);
+                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ActivityMapLocations.this);
                                     alertDialogBuilder.setTitle("Server Error!!!")
 
 
@@ -587,7 +730,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                                 }
                                             }).show();
                                        progressBar.dismiss();
-                                    Toast.makeText(MapsActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ActivityMapLocations.this, "Server Error", Toast.LENGTH_SHORT).show();
                                     // showCustomPopupMenu();
                                     Log.e("Volley", "Error.HTTP Status Code:" + error.networkResponse.statusCode);
                                 }
@@ -597,7 +740,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 requestQueue.add(stringRequest);
             }else {
                 progressBar.dismiss();
-                android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(MapsActivity.this);
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ActivityMapLocations.this);
                 alertDialogBuilder.setTitle("Server Down!!!!")
                         .setMessage("Try after some time!")
 
@@ -615,7 +758,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }catch (Exception e)
         {
-            Toast.makeText(MapsActivity.this,"Errorcode-155 CounselorData getCounselor "+e.toString(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(ActivityMapLocations.this,"Errorcode-155 CounselorData getCounselor "+e.toString(),Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -681,8 +824,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @SuppressLint("MissingPermission")
     private void init() {
-        if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(ActivityMapLocations.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(ActivityMapLocations.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         mMap.setBuildingsEnabled(true);
@@ -701,11 +844,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         uiSettings.setZoomControlsEnabled(true);
         uiSettings.setZoomGesturesEnabled(true);
     }
+
+    @Override
+    public void onBackPressed() {
+        try {
+            Intent intent = new Intent(ActivityMapLocations.this, ActivityHome.class);
+            intent.putExtra("Activity", "MapsActivity");
+            startActivity(intent);
+            finish();
+            super.onBackPressed();
+            Animatoo.animateSlideRight(ActivityMapLocations.this);
+        } catch (Exception e) {
+            Log.d("Exception", String.valueOf(e));
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == 1) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                ContextCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION);
+                ContextCompat.checkSelfPermission(ActivityMapLocations.this, Manifest.permission.ACCESS_FINE_LOCATION);
             }
         }
     }

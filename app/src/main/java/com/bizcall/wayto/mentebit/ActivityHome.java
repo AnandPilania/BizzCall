@@ -130,7 +130,7 @@ public class ActivityHome extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                         Animatoo.animateSlideLeft(ActivityHome.this);
-                        break;*//*
+                        break;*//**/
                     //--------------------------------Report-------------------------------
                     case "Call Log Report":
                         intent = new Intent(ActivityHome.this, ActivityGraphReport.class);
@@ -157,12 +157,12 @@ public class ActivityHome extends AppCompatActivity {
                         finish();
                         Animatoo.animateSlideLeft(ActivityHome.this);
                         break;
-                    case "First Call Report":
-                        intent = new Intent(ActivityHome.this, ActivityFirstCallReport.class);
+                   /* case "First Call Report":
+                        intent = new Intent(ActivityHome.this, FirstCallReport.class);
                         startActivity(intent);
                         finish();
                         Animatoo.animateSlideLeft(ActivityHome.this);
-                        break;
+                        break;*/
                     case "Call Report":
                         intent = new Intent(ActivityHome.this, ActivityGraphReport.class);
                         intent.putExtra("ActivityName", "Call Report");
@@ -211,7 +211,7 @@ public class ActivityHome extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                         Animatoo.animateSlideLeft(ActivityHome.this);
-                        break;*/
+                        break;
                     //--------------------------------LogOut-------------------------------
                     case "LogOut":
                         intent = new Intent(ActivityHome.this, Login.class);

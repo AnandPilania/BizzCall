@@ -97,6 +97,46 @@
 
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/linearSpinner">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:layout_weight="0"
+            android:padding="10dp"
+            android:text="Select Counselor Name : "/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:layout_margin="10dp"
+            android:layout_marginRight="0dp"
+            android:background="@drawable/round_edit_text">
+
+            <Spinner
+                android:id="@+id/spinner_counselor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/black"
+                android:paddingRight="10dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:id="@+id/linearUnderCounselor">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -189,5 +229,5 @@
 
     </android.support.v7.widget.RecyclerView>
     </LinearLayout>
-
+    </LinearLayout>
 </LinearLayout>
