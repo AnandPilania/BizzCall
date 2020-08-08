@@ -5,13 +5,13 @@
     android:layout_height="match_parent"
     tools:context=".PointCollectionDetails"
     android:orientation="vertical">
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar1"
         android:layout_width="fill_parent"
-        android:layout_height="58dp"
-        android:background="#0090bf"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/toolbar_background"
         android:minHeight="?attr/actionBarSize"
-        android:titleTextColor="#ffff">
+        android:titleTextColor="@color/white">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -21,7 +21,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="18dp"
                 android:background="@drawable/linerlayout_border_round"
                 android:orientation="horizontal">
 
@@ -32,38 +32,71 @@
                     android:src="@drawable/ic_arrow_back_black_24dp" />
             </LinearLayout>
 
-
-            <TextView
-                android:id="@+id/txtActivitywithStatus"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:text="Point Details"
-                android:textColor="@color/white"
-                android:textSize="20dp" />
+                android:layout_marginTop="12dp">
 
-            <ImageView
-                android:id="@+id/imgCoin"
-                android:layout_width="35dp"
-                android:layout_height="47dp"
-                android:layout_marginLeft="60dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="15dp"
-                android:src="@drawable/dollar" />
+                <TextView
+                    android:id="@+id/txtActivitywithStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="3dp"
+                    android:gravity="center"
+                    android:text="Point Details"
+                    android:textColor="@color/white"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/txtCoin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="3dp"
-                android:paddingLeft="0dp"
-                android:paddingTop="13dp"
-                android:paddingRight="3dp"
-                android:paddingBottom="5dp"
-                android:text="0"
-                android:textColor="@color/white"
-                android:textSize="12dp" />
+                <ImageView
+                    android:id="@+id/imgCoin"
+                    android:layout_width="35dp"
+                    android:layout_height="47dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginEnd="80dp"
+                    android:layout_marginRight="80dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="15dp"
+                    android:src="@drawable/dollar" />
+
+                <TextView
+                    android:id="@+id/txtCoin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="51dp"
+                    android:layout_marginRight="51dp"
+                    android:gravity="top|start"
+                    android:paddingLeft="0dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="5dp"
+                    android:text="0"
+                    android:textColor="@color/white"
+                    android:textSize="15dp" />
+
+                <ImageView
+                    android:id="@+id/imgRefresh"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/reload" />
+            </RelativeLayout>
 
             <ImageView
                 android:layout_width="35dp"
@@ -86,7 +119,8 @@
                 android:visibility="gone" />
 
         </LinearLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
+
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -116,7 +150,7 @@
                         android:text="Point Id"
                         android:textColor="@color/black"
                         android:textAlignment="center"
-                        android:textSize="17dp"></TextView>
+                        android:textSize="13dp"></TextView>
 
                     <TextView
                         android:layout_width="200dp"
@@ -128,7 +162,7 @@
                         android:text="Event"
                         android:textColor="@color/black"
                         android:textAlignment="center"
-                        android:textSize="17dp"></TextView>
+                        android:textSize="13dp"></TextView>
 
                     <TextView
                         android:layout_width="80dp"
@@ -140,7 +174,7 @@
                         android:text="Point"
                         android:textColor="@color/black"
                         android:textAlignment="center"
-                        android:textSize="17dp"></TextView>
+                        android:textSize="13dp"></TextView>
 
                     <TextView
                         android:id="@+id/txtValidFrom"
@@ -152,7 +186,7 @@
                         android:paddingRight="10dp"
                         android:textColor="@color/black"
                         android:text="Valid From"
-                        android:textSize="17dp"></TextView>
+                        android:textSize="13dp"></TextView>
                     <TextView
                         android:id="@+id/txtValidUpto"
                         android:layout_width="120dp"
@@ -163,16 +197,17 @@
                         android:paddingRight="10dp"
                         android:textColor="@color/black"
                         android:text="Valid Upto"
-                        android:textSize="17dp"></TextView>
+                        android:textSize="13dp"></TextView>
 
                 </TableRow>
             </TableLayout>
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerCoins"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+                android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>
         </LinearLayout>
+
 
     </HorizontalScrollView>
 

@@ -6,13 +6,13 @@
     tools:context=".ReminderActivity"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar1"
         android:layout_width="fill_parent"
-        android:layout_height="58dp"
-        android:background="#0090bf"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/toolbar_background"
         android:minHeight="?attr/actionBarSize"
-        android:titleTextColor="#ffff">
+        android:titleTextColor="@color/white">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -22,7 +22,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/linerlayout_border_round"
                 android:orientation="horizontal">
                 <ImageView
@@ -33,44 +33,72 @@
                     android:src="@drawable/ic_arrow_back_black_24dp" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/txtActivitywithStatus"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="Reminder"
-                android:layout_marginTop="5dp"
-                android:textColor="@color/white"
-                android:textSize="20dp"
-                />
-            <ImageView
-                android:layout_width="35dp"
-                android:layout_height="47dp"
-                android:layout_marginLeft="110dp"
-                android:src="@drawable/dollar"
-                android:id="@+id/imgCoin"
-                android:paddingTop="10dp"
-                android:paddingBottom="15dp"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12dp"
-                android:paddingTop="13dp"
-                android:text="0"
-                android:paddingRight="3dp"
-                android:paddingLeft="0dp"
-                android:paddingBottom="5dp"
-                android:id="@+id/txtCoin"
-                android:textColor="@color/white"
-                android:layout_marginLeft="5dp"/>
-            <ImageView
-                android:layout_width="21dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="4dp"
-                android:src="@drawable/reload"
-                android:id="@+id/imgRefresh"/>
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:id="@+id/txtActivitywithStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="3dp"
+                    android:gravity="center"
+                    android:text="Reminder"
+                    android:textColor="@color/white"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/imgCoin"
+                    android:layout_width="35dp"
+                    android:layout_height="47dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginEnd="80dp"
+                    android:layout_marginRight="80dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="15dp"
+                    android:src="@drawable/dollar" />
+
+                <TextView
+                    android:id="@+id/txtCoin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="51dp"
+                    android:layout_marginRight="51dp"
+                    android:gravity="top|start"
+                    android:paddingLeft="0dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="5dp"
+                    android:text="0"
+                    android:textColor="@color/white"
+                    android:textSize="15dp" />
+
+                <ImageView
+                    android:id="@+id/imgRefresh"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/reload" />
+            </RelativeLayout>
+
             <ImageView
                 android:layout_width="35dp"
                 android:layout_height="50dp"
@@ -91,7 +119,7 @@
                 android:layout_marginLeft="3dp"
                 android:visibility="gone"/>
         </LinearLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <!--  <LinearLayout
           android:layout_width="match_parent"
@@ -140,7 +168,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:layout_marginLeft="5dp"
-                        android:background="@color/blue_text"
+                        android:background="@color/white"
                         android:textColor="@color/white"
                         android:text="Call"
                         android:paddingLeft="10dp"
@@ -148,22 +176,22 @@
                         android:id="@+id/txtCall"
                         android:textAlignment="center"
                         android:textSize="17dp"
-                        android:visibility="invisible"></TextView>
+                        android:visibility="visible"></TextView>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:background="@color/blue_text"
+                        android:background="@color/white"
                         android:textColor="@color/white"
-                        android:text="Clear"
+                        android:text=""
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         android:id="@+id/txtClearReminder"
                         android:textAlignment="center"
                         android:textSize="17dp"
-                        android:visibility="invisible"></TextView>
+                        android:visibility="visible"></TextView>
 
 
                     <TextView
@@ -173,6 +201,7 @@
                         android:background="@drawable/border"
                         android:textColor="@color/black"
                         android:text="Call Date"
+                        android:layout_marginLeft="135dp"
                         android:id="@+id/txtReminderCallDate"
                         android:textAlignment="center"
                         android:textSize="17dp"></TextView>
@@ -260,10 +289,10 @@
                 </TableRow>
             </TableLayout>
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycleReminder"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+                android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>
         </LinearLayout>
 
     </HorizontalScrollView>

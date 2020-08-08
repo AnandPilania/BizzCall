@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="20dp"
         android:background="#00b8d7">
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/cardInfo"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -20,8 +20,6 @@
             android:layout_marginLeft="7dp"
             android:background="#0090bf"
             app:cardElevation="7dp">
-
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -68,7 +66,7 @@
                         android:layout_height="wrap_content"
                         android:text="Candidate Name"
                         android:layout_marginTop="5dp"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="13sp"></TextView>
@@ -116,16 +114,49 @@
                         android:textSize="13sp"></TextView>
 
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="0dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Srno"
+                        android:visibility="gone"
+                        android:textColor="@color/red"
+                        android:textSize="13sp"
+                        android:layout_marginRight="3dp"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_marginTop="3dp"
+                        android:textStyle="bold"></TextView>
+
+                    <TextView
+                        android:id="@+id/txtDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="date"
+                        android:layout_marginRight="3dp"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginBottom="3dp"
+                        android:layout_marginTop="3dp"
+                        android:textColor="@color/black"
+                        android:textSize="10sp"></TextView>
+
+                </LinearLayout>
             </LinearLayout>
 
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="8dp"
         android:background="#FFF"></View>
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/cardAction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -194,7 +225,7 @@
                 android:textSize="15dp" />
 
         </LinearLayout>
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
 
 </LinearLayout>

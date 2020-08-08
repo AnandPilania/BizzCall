@@ -15,4 +15,34 @@
         android:id="@+id/img_name"
         android:hint="image name"
         android:gravity="center"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="gone">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:background="@drawable/edittext_border">
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="35dp"
+            android:id="@+id/txtRightTick"
+            android:background="@drawable/right_tick"
+            android:gravity="center"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:background="@drawable/edittext_border">
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="35dp"
+            android:id="@+id/txtWrongTick"
+            android:background="@drawable/wrong_tick"
+            android:gravity="center"/>
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

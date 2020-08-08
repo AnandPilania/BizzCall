@@ -4,15 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".NewClientEntry">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar1"
         android:layout_width="fill_parent"
-        android:layout_height="58dp"
-        android:background="#0090bf"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/toolbar_background"
         android:minHeight="?attr/actionBarSize"
-        android:titleTextColor="#ffff">
+        android:titleTextColor="@color/white">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -97,7 +97,7 @@
                 android:visibility="gone" />
 
         </LinearLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
 
 
@@ -127,9 +127,8 @@
                     android:id="@+id/txtPersonalInfo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="0dp"
-                    android:layout_marginRight="0dp"
-                    android:background="@color/activity_background"
+                   android:layout_margin="7dp"
+                    android:background="@drawable/shape_btnrenewacc"
                     android:drawablePadding="30dp"
                     android:gravity="center"
                     android:paddingLeft="50dp"
@@ -233,7 +232,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:layout_weight="1.7"
-                                android:background="@color/activity_background"
+                                android:background="@drawable/shape_btnrenewacc"
                                 android:paddingTop="5dp"
                                 android:paddingBottom="5dp"
                                 android:text="Get Details"
@@ -486,8 +485,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-
-                                    android:maxLength="10"
+                                    android:inputType="phone"
                                     android:paddingTop="5dp"
                                     android:paddingBottom="5dp"
                                     android:backgroundTint="@color/light_blue"
@@ -560,7 +558,6 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:focusable="false"
                                     android:paddingTop="5dp"
                                     android:paddingBottom="5dp"
                                     android:backgroundTint="@color/light_blue"
@@ -591,9 +588,8 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:focusable="false"
+                                    android:focusable="true"
                                     android:inputType="number"
-                                    android:maxLength="10"
                                     android:paddingLeft="5dp"
                                     android:paddingTop="5dp"
                                     android:paddingBottom="5dp"
@@ -1456,10 +1452,8 @@
                     android:id="@+id/txtCommunication"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="0dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginRight="0dp"
-                    android:background="@color/activity_background"
+                  android:layout_margin="7dp"
+                    android:background="@drawable/shape_btnrenewacc"
                     android:drawablePadding="30dp"
                     android:gravity="center"
                     android:paddingLeft="50dp"
@@ -1641,7 +1635,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:background="@color/activity_background"
+                    android:background="@drawable/shape_btnrenewacc"
                     android:layout_marginLeft="0dp"
                     android:layout_marginRight="0dp"
                     android:drawablePadding="30dp"

@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="Encoding" addBOMForNewFiles="with NO BOM" />
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/bizcall/wayto/mentebit13/AdapterCounselorData.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/bizcall/wayto/mentebit13/CounsellorData.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/bizcall/wayto/mentebit13/DataAccountName.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/bizcall/wayto/mentebit13/MailActiivity.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/bizcall/wayto/mentebit13/Splash.java" charset="windows-1252" />
+  </component>
 </project>

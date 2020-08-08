@@ -7,7 +7,12 @@
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
     <color name="red">#B22222</color>
+    <color name="light_red">#EF5350</color>
+
     <color name="ad">#661791d7</color>
+
+    <color name="button_gray">#3a3a3a</color>
+
     <color name="offwhite">#f5f2d0</color>
     <color name="linen">#faf0e6</color>
     <color name="antique">#faebd7</color>
@@ -16,9 +21,16 @@
     <color name="cyan_text">#28718c</color>
     <color name="activity_background">#00b8d7</color>
     <color name="background_yellow">#ffc809</color>
+    <color name="toolbar_bg">#0090bf</color>
 
+    <color name="listcolor1">#85d01d</color>
+    <color name="listcolor2">#f4a642</color>
+    <color name="listcolor3">#3bc9d3</color>
+    <color name="listcolor4">#fe8484 </color>
+    <color name="listcolor5">#f7abde</color>
+    <color name="listcolor6">#35e79b</color>
 
-
+    <color name="green">#00FF00</color>
     <color name="circleLayout1">#d2efee</color>
     <color name="circleText1">#5b0136</color>
     <color name="circleLayout2">#cbffcb</color>
@@ -35,8 +47,10 @@
     <color name="ocean_blue">#9cd7df</color>
     <color name="light_blue">#85cffa</color>
     <color name="blue_text">#171F4B</color>
-    <color name="dashboard_background">#00b7d7</color>
+    <color name="dashboard_background1">#00b7d7</color>
+    <color name="dashboard_background">#0090bf</color>
     <color name="dashboard_spinner_yellow">#faca28</color>
+    <color name="toolbar_background1">#0b2e54</color>
     <color name="toolbar_background">#0090bf</color>
 
     <color name="tiffin_content_txtcolor">#122</color>

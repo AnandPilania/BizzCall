@@ -5,13 +5,13 @@
     android:layout_height="match_parent"
     tools:context=".MessageActivity"
     android:orientation="vertical">
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar1"
         android:layout_width="fill_parent"
-        android:layout_height="58dp"
-        android:background="#0090bf"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/toolbar_background"
         android:minHeight="?attr/actionBarSize"
-        android:titleTextColor="#ffff">
+        android:titleTextColor="@color/white">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -42,7 +42,7 @@
                 />
 
         </LinearLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -68,7 +68,8 @@
                 android:text="Name:"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="18dp" />
+                android:textSize="18dp"
+                android:gravity="center_horizontal" />
 
             <EditText
                 android:id="@+id/edtUserName1"
@@ -102,22 +103,56 @@
                 android:text="Enter Whatsapp number here:"
                 android:textAlignment="center"
                 android:textColor="@color/gray"
-                android:textSize="15dp" />
-
-            <EditText
-                android:id="@+id/edtMobileNo"
-                android:layout_width="match_parent"
+                android:textSize="15dp"
+                android:gravity="center_horizontal" />
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
-                android:layout_marginTop="0dp"
-                android:layout_weight="1"
-                android:paddingLeft="15dp"
-                android:paddingRight="5dp"
-                android:text=""
-                android:textColor="@color/black"
-                android:textSize="20dp" />
-        </LinearLayout>
+                android:layout_marginTop="7dp"
+                android:orientation="horizontal">
 
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/gray"
+                    android:id="@+id/spinner_countrycode"/>
+
+                <LinearLayout
+                android:layout_width="480dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/round_edit_text"
+                android:orientation="horizontal"
+                android:paddingRight="10dp">
+
+                <Spinner
+                    android:id="@+id/spinnerMobile"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="0dp"
+                    android:backgroundTint="@color/black"
+                    android:paddingRight="5dp" />
+            </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <EditText
+            android:id="@+id/edtMobileNo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_weight="1"
+            android:visibility="visible"
+            android:paddingLeft="15dp"
+            android:paddingRight="5dp"
+            android:text=""
+            android:textColor="@color/black"
+            android:textSize="20dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -158,6 +193,7 @@
                 android:layout_marginTop="0dp"
                 android:layout_marginRight="30dp"
                 android:gravity="start"
+                android:maxLength="4500"
                 android:hint="Enter message here"
                 android:textAlignment="viewStart" />
         </LinearLayout>
@@ -173,8 +209,8 @@
 
             <Button
                 android:id="@+id/btnSMS"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:background="@drawable/mail"
                 android:text=""
                 android:textAlignment="center"
@@ -182,8 +218,8 @@
 
             <Button
                 android:id="@+id/btnWhatsapp"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_marginLeft="20dp"
                 android:background="@drawable/whatsapp"
                 android:paddingLeft="0dp"
@@ -193,14 +229,38 @@
                 android:textColor="@color/white" />
             <Button
                 android:id="@+id/btnWeb"
-                android:layout_width="47dp"
-                android:layout_height="47dp"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
                 android:layout_marginLeft="20dp"
                 android:background="@drawable/web"
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
                 android:text=""
                 android:visibility="visible"
+                android:textAlignment="center"
+                android:textColor="@color/white" />
+            <Button
+                android:id="@+id/btnEmail"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/gmail"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:text=""
+                android:visibility="gone"
+                android:textAlignment="center"
+                android:textColor="@color/white" />
+            <Button
+                android:id="@+id/btnNotify"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/notification2"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:text=""
+                android:visibility="gone"
                 android:textAlignment="center"
                 android:textColor="@color/white" />
         </LinearLayout>

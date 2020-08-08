@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/linearTableColumn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <TableLayout
+            android:id="@+id/table_records"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <TableRow>
+                <TextView
+                    android:id="@+id/txtReceiptLink"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Receipt"
+                    android:textColor="@color/black"
+                    android:textSize="13dp" />
+                <TextView
+                    android:id="@+id/txtPaymentLink"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text="PaymentLink"
+                    android:textColor="@color/black"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtInvoiceLink"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text="Invoice"
+                    android:textColor="@color/black"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtPaymentDate"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text="Payment Date"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtOrderID"
+                    android:layout_width="120dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text="Order ID"
+                    android:textSize="13dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtOrderStatus"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text="OrderStatus"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtInvoiceID"
+                    android:layout_width="140dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text="InvoiceId"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtOrderAmount"
+                    android:layout_width="140dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text="Order Amount"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtOrderFor"
+                    android:layout_width="140dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text="OrderFor"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtPaymenthod"
+                    android:layout_width="80dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text="Paymethod"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtTrackingID"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text="TrackingID"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtBankRefNo"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text="BankRefno"
+                    android:textSize="13dp"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/txtBillName"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text="BillName"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtBillPhone"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text="BillPhone"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtBillEmail"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text="BillEmail"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtAddress"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text="Address"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtCity"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text="City"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtState"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text="State"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtPin"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text="Pin"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtDatePay"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text="DatePay"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtPaymentThrough"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text="PaymentThrough"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtWebsite"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text="Website"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtFormNo"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text="Formno"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtCounselorID"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text="CounselorID"
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtPaymentLink1"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text=""
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtInvoiceLink1"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text=""
+                    android:textSize="13dp" />
+
+                <TextView
+                    android:id="@+id/txtReceiptLink1"
+                    android:layout_width="150dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_column"
+                    android:gravity="center"
+                    android:text=""
+                    android:textSize="13dp" />
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+</LinearLayout>

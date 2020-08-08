@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "311701849633",
+    "firebase_url": "https://sample-92a17.firebaseio.com",
+    "project_id": "sample-92a17",
+    "storage_bucket": "sample-92a17.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:311701849633:android:7638f65f2952a781f3c560",
+        "android_client_info": {
+          "package_name": "com.bizcallcrm.wayto.mentebit13"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "311701849633-m1cj2d4m2hvvtf33huo29bu24kpq4ad8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bizcallcrm.wayto.mentebit12",
+            "certificate_hash": "1820a02417bb9d85ed382031a9771f2c55296b90"
+          }
+        },
+        {
+          "client_id": "311701849633-q1ifjh6s0thbggb76dqllovd0dgkccov.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-iNZ8GISCjMqXmZq14MTrojCvfwlVBY8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "311701849633-q1ifjh6s0thbggb76dqllovd0dgkccov.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

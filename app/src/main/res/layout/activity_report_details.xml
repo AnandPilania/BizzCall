@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.bizcall.wayto.mentebit.ReportDetails">
-    <android.support.v7.widget.Toolbar
+    tools:context="com.bizcall.wayto.mentebit13.ReportDetails">
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar1"
         android:layout_width="fill_parent"
-        android:layout_height="58dp"
-        android:background="#0090bf"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/toolbar_background"
         android:minHeight="?attr/actionBarSize"
-        android:titleTextColor="#ffff">
+        android:titleTextColor="@color/white">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -43,7 +43,7 @@
                 />
 
         </LinearLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
     <TableLayout
         android:id="@+id/table"
         android:layout_width="match_parent"
@@ -116,9 +116,9 @@
 
         </TableRow>
     </TableLayout>
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/recyclerReportDetails"></android.support.v7.widget.RecyclerView>
+        android:id="@+id/recyclerReportDetails"></androidx.recyclerview.widget.RecyclerView>
 
 </LinearLayout>

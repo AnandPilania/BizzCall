@@ -4,7 +4,7 @@
     android:id="@+id/linearCounselorInfo"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#9cd7bf"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -12,13 +12,13 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar1"
             android:layout_width="fill_parent"
-            android:layout_height="58dp"
-            android:background="#0090bf"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/toolbar_background"
             android:minHeight="?attr/actionBarSize"
-            android:titleTextColor="#ffff">
+            android:titleTextColor="@color/white">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -28,7 +28,7 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="18dp"
                     android:background="@drawable/linerlayout_border_round"
                     android:orientation="horizontal">
 
@@ -39,45 +39,70 @@
                         android:src="@drawable/ic_arrow_back_black_24dp" />
                 </LinearLayout>
 
-
-                <TextView
-                    android:id="@+id/txtActivitywithStatus"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
-                    android:text="Counsellor Contact"
-                    android:textColor="@color/white"
-                    android:textSize="20dp" />
+                    android:layout_marginTop="12dp">
+
+                    <TextView
+                        android:id="@+id/txtActivitywithStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="3dp"
+                        android:gravity="center"
+                        android:text="Counselor Contact"
+                        android:textColor="@color/white"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
 
                     <ImageView
-                    android:id="@+id/imgCoin"
-                    android:layout_width="35dp"
-                    android:layout_height="47dp"
-                    android:layout_marginLeft="40dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="15dp"
-                    android:src="@drawable/dollar" />
+                        android:id="@+id/imgCoin"
+                        android:layout_width="35dp"
+                        android:layout_height="47dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginEnd="80dp"
+                        android:layout_marginRight="80dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="15dp"
+                        android:src="@drawable/dollar" />
 
-                <TextView
-                    android:id="@+id/txtCoin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:paddingLeft="0dp"
-                    android:paddingTop="13dp"
-                    android:paddingRight="3dp"
-                    android:paddingBottom="5dp"
-                    android:text="0"
-                    android:textColor="@color/white"
-                    android:textSize="12dp" />
-                <ImageView
-                    android:layout_width="21dp"
-                    android:layout_height="25dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="4dp"
-                    android:src="@drawable/reload"
-                    android:id="@+id/imgRefresh"/>
+                    <TextView
+                        android:id="@+id/txtCoin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginTop="0dp"
+                        android:layout_marginEnd="51dp"
+                        android:layout_marginRight="51dp"
+                        android:gravity="top|start"
+                        android:paddingLeft="0dp"
+                        android:paddingTop="8dp"
+                        android:paddingRight="0dp"
+                        android:paddingBottom="5dp"
+                        android:text="0"
+                        android:textColor="@color/white"
+                        android:textSize="15dp" />
+
+                    <ImageView
+                        android:id="@+id/imgRefresh"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/reload" />
+                </RelativeLayout>
 
                 <ImageView
                     android:layout_width="35dp"
@@ -100,7 +125,7 @@
                     android:visibility="gone" />
 
             </LinearLayout>
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
         <ScrollView
 
@@ -111,417 +136,518 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="15dp"
-                android:background="#00b8d7"
-                android:visibility="visible"
-                android:orientation="vertical"
+                android:background="@color/white"
                 android:descendantFocusability="beforeDescendants"
-                android:focusableInTouchMode="true">
+                android:focusableInTouchMode="true"
+                android:orientation="vertical"
+                android:visibility="visible">
+
                 <LinearLayout
+                    android:id="@+id/linearViewDetails"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:id="@+id/linearViewDetails"
-                    >
+                    android:layout_marginTop="150dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
                     <Button
                         android:id="@+id/btnViewdetails"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="100dp"
-                        android:layout_marginTop="100dp"
-                        android:layout_marginRight="100dp"
-                        android:layout_marginBottom="50dp"
-                        android:paddingTop="7dp"
-                        android:paddingRight="7dp"
-                        android:paddingBottom="7dp"
-                        android:paddingLeft="7dp"
                         android:background="@drawable/linerlayout_border_squre"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
                         android:text="View Details"
-                        android:textSize="20dp"
-                        android:textColor="@color/white" />
+                        android:textColor="@color/white"
+                        android:textSize="20dp" />
                 </LinearLayout>
+
                 <LinearLayout
+                    android:id="@+id/linearContactDetails"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:id="@+id/linearContactDetails"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
-                <android.support.v7.widget.CardView
-                    android:id="@+id/cardInfo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:cardCornerRadius="3dp"
-                    app:cardElevation="7dp">
-
-                    <LinearLayout
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardInfo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#00b8d7"
-                        android:orientation="vertical">
-
+                        app:cardCornerRadius="3dp"
+                        app:cardElevation="7dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginTop="10dp"
-                            android:orientation="horizontal">
-                            <TableLayout
+                            android:background="@color/white"
+                            android:orientation="vertical">
+
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-
-                            <TableRow
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
-
-                            <TextView
-                                android:id="@+id/txtSrNo1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_weight="0.5"
-                                android:layout_marginTop="0dp"
-                                android:gravity="center"
-                                android:text="Sr.No"
-                                android:textColor="@color/blue_text"
-                                android:textSize="15sp"
-                                android:textStyle="bold"></TextView>
-
-                            <TextView
-                                android:id="@+id/txtCandidateName1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_weight="2"
                                 android:layout_gravity="center"
-                                android:layout_marginLeft="15dp"
-                                android:paddingLeft="10dp"
-                                android:paddingRight="10dp"
-                                android:text="Candidate Name"
-                                android:textColor="@color/blue_text"
-                                android:textSize="15sp"
-                                android:textStyle="bold"></TextView>
-                            </TableRow>
-                            </TableLayout>
-                        </LinearLayout>
+                                android:gravity="center"
+                                android:orientation="vertical">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginTop="15dp"
-                            android:background="#00b8d7"
-                            android:gravity="center"
-                            android:orientation="horizontal">
-                            <TableLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-
-                                <TableRow
+                                <LinearLayout
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content">
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_gravity="left"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:id="@+id/txtSrNo1"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="right"
+                                        android:text="Sr.No"
+                                        android:textColor="@color/blue_text"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/txtCandidateName1"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:layout_marginLeft="25dp"
+                                        android:paddingLeft="10dp"
+                                        android:paddingRight="10dp"
+                                        android:text="Candidate Name"
+                                        android:textColor="@color/blue_text"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_gravity="left"
+                                    android:layout_marginTop="15dp"
+                                    android:background="@color/white"
+                                    android:orientation="horizontal">
 
                                     <TextView
                                         android:id="@+id/txtCourse1"
-                                        android:layout_width="100dp"
-                                        android:layout_height="match_parent"
-                                        android:layout_weight="1"
-                                        android:gravity="center"
-                                        android:text="Course"
-                                        android:textColor="@color/gray"
-                                        android:textSize="15sp"></TextView>
-
-
-                                    <!--   <TextView
-                                           android:layout_width="wrap_content"
-                                           android:layout_height="wrap_content"
-                                           android:layout_marginLeft="30dp"
-                                           android:paddingLeft="0dp"
-                                           android:paddingRight="10dp"
-                                           android:text="Mobile No"
-                                           android:textColor="@color/black" />-->
-
-                                    <LinearLayout
-                                        android:layout_width="150dp"
+                                        android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:layout_weight="2"
-                                        android:layout_marginLeft="0dp"
-                                        android:layout_marginRight="0dp"
-                                        android:background="@drawable/round_edit_text"
-                                        android:paddingRight="10dp">
+                                        android:gravity="center"
+                                        android:text="Course"
+                                        android:textColor="@color/black"
+                                        android:textSize="12sp" />
 
-                                        <Spinner
-                                            android:id="@+id/spinnerMobile"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="40dp"
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1"
+                                        android:layout_marginLeft="10dp"
+                                        android:orientation="horizontal">
+
+                                        <LinearLayout
+                                            android:layout_width="140dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:background="@drawable/round_edit_text"
+                                            android:orientation="horizontal"
+                                            android:paddingRight="10dp">
+
+                                            <Spinner
+                                                android:id="@+id/spinnerMobile"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="40dp"
+                                                android:layout_marginLeft="0dp"
+                                                android:layout_marginRight="0dp"
+                                                android:backgroundTint="@color/black"
+                                                android:paddingRight="5dp" />
+                                        </LinearLayout>
+
+
+                                        <ImageView
+                                            android:id="@+id/imgAddContact"
+                                            android:layout_width="27dp"
+                                            android:layout_height="27dp"
+                                            android:layout_weight="1"
                                             android:layout_marginLeft="5dp"
-                                            android:layout_marginRight="5dp"
-                                            android:backgroundTint="@color/black"
-                                            android:paddingRight="10dp"></Spinner>
+                                            android:src="@drawable/newcontact" />
+
+                                        <ImageView
+                                            android:id="@+id/imgDone"
+                                            android:layout_width="27dp"
+                                            android:layout_height="27dp"
+                                            android:layout_weight="1"
+                                            android:layout_marginLeft="5dp"
+                                            android:src="@drawable/confirmed"
+                                            android:visibility="visible" />
                                     </LinearLayout>
-                                </TableRow>
-                            </TableLayout>
-                                    <ImageView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:id="@+id/imgAddContact"
-                                        android:src="@drawable/newcontact"
-                                        android:layout_marginLeft="5dp"/>
-                                    <ImageView
-                                        android:layout_width="27dp"
-                                        android:layout_height="27dp"
-                                        android:visibility="visible"
-                                        android:id="@+id/imgDone"
-                                        android:src="@drawable/confirmed"
-                                        android:layout_marginLeft="5dp"/>
-
-
+                                </LinearLayout>
+                            </LinearLayout>
                         </LinearLayout>
-                    </LinearLayout>
-                </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
-                <android.support.v7.widget.CardView
-                    android:id="@+id/cardAction"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-                    android:layout_gravity="center"
-                    android:visibility="visible"
-                    app:cardCornerRadius="3dp"
-                    app:cardElevation="8dp">
-
-                    <LinearLayout
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardAction"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+
                         android:layout_gravity="center"
-                        android:background="#00b8d7"
-
-                        android:orientation="vertical">
-
+                        android:visibility="visible"
+                        app:cardCornerRadius="3dp"
+                        app:cardElevation="8dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginTop="20dp"
-                            android:background="#00b8d7"
-                            android:gravity="center"
-                            android:orientation="horizontal">
+                            android:background="@color/white"
 
-                            <Button
-                                android:id="@+id/btnCall"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="0dp"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginBottom="5dp"
-                                android:background="#00b8d7"
-                                android:drawableTop="@drawable/call_icon"
-                                android:drawablePadding="8dp"
-                                android:text="Call"
-                                android:textColor="#464978"
-                                android:textSize="15dp" />
+                            android:orientation="vertical">
 
-                            <Button
-                                android:id="@+id/btnMessage"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="3dp"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginRight="0dp"
-                                android:layout_marginBottom="5dp"
-                                android:background="#00b8d7"
-                                android:drawableTop="@drawable/message_icon"
-                                android:drawablePadding="8dp"
-                                android:text="Message"
-                                android:textColor="#464978"
-                                android:textSize="15dp" />
-
-                            <Button
-                                android:id="@+id/btnMail"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="3dp"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginRight="0dp"
-                                android:layout_marginBottom="5dp"
-                                android:background="#00b8d7"
-                                android:drawableTop="@drawable/email_icon"
-                                android:drawablePadding="8dp"
-                                android:text="Email"
-                                android:textColor="#464978"
-                                android:textSize="15dp" />
-
-                            <Button
-                                android:id="@+id/btnDetails"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="3dp"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginBottom="5dp"
-                                android:background="#00b8d7"
-                                android:drawableTop="@drawable/details_icon"
-                                android:drawablePadding="8dp"
-                                android:text="Details"
-                                android:textColor="#464978"
-                                android:textSize="15dp" />
-
-                        </LinearLayout>
-                    </LinearLayout>
-                </android.support.v7.widget.CardView>
-
-                <android.support.v7.widget.CardView
-                    android:id="@+id/cardStatus"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:visibility="visible"
-                    app:cardCornerRadius="3dp"
-                    app:cardElevation="8dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="#00b8d7"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginTop="0dp"
-                            android:layout_marginBottom="0dp"
-                            android:background="#00b8d7"
-                            android:orientation="vertical"
-                            android:visibility="visible">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="20dp"
+                                android:background="@color/white"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <Button
+                                    android:id="@+id/btnCall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="0dp"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_marginBottom="5dp"
+                                    android:background="@color/white"
+                                    android:drawableTop="@drawable/call_icon"
+                                    android:drawablePadding="8dp"
+                                    android:text="Call"
+                                    android:textColor="#464978"
+                                    android:textSize="15dp" />
+
+                                <Button
+                                    android:id="@+id/btnMessage"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="3dp"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_marginRight="0dp"
+                                    android:layout_marginBottom="5dp"
+                                    android:background="@color/white"
+                                    android:drawableTop="@drawable/message_icon"
+                                    android:drawablePadding="8dp"
+                                    android:text="Message"
+                                    android:textColor="#464978"
+                                    android:textSize="15dp" />
+
+                                <Button
+                                    android:id="@+id/btnMail"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="3dp"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_marginRight="0dp"
+                                    android:layout_marginBottom="5dp"
+                                    android:background="@color/white"
+                                    android:drawableTop="@drawable/email_icon"
+                                    android:drawablePadding="8dp"
+                                    android:text="Email"
+                                    android:textColor="#464978"
+                                    android:textSize="15dp" />
+
+                                <Button
+                                    android:id="@+id/btnDetails"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="3dp"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_marginBottom="5dp"
+                                    android:background="@color/white"
+                                    android:drawableTop="@drawable/details_icon"
+                                    android:drawablePadding="8dp"
+                                    android:text="Details"
+                                    android:textColor="#464978"
+                                    android:textSize="15dp" />
+
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardCountryCourse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:visibility="visible"
+                app:cardCornerRadius="3dp"
+                app:cardElevation="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="0dp"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="0dp"
+                        android:orientation="horizontal"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="10dp"
+                        android:visibility="visible">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_weight="1">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginRight="20dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/round_edit_text"
+                            android:paddingRight="5dp">
+
+                            <Spinner
+                                android:id="@+id/spinnerCountry"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="0dp"
+                                android:layout_marginRight="0dp"></Spinner>
+                        </LinearLayout>
+                            <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/edtCountry"
+                                android:textSize="15dp"
+                                android:visibility="gone"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_weight="1">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="0dp"
+                            android:layout_marginRight="20dp"
+                            android:background="@drawable/round_edit_text"
+                            android:paddingRight="5dp">
+
+                            <Spinner
+                                android:id="@+id/spinnerCourse"
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="0dp"
+                                android:layout_marginRight="0dp"></Spinner>
+                        </LinearLayout>
+                            <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/edtCourse"
+                                android:visibility="gone"
+                                android:textSize="15dp"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                    <Button
+                        android:id="@+id/btnUpdateCountryCourse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="60dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="60dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/shape_btnrenewacc"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:text="update"
+                        android:textColor="@color/white" />
+                </LinearLayout>
+            </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:visibility="visible"
+                        app:cardCornerRadius="3dp"
+                        app:cardElevation="8dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="0dp"
                                 android:layout_marginBottom="0dp"
+                                android:background="@color/white"
                                 android:orientation="vertical"
-                                android:paddingLeft="10dp"
-                                android:paddingTop="10dp"
-                                android:paddingRight="10dp"
-                                android:paddingBottom="10dp"
                                 android:visibility="visible">
 
-                                <TextView
-                                    android:id="@+id/txtCurrentStatus"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="20dp"
-                                    android:layout_marginLeft="20dp"
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginBottom="0dp"
+                                    android:orientation="vertical"
                                     android:paddingLeft="10dp"
-                                    android:layout_gravity="center"
+                                    android:paddingTop="10dp"
                                     android:paddingRight="10dp"
-                                    android:paddingBottom="5dp"
-                                    android:text="Current Status:"
-                                    android:textColor="@color/red"
-                                    android:textSize="14dp"
-                                    android:textStyle="bold"/>
+                                    android:paddingBottom="10dp"
+                                    android:visibility="visible">
+
+                                    <TextView
+                                        android:id="@+id/txtCurrentStatus"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="20dp"
+                                        android:layout_gravity="center"
+                                        android:layout_marginLeft="20dp"
+                                        android:paddingLeft="10dp"
+                                        android:paddingRight="10dp"
+                                        android:paddingBottom="5dp"
+                                        android:text="Current Status:"
+                                        android:textColor="@color/red"
+                                        android:textSize="14dp"
+                                        android:textStyle="bold" />
+
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="20dp"
+                                        android:layout_marginTop="0dp"
+                                        android:layout_marginRight="20dp"
+                                        android:background="@drawable/round_edit_text"
+                                        android:paddingRight="5dp">
+
+                                        <Spinner
+                                            android:id="@+id/spinnerStatus11"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="40dp"
+                                            android:layout_marginLeft="5dp"
+                                            android:layout_marginTop="0dp"
+                                            android:layout_marginRight="0dp"></Spinner>
+                                    </LinearLayout>
+
+                                    <Button
+                                        android:id="@+id/btnUpdateStatus"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="40dp"
+                                        android:layout_gravity="center"
+                                        android:layout_marginLeft="60dp"
+                                        android:layout_marginTop="10dp"
+                                        android:layout_marginRight="60dp"
+                                        android:layout_marginBottom="5dp"
+                                        android:background="@drawable/shape_btnrenewacc"
+                                        android:paddingLeft="5dp"
+                                        android:paddingRight="5dp"
+                                        android:text="update status"
+                                        android:textColor="@color/white" />
+                                </LinearLayout>
 
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="20dp"
-                                    android:layout_marginTop="0dp"
-                                    android:layout_marginRight="20dp"
-                                    android:background="@drawable/round_edit_text"
-                                    android:paddingRight="5dp">
-
-                                    <Spinner
-                                        android:id="@+id/spinnerStatus11"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="40dp"
-                                        android:layout_marginLeft="5dp"
-                                        android:layout_marginTop="0dp"
-                                        android:layout_marginRight="0dp"></Spinner>
-                                </LinearLayout>
-                                <Button
-                                    android:id="@+id/btnUpdateStatus"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="40dp"
-                                    android:layout_gravity="center"
-                                    android:layout_marginLeft="60dp"
                                     android:layout_marginTop="10dp"
-                                    android:layout_marginRight="60dp"
-                                    android:layout_marginBottom="5dp"
-                                    android:paddingRight="5dp"
-                                    android:paddingLeft="5dp"
-                                    android:background="@drawable/linerlayout_border_squre"
-                                    android:text="update status"
-                                    android:textColor="#00698c" />
-                            </LinearLayout>
+                                    android:orientation="horizontal">
+                                    <!-- <TextView
+                                         android:layout_width="wrap_content"
+                                         android:layout_height="wrap_content"
+                                         android:layout_marginLeft="5dp"
+                                         android:layout_marginRight="10dp"
+                                         android:paddingTop="0dp"
+                                         android:text="Remark:"
+                                         android:textAlignment="center"
+                                         android:textColor="@color/black"
+                                         android:textSize="12dp" />-->
+                                    <TextView
+                                        android:id="@+id/txtRemarks"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="20dp"
+                                        android:layout_marginRight="10dp"
+                                        android:gravity="center"
+                                        android:paddingLeft="20dp"
+                                        android:paddingTop="0dp"
+                                        android:text="Remark"
+                                        android:textColor="@color/red"
+                                        android:textSize="15dp" />
 
+                                </LinearLayout>
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:orientation="horizontal">
-                                <!-- <TextView
-                                     android:layout_width="wrap_content"
-                                     android:layout_height="wrap_content"
-                                     android:layout_marginLeft="5dp"
-                                     android:layout_marginRight="10dp"
-                                     android:paddingTop="0dp"
-                                     android:text="Remark:"
-                                     android:textAlignment="center"
-                                     android:textColor="@color/black"
-                                     android:textSize="12dp" />-->
-                                <TextView
-                                    android:id="@+id/txtRemarks"
+                                <EditText
+                                    android:id="@+id/edtRemarks"
                                     android:layout_width="match_parent"
+                                    android:layout_height="70dp"
+                                    android:layout_marginLeft="30dp"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_marginRight="20dp"
+                                    android:layout_marginBottom="5dp"
+                                    android:background="@drawable/round_edit_text"
                                     android:gravity="center"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="20dp"
-                                    android:layout_marginRight="10dp"
+                                    android:hint="Enter remark here"
+                                    android:maxLength="1500"
                                     android:paddingLeft="20dp"
-                                    android:paddingTop="0dp"
-                                    android:text="Remark"
-                                    android:textColor="@color/red"
+                                    android:paddingRight="10dp"
+                                    android:textColor="#1293bb"
                                     android:textSize="15dp" />
 
                             </LinearLayout>
 
-                            <EditText
-                                android:id="@+id/edtRemarks"
-                                android:layout_width="match_parent"
-                                android:layout_height="70dp"
-                                android:layout_marginLeft="30dp"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginRight="20dp"
+                            <Button
+                                android:id="@+id/btnUpdateRemark"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="60dp"
+                                android:layout_marginTop="7dp"
+                                android:layout_marginRight="60dp"
                                 android:layout_marginBottom="5dp"
-                                android:background="@drawable/round_edit_text"
-                                android:hint="Enter remark here"
-                                android:gravity="center"
-                                android:maxLength="1500"
-                                android:paddingLeft="20dp"
-                                android:paddingRight="10dp"
-                                android:textColor="#1293bb"
-                                android:textSize="15dp"
-                                />
-
+                                android:background="@drawable/shape_btnrenewacc"
+                                android:paddingLeft="5dp"
+                                android:paddingRight="5dp"
+                                android:text="update remarks"
+                                android:textColor="@color/white" />
                         </LinearLayout>
-                        <Button
-                            android:id="@+id/btnUpdateRemark"
-                            android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="60dp"
-                            android:layout_marginTop="7dp"
-                            android:layout_marginRight="60dp"
-                            android:layout_marginBottom="5dp"
-                            android:background="@drawable/linerlayout_border_squre"
-                            android:text="update remarks"
-                            android:paddingRight="5dp"
-                            android:paddingLeft="5dp"
-                            android:textColor="#00698c" />
-                    </LinearLayout>
-                </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -530,7 +656,7 @@
                         android:layout_marginRight="20dp"
                         android:background="#ffc809">
 
-                        <android.support.v7.widget.CardView
+                        <androidx.cardview.widget.CardView
                             android:id="@+id/cardOnlineFormDetails"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -546,7 +672,8 @@
                                 android:layout_marginLeft="20dp"
                                 android:layout_marginRight="20dp"
                                 android:orientation="vertical">
-                            <TextView
+
+                                <TextView
                                     android:id="@+id/txtOnlineFormTitle"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -554,16 +681,16 @@
                                     android:drawableRight="@drawable/ic_arrow_drop_down_black_24dp"
                                     android:drawablePadding="30dp"
                                     android:gravity="center"
-                                    android:visibility="gone"
                                     android:paddingLeft="20dp"
                                     android:paddingTop="10dp"
                                     android:paddingRight="10dp"
                                     android:paddingBottom="5dp"
                                     android:text="Online Form Details"
                                     android:textColor="@color/cyan_text"
-                                    android:textSize="20dp" />
+                                    android:textSize="20dp"
+                                    android:visibility="gone" />
 
-                             <LinearLayout
+                                <LinearLayout
                                     android:id="@+id/linearOnlineForm"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -573,920 +700,957 @@
                                     android:orientation="horizontal"
                                     android:visibility="gone">
 
-                             <HorizontalScrollView
-                                 android:id="@+id/search_horizontallscroll"
-                                 android:layout_width="match_parent"
-                                 android:layout_height="match_parent">
-
-                             <LinearLayout
-                                 android:layout_width="match_parent"
-                                 android:layout_height="wrap_content"
-                                 android:orientation="vertical"
-                                 android:layout_marginTop="5dp"
-                                 android:layout_marginBottom="10dp">
-
-                                 <View
-                                   android:layout_width="match_parent"
-                                   android:layout_height="2dp"
-                                   android:background="@android:color/black" />
-
-                                 <LinearLayout
-                                     android:layout_width="wrap_content"
-                                     android:layout_height="wrap_content"
-                                      android:orientation="horizontal">
-                                     <TableLayout
-                                         android:id="@+id/table_records"
-                                         android:layout_width="match_parent"
-                                         android:layout_height="30dp">
-                                         <TableRow>
-
-                                             <TextView
-                                                 android:layout_width="60dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:id="@+id/txtId"
-                                                 android:background="@drawable/shape_column"
-                                                 android:text="Id"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:gravity="center"
-                                                 android:textAllCaps="false" />
-
-                                             <TextView
-                                                 android:layout_width="60dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:id="@+id/txtFormNo"
-                                                 android:background="@drawable/shape_column"
-                                                 android:text="Form No"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:gravity="center"
-                                                 android:textAllCaps="false" />
-
-                                             <TextView
-                                                 android:layout_width="100dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:id="@+id/txtFname"
-                                                 android:background="@drawable/shape_column"
-                                                 android:text="FirstName"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:textAllCaps="false" />
-
-                                             <TextView
-                                                 android:layout_width="100dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:id="@+id/txtLname"
-                                                 android:text="LastName"
-                                                 android:gravity="center"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:paddingTop="5dp"
-                                                 android:background="@drawable/shape_column" />
-
-                                             <TextView
-                                                 android:id="@+id/txtFatherName"
-                                                 android:layout_width="100dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:paddingTop="5dp"
-                                                 android:text="FatherName"
-                                                 android:background="@drawable/shape_column" />
-
-                                             <TextView
-                                                 android:layout_width="120dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:text="MotherName"
-                                                 android:gravity="center"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:id="@+id/txtMothername"
-                                                 android:background="@drawable/shape_column" />
-
-                                             <TextView
-                                                 android:layout_width="90dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="DOB"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:id="@+id/txtDOB"
-                                                 android:background="@drawable/shape_column" />
-
-                                             <TextView
-                                                 android:layout_width="90dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:text="PassportNo"
-                                                 android:gravity="center"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:id="@+id/txtPassport"
-                                                 android:background="@drawable/shape_column"/>
-                                             <TextView
-                                                 android:layout_width="100dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="Mobile"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:id="@+id/txtMobile"
-                                                 android:background="@drawable/shape_column" />
-                                             <TextView
-                                                 android:layout_width="150dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:text="Address"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:gravity="center"
-                                                 android:id="@+id/txtAddress"
-                                                 android:background="@drawable/shape_column" />
-                                             <TextView
-                                                 android:layout_width="100dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="City"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:id="@+id/txtCity"
-                                                 android:background="@drawable/shape_column" />
-
-                                             <TextView
-                                                 android:layout_width="100dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="State"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:id="@+id/txtState"
-                                                 android:background="@drawable/shape_column"/>
-
-                                             <TextView
-                                                 android:layout_width="100dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="Pincode"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:id="@+id/txtPincode"
-                                                 android:background="@drawable/shape_column"/>
-                                             <TextView
-                                                 android:layout_width="150dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:text="PermanentAddress"
-                                                 android:gravity="center"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:id="@+id/txtPAddress"
-                                                 android:background="@drawable/shape_column" />
-                                             <TextView
-                                                 android:layout_width="150dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:text="PermanentCity"
-                                                 android:id="@+id/txtPCity"
-                                                 android:background="@drawable/shape_column" />
-
-                                             <TextView
-                                                 android:layout_width="150dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:text="PermanentState"
-                                                 android:id="@+id/txtPState"
-                                                 android:background="@drawable/shape_column"/>
-
-                                             <TextView
-                                                 android:layout_width="150dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:text="PermanentPincode"
-                                                 android:id="@+id/txtPPincode"
-                                                 android:background="@drawable/shape_column"/>
-                                             <TextView
-                                                 android:layout_width="100dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="Parent Mobile"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:id="@+id/txtParentMobile"
-                                                 android:background="@drawable/shape_column"/>
-                                             <TextView
-                                                 android:layout_width="120dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="EmailId"
-                                                 android:id="@+id/txtEmail"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:background="@drawable/shape_column"/>
-                                             <TextView
-                                                 android:layout_width="150dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:text="College"
-                                                 android:gravity="center"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:id="@+id/txtCollege"
-                                                 android:background="@drawable/shape_column"/>
-
-                                             <TextView
-                                                 android:layout_width="150dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="School Board"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:id="@+id/txtSchoolBoard"
-                                                 android:background="@drawable/shape_column" />
-                                             <TextView
-                                                 android:layout_width="60dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="10th %"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:id="@+id/txtTenthPer"
-                                                 android:background="@drawable/shape_column" />
-                                             <TextView
-                                                 android:layout_width="80dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="10th Year"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:id="@+id/txtTenthYear"
-                                                 android:background="@drawable/shape_column" />
-                                             <TextView
-                                                 android:layout_width="80dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="10th Marks"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:id="@+id/txtTenthMarks"
-                                                 android:background="@drawable/shape_column" />
-                                             <TextView
-                                                 android:layout_width="80dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:text="10th OutOf"
-                                                 android:id="@+id/txtTenthOutof"
-                                                 android:background="@drawable/shape_column" />
-                                             <TextView
-                                                 android:layout_width="60dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="12th %"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:id="@+id/txtTwelthPer"
-                                                 android:background="@drawable/shape_column" />
-                                             <TextView
-                                                 android:layout_width="60dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="12th Year"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:id="@+id/txtTwelthYear"
-                                                 android:background="@drawable/shape_column" />
-                                             <TextView
-                                                 android:layout_width="80dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="12th Marks"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:id="@+id/txtTwelthMarks"
-                                                 android:background="@drawable/shape_column" />
-                                             <TextView
-                                                 android:layout_width="80dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="12th Outof"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:id="@+id/txtTwelthOutof"
-                                                 android:background="@drawable/shape_column" />
-                                             <TextView
-                                                 android:layout_width="60dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="NeetYear"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:id="@+id/txtNeetYear"
-                                                 android:background="@drawable/shape_column" />
-                                             <TextView
-                                                 android:layout_width="80dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="NeetMarks"
-                                                 android:id="@+id/txtNeetMarks"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:background="@drawable/shape_column" />
-                                             <TextView
-                                                 android:layout_width="80dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="Physics"
-                                                 android:id="@+id/txtPhysics"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:background="@drawable/shape_column" />
-                                             <TextView
-                                                 android:layout_width="80dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="Chemistry"
-                                                 android:id="@+id/txtChemistry"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:background="@drawable/shape_column" />
-                                             <TextView
-                                                 android:layout_width="80dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="Biology"
-                                                 android:id="@+id/txtBiology"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:background="@drawable/shape_column" />
-                                             <TextView
-                                                 android:layout_width="80dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="PCB"
-                                                 android:id="@+id/txtPCB"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:background="@drawable/shape_column" />
-                                             <TextView
-                                                 android:layout_width="80dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="Aggregate"
-                                                 android:id="@+id/txtAggregate"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:background="@drawable/shape_column" />
-                                             <TextView
-                                                 android:layout_width="100dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="CreatedDate"
-                                                 android:id="@+id/txtCreatedDate"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"
-                                                 android:background="@drawable/shape_column" />
-                                             <TextView
-                                                 android:layout_width="120dp"
-                                                 android:layout_height="match_parent"
-                                                 android:layout_weight="1"
-                                                 android:gravity="center"
-                                                 android:text="Website"
-                                                 android:id="@+id/txtWebsite"
-                                                 android:background="@drawable/shape_column"
-                                                 android:paddingTop="5dp"
-                                                 android:paddingBottom="7dp"
-                                                 android:paddingLeft="5dp"
-                                                 android:paddingRight="5dp"/>
-                                         </TableRow>
-                                     </TableLayout>
-
-                                 </LinearLayout>
-                                 <android.support.v7.widget.RecyclerView
-                                  android:id="@+id/recyclerOnlineFormDetails"
-                                  android:layout_width="wrap_content"
-                                  android:layout_height="wrap_content">
-                                  </android.support.v7.widget.RecyclerView>
-                             </LinearLayout>
-                                    </HorizontalScrollView>
-                                </LinearLayout>
-                                </LinearLayout>
-                        </android.support.v7.widget.CardView>
-                    </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginRight="20dp"
-                    android:background="#ffc809">
-
-                    <android.support.v7.widget.CardView
-                        android:id="@+id/cardReminder"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="10dp"
-                        android:visibility="visible"
-                        app:cardCornerRadius="3dp"
-                        app:cardElevation="8dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/txtReminderTitle"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@color/white"
-                                android:drawableRight="@drawable/ic_arrow_drop_down_black_24dp"
-                                android:drawablePadding="30dp"
-                                android:gravity="center"
-                                android:paddingLeft="50dp"
-                                android:paddingTop="10dp"
-                                android:paddingRight="20dp"
-                                android:paddingBottom="5dp"
-                                android:text="Reminder"
-                                android:textColor="@color/cyan_text"
-                                android:textSize="20dp" />
-
-                            <LinearLayout
-                                android:id="@+id/linearReminder"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:orientation="horizontal"
-                                android:visibility="gone">
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="1"
-                                    android:layout_marginTop="4dp"
-                                    android:orientation="horizontal">
-
-                                    <LinearLayout
-                                        android:id="@+id/linearSelectDate"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:background="@drawable/table_border"
-                                        android:orientation="horizontal"
-                                        android:paddingTop="5dp"
-                                        android:layout_marginLeft="2dp"
-                                        android:paddingBottom="5dp">
-
-                                        <TextView
-                                            android:id="@+id/txtSelectedDate"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="Select date"
-                                            android:textColor="@color/black"
-                                            android:textSize="12dp" />
-
-                                        <ImageView
-                                            android:id="@+id/imgCalender"
-                                            android:layout_width="20dp"
-                                            android:layout_height="20dp"
-                                            android:layout_weight="1"
-                                            android:src="@drawable/calendar1"></ImageView>
-                                    </LinearLayout>
-
-                                    <LinearLayout
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="0dp"
-                                        android:background="@drawable/table_border"
-                                        android:orientation="horizontal"
-                                        android:paddingTop="5dp"
-                                        android:layout_marginLeft="5dp"
-                                        android:paddingRight="5dp"
-                                        android:paddingBottom="5dp">
+                                    <HorizontalScrollView
+                                        android:id="@+id/search_horizontallscroll"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
 
                                         <LinearLayout
-                                            android:id="@+id/linearSelectTime"
-                                            android:layout_width="wrap_content"
+                                            android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:orientation="horizontal">
+                                            android:layout_marginTop="5dp"
+                                            android:layout_marginBottom="10dp"
+                                            android:orientation="vertical">
 
-                                            <TextView
-                                                android:id="@+id/txtSelectTime"
+                                            <View
+                                                android:layout_width="match_parent"
+                                                android:layout_height="2dp"
+                                                android:background="@android:color/black" />
+
+                                            <LinearLayout
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:layout_marginLeft="3dp"
-                                                android:text="-Select time-"
+                                                android:orientation="horizontal">
+
+                                                <TableLayout
+                                                    android:id="@+id/table_records"
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="30dp">
+
+                                                    <TableRow>
+
+                                                        <TextView
+                                                            android:id="@+id/txtId"
+                                                            android:layout_width="60dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="Id"
+                                                            android:textAllCaps="false" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtFormNo"
+                                                            android:layout_width="60dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="Form No"
+                                                            android:textAllCaps="false" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtFname"
+                                                            android:layout_width="100dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="FirstName"
+                                                            android:textAllCaps="false" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtLname"
+                                                            android:layout_width="100dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="LastName" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtFatherName"
+                                                            android:layout_width="100dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="FatherName" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtMothername"
+                                                            android:layout_width="120dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="MotherName" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtDOB"
+                                                            android:layout_width="90dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="DOB" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtPassport"
+                                                            android:layout_width="90dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="PassportNo" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtMobile"
+                                                            android:layout_width="100dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="Mobile" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtAddress"
+                                                            android:layout_width="150dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="Address" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtCity"
+                                                            android:layout_width="100dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="City" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtState"
+                                                            android:layout_width="100dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="State" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtPincode"
+                                                            android:layout_width="100dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="Pincode" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtPAddress"
+                                                            android:layout_width="150dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="PermanentAddress" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtPCity"
+                                                            android:layout_width="150dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="PermanentCity" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtPState"
+                                                            android:layout_width="150dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="PermanentState" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtPPincode"
+                                                            android:layout_width="150dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="PermanentPincode" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtParentMobile"
+                                                            android:layout_width="100dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="Parent Mobile" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtEmail"
+                                                            android:layout_width="120dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="EmailId" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtCollege"
+                                                            android:layout_width="150dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="College" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtSchoolBoard"
+                                                            android:layout_width="150dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="School Board" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtTenthPer"
+                                                            android:layout_width="60dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="10th %" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtTenthYear"
+                                                            android:layout_width="80dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="10th Year" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtTenthMarks"
+                                                            android:layout_width="80dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="10th Marks" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtTenthOutof"
+                                                            android:layout_width="80dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="10th OutOf" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtTwelthPer"
+                                                            android:layout_width="60dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="12th %" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtTwelthYear"
+                                                            android:layout_width="60dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="12th Year" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtTwelthMarks"
+                                                            android:layout_width="80dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="12th Marks" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtTwelthOutof"
+                                                            android:layout_width="80dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="12th Outof" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtNeetYear"
+                                                            android:layout_width="60dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="NeetYear" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtNeetMarks"
+                                                            android:layout_width="80dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="NeetMarks" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtPhysics"
+                                                            android:layout_width="80dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="Physics" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtChemistry"
+                                                            android:layout_width="80dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="Chemistry" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtBiology"
+                                                            android:layout_width="80dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="Biology" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtPCB"
+                                                            android:layout_width="80dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="PCB" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtAggregate"
+                                                            android:layout_width="80dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="Aggregate" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtCreatedDate"
+                                                            android:layout_width="100dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="CreatedDate" />
+
+                                                        <TextView
+                                                            android:id="@+id/txtWebsite"
+                                                            android:layout_width="120dp"
+                                                            android:layout_height="match_parent"
+                                                            android:layout_weight="1"
+                                                            android:background="@drawable/shape_column"
+                                                            android:gravity="center"
+                                                            android:paddingLeft="5dp"
+                                                            android:paddingTop="5dp"
+                                                            android:paddingRight="5dp"
+                                                            android:paddingBottom="7dp"
+                                                            android:text="Website" />
+                                                    </TableRow>
+                                                </TableLayout>
+
+                                            </LinearLayout>
+
+                                            <androidx.recyclerview.widget.RecyclerView
+                                                android:id="@+id/recyclerOnlineFormDetails"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>
+                                        </LinearLayout>
+                                    </HorizontalScrollView>
+                                </LinearLayout>
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="0dp"
+                        android:background="@color/white">
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cardReminder"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:visibility="visible"
+                            app:cardCornerRadius="3dp"
+                            app:cardElevation="8dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="20dp"
+                                android:layout_marginRight="20dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/txtReminderTitle"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/shape_btnrenewacc"
+                                    android:drawableRight="@drawable/ic_arrow_drop_down_white_24dp"
+                                    android:drawablePadding="30dp"
+                                    android:gravity="center"
+                                   android:padding="10dp"
+                                    android:text="Reminder"
+                                    android:textColor="@color/white"
+                                    android:textSize="20dp" />
+
+                                <LinearLayout
+                                    android:id="@+id/linearReminder"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:orientation="horizontal"
+                                    android:visibility="gone">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_marginTop="0dp"
+                                        android:layout_weight="1"
+                                        android:orientation="horizontal">
+
+                                        <LinearLayout
+                                            android:id="@+id/linearSelectDate"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:layout_gravity="center"
+                                            android:gravity="center"
+                                            android:background="@drawable/table_border"
+                                            android:orientation="horizontal"
+                                            android:paddingTop="5dp"
+                                            android:paddingBottom="5dp">
+
+                                            <LinearLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_weight="1"
+                                                android:orientation="horizontal"
+                                                android:layout_gravity="center"
+                                                android:gravity="center">
+                                            <TextView
+                                                android:id="@+id/txtSelectedDate"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="-Select date-"
+                                                android:padding="2dp"
                                                 android:textColor="@color/black"
                                                 android:textSize="12dp" />
 
                                             <ImageView
-                                                android:id="@+id/imgClock"
-                                                android:layout_width="wrap_content"
+                                                android:id="@+id/imgCalender"
+                                                android:layout_width="20dp"
                                                 android:layout_height="20dp"
-
-                                                android:src="@drawable/alarm_clock" />
+                                                android:src="@drawable/calendar1"></ImageView>
+                                            </LinearLayout>
                                         </LinearLayout>
-                                    </LinearLayout>
 
-                                    <Button
-                                        android:id="@+id/btnReminder"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="30dp"
-                                        android:layout_marginTop="0dp"
-                                        android:layout_marginBottom="5dp"
-                                        android:layout_marginRight="5dp"
-                                        android:layout_marginLeft="15dp"
-                                        android:background="@drawable/linerlayout_border_squre"
-                                        android:text="Reminder"
-                                        android:textColor="#00698c"
-                                        android:textSize="12dp" />
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:layout_marginLeft="5dp"
+                                            android:layout_marginTop="0dp"
+                                            android:background="@drawable/table_border"
+                                            android:orientation="horizontal"
+                                            android:paddingTop="5dp"
+                                            android:paddingRight="5dp"
+                                            android:paddingBottom="5dp">
+
+                                            <LinearLayout
+                                                android:id="@+id/linearSelectTime"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+                                                android:layout_weight="1"
+                                                android:orientation="horizontal"
+                                                android:layout_gravity="center"
+                                                android:gravity="center">
+
+                                                <TextView
+                                                    android:id="@+id/txtSelectTime"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                   android:padding="2dp"
+                                                    android:layout_marginLeft="3dp"
+                                                    android:text="-Select time-"
+                                                    android:textColor="@color/black"
+                                                    android:textSize="12dp" />
+
+                                                <ImageView
+                                                    android:id="@+id/imgClock"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="20dp"
+
+                                                    android:src="@drawable/alarm_clock" />
+                                            </LinearLayout>
+                                        </LinearLayout>
+
+                                        <Button
+                                            android:id="@+id/btnReminder"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="30dp"
+                                            android:layout_marginLeft="15dp"
+                                            android:layout_marginTop="0dp"
+                                            android:layout_marginRight="5dp"
+                                            android:layout_marginBottom="5dp"
+                                            android:background="@drawable/linerlayout_border_squre"
+                                            android:text="Reminder"
+                                            android:textColor="#00698c"
+                                            android:textSize="12dp" />
+                                    </LinearLayout>
                                 </LinearLayout>
                             </LinearLayout>
-                        </LinearLayout>
-                    </android.support.v7.widget.CardView>
-                </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
 
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginRight="20dp"
-                    android:background="#ffc809">
-
-                    <android.support.v7.widget.CardView
-                        android:id="@+id/cardReallocation"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="0dp"
-                        android:layout_marginLeft="10dp"
-                        android:visibility="visible"
-                        app:cardCornerRadius="3dp"
-                        app:cardElevation="8dp">
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="0dp"
+                        android:background="@color/white">
 
-                        <LinearLayout
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cardReallocation"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="10dp">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@color/white"
-                                android:text="Reallocation"
-                                android:id="@+id/txtReallocationTitle"
-                                android:drawableRight="@drawable/ic_arrow_drop_down_black_24dp"
-                                android:paddingTop="5dp"
-                                android:layout_marginLeft="10dp"
-                                android:paddingRight="45dp"
-                                android:paddingBottom="5dp"
-                                android:gravity="center"
-                                android:textColor="@color/cyan_text"
-                                android:textSize="20dp" />
-
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="0dp"
+                            android:visibility="visible"
+                            app:cardCornerRadius="3dp"
+                            app:cardElevation="8dp">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:orientation="horizontal"
-                                android:id="@+id/linearReallocation"
-                                android:visibility="gone">
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="20dp"
+                                android:layout_marginRight="20dp"
+                                android:orientation="vertical">
 
-                                <android.support.v7.widget.RecyclerView
-                                    android:id="@+id/recyclerCounselorDetails"
-                                    android:layout_width="wrap_content"
+                                <TextView
+                                    android:id="@+id/txtReallocationTitle"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    ></android.support.v7.widget.RecyclerView>
+                                    android:layout_marginLeft="0dp"
+                                    android:background="@drawable/shape_btnrenewacc"
+                                    android:drawableRight="@drawable/ic_arrow_drop_down_white_24dp"
+                                    android:gravity="center"
+                                   android:padding="10dp"
+                                    android:text="Reallocation"
+                                    android:textColor="@color/white"
+                                    android:textSize="20dp" />
+
 
                                 <LinearLayout
-                                    android:id="@+id/linearReallocateTo"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="40dp"
-                                    android:orientation="vertical"
+                                    android:id="@+id/linearReallocation"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="300dp"
+                                    android:orientation="horizontal"
+                                    android:layout_gravity="center"
                                     android:visibility="gone">
-                                    <!-- <LinearLayout
-                                         android:layout_width="wrap_content"
-                                         android:layout_height="wrap_content"
-                                         android:orientation="vertical"
-                                         android:layout_marginTop="0dp">-->
-                                    <TextView
-                                        android:id="@+id/txtSelectedSrno"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center"
-                                        android:text="srno"
-                                        android:textColor="@color/black"
-                                        android:textSize="15dp" />
 
-                                    <TextView
-                                        android:id="@+id/txtSelectedCounselorId"
-                                        android:layout_width="wrap_content"
+                                    <androidx.recyclerview.widget.RecyclerView
+                                        android:id="@+id/recyclerCounselorDetails"
+                                        android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_gravity="center"
-                                        android:layout_marginTop="10dp"
-                                        android:text="Cid"
-                                        android:textColor="@color/black"
-                                        android:textSize="15dp" />
-
-                                    <TextView
-                                        android:id="@+id/txtSelectedCName"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center"
-                                        android:layout_marginTop="5dp"
-                                        android:text="cname"
-                                        android:textColor="@color/black"
-                                        android:textSize="15dp" />
+                                        android:layout_weight="1"></androidx.recyclerview.widget.RecyclerView>
 
                                     <LinearLayout
-                                        android:layout_width="wrap_content"
+                                        android:id="@+id/linearReallocateTo"
+                                        android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:orientation="horizontal"
-                                        android:paddingRight="10dp"
-                                        android:layout_marginTop="7dp">
-
+                                        android:layout_weight="1"
+                                        android:layout_marginTop="0dp"
+                                        android:layout_gravity="center"
+                                        android:gravity="center"
+                                        android:orientation="vertical"
+                                        android:visibility="gone">
+                                        <!-- <LinearLayout
+                                             android:layout_width="wrap_content"
+                                             android:layout_height="wrap_content"
+                                             android:orientation="vertical"
+                                             android:layout_marginTop="0dp">-->
                                         <TextView
-                                            android:id="@+id/btnReallocate"
+                                            android:id="@+id/txtSelectedSrno"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:layout_marginLeft="5dp"
-                                            android:background="@drawable/linerlayout_border_squre"
-                                            android:text="Reallocate"
-                                            android:textSize="12dp"
-                                            android:paddingRight="5dp"
-                                            android:paddingLeft="5dp"
-                                            android:paddingTop="5dp"
-                                            android:paddingBottom="5dp"
-                                            android:textColor="@color/cyan_text" />
+                                            android:layout_gravity="center"
+                                            android:text="srno"
+                                            android:textColor="@color/black"
+                                            android:textSize="15dp" />
 
                                         <TextView
-                                            android:id="@+id/btnCancel1"
+                                            android:id="@+id/txtSelectedCounselorId"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:layout_marginLeft="2dp"
-                                            android:background="@drawable/linerlayout_border_squre"
-                                            android:text="Cancel"
-                                            android:paddingRight="5dp"
-                                            android:paddingLeft="5dp"
-                                            android:paddingTop="5dp"
-                                            android:paddingBottom="5dp"
-                                            android:textSize="12dp"
-                                            android:textColor="@color/cyan_text" />
+                                            android:layout_gravity="center"
+                                            android:layout_marginTop="10dp"
+                                            android:text="Cid"
+                                            android:textColor="@color/black"
+                                            android:textSize="15dp" />
 
+                                        <TextView
+                                            android:id="@+id/txtSelectedCName"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="center"
+                                            android:layout_marginTop="5dp"
+                                            android:text="cname"
+                                            android:textColor="@color/black"
+                                            android:textSize="15dp" />
+
+                                        <LinearLayout
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="7dp"
+                                            android:orientation="horizontal"
+                                            android:paddingRight="10dp">
+
+                                            <TextView
+                                                android:id="@+id/btnReallocate"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginLeft="5dp"
+                                                android:background="@drawable/linerlayout_border_squre"
+                                                android:paddingLeft="5dp"
+                                                android:paddingTop="5dp"
+                                                android:paddingRight="5dp"
+                                                android:paddingBottom="5dp"
+                                                android:text="Reallocate"
+                                                android:textColor="@color/cyan_text"
+                                                android:textSize="12dp" />
+
+                                            <TextView
+                                                android:id="@+id/btnCancel1"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginLeft="2dp"
+                                                android:background="@drawable/linerlayout_border_squre"
+                                                android:paddingLeft="5dp"
+                                                android:paddingTop="5dp"
+                                                android:paddingRight="5dp"
+                                                android:paddingBottom="5dp"
+                                                android:text="Cancel"
+                                                android:textColor="@color/cyan_text"
+                                                android:textSize="12dp" />
+
+                                        </LinearLayout>
                                     </LinearLayout>
                                 </LinearLayout>
                             </LinearLayout>
-                        </LinearLayout>
-                    </android.support.v7.widget.CardView>
+                        </androidx.cardview.widget.CardView>
 
-                </LinearLayout>
+                    </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginRight="20dp"
-                    android:background="#ffc809">
-
-                    <android.support.v7.widget.CardView
-                        android:id="@+id/cardReport"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="10dp"
-                        android:visibility="visible"
-                        app:cardCornerRadius="3dp"
-                        app:cardElevation="8dp">
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="0dp"
+                        android:background="@color/white">
 
-                        <LinearLayout
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cardReport"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_gravity="center"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/txtReportTitle"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@color/white"
-                                android:drawableRight="@drawable/ic_arrow_drop_down_black_24dp"
-                                android:drawablePadding="20dp"
-                                android:gravity="center"
-                                android:paddingLeft="50dp"
-                                android:paddingTop="5dp"
-                                android:paddingRight="20dp"
-                                android:paddingBottom="5dp"
-                                android:layout_marginBottom="10dp"
-                                android:text="History"
-                                android:textColor="@color/cyan_text"
-                                android:textSize="20dp" />
+                            android:layout_marginLeft="10dp"
+                            android:visibility="visible"
+                            app:cardCornerRadius="3dp"
+                            app:cardElevation="8dp">
 
                             <LinearLayout
-                                android:id="@+id/linearReport"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:visibility="gone">
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="20dp"
+                                android:layout_marginRight="20dp"
+                                android:orientation="vertical">
 
-                                <android.support.design.widget.TabLayout
-                                    android:id="@+id/tabs"
-                                    app:tabTextColor="@color/cyan_text"
-
+                                <TextView
+                                    android:id="@+id/txtReportTitle"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content" />
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="10dp"
+                                    android:background="@drawable/shape_btnrenewacc"
+                                    android:drawableRight="@drawable/ic_arrow_drop_down_white_24dp"
+                                    android:drawablePadding="20dp"
+                                    android:gravity="center"
+                                  android:padding="10dp"
+                                    android:text="History"
+                                    android:textColor="@color/white"
+                                    android:textSize="20dp" />
 
-                                <android.support.v4.view.ViewPager
-                                    android:id="@+id/viewpager"
-                                    android:layout_width="355dp"
-                                    android:layout_height="500dp"
-                                    app:layout_constraintTop_toBottomOf="@+id/tabs" />
+                                <LinearLayout
+                                    android:id="@+id/linearReport"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:visibility="gone">
 
+                                    <com.google.android.material.tabs.TabLayout
+                                        android:id="@+id/tabs"
+                                        android:layout_width="match_parent"
+
+                                        android:layout_height="wrap_content"
+                                        app:tabTextColor="@color/cyan_text" />
+
+                                    <androidx.viewpager.widget.ViewPager
+                                        android:id="@+id/viewpager"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="500dp"
+                                        app:layout_constraintTop_toBottomOf="@+id/tabs" />
+
+                                </LinearLayout>
                             </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
 
-                        </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textSize="20dp" />
 
-                    </android.support.v7.widget.CardView>
-
-                </LinearLayout>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textSize="20dp"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="#ffc809"
-                    android:visibility="gone">
-
-                    <android.support.v7.widget.CardView
-                        android:id="@+id/cardClientEntry"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="10dp"
-                        android:visibility="gone"
-                        app:cardCornerRadius="3dp"
-                        app:cardElevation="8dp">
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="#ffc809"
+                        android:visibility="gone">
 
-                        <LinearLayout
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cardClientEntry"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
-                            android:orientation="vertical">
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:visibility="gone"
+                            app:cardCornerRadius="3dp"
+                            app:cardElevation="8dp">
 
-                            <TextView
-                                android:id="@+id/txtNewClientEntry"
+                            <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@color/white"
-                                android:drawableRight="@drawable/ic_arrow_drop_down_white_24dp"
-                                android:drawablePadding="20dp"
-                                android:gravity="center"
-                                android:paddingLeft="50dp"
-                                android:paddingTop="5dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="20dp"
+                                android:layout_marginRight="20dp"
+                                android:orientation="vertical">
 
-                                android:paddingRight="20dp"
-                                android:text="New Client Entry"
-                                android:textColor="@color/cyan_text"
-                                android:textSize="20dp"
-                                android:visibility="visible" />
-                        </LinearLayout>
-                    </android.support.v7.widget.CardView>
-                </LinearLayout>
+                                <TextView
+                                    android:id="@+id/txtNewClientEntry"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@color/white"
+                                    android:drawableRight="@drawable/ic_arrow_drop_down_white_24dp"
+                                    android:drawablePadding="20dp"
+                                    android:gravity="center"
+                                    android:paddingLeft="50dp"
+                                    android:paddingTop="5dp"
+
+                                    android:paddingRight="20dp"
+                                    android:text="New Client Entry"
+                                    android:textColor="@color/cyan_text"
+                                    android:textSize="20dp"
+                                    android:visibility="visible" />
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
-
 </LinearLayout>

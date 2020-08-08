@@ -9,13 +9,13 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar1"
             android:layout_width="fill_parent"
-            android:layout_height="58dp"
-            android:background="#0090bf"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/toolbar_background"
             android:minHeight="?attr/actionBarSize"
-            android:titleTextColor="#ffff">
+            android:titleTextColor="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -36,25 +36,32 @@
                         android:src="@drawable/ic_arrow_back_black_24dp" />
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/txtActivity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="Edit Details"
-                    android:textColor="@color/white"
-                    android:textSize="20dp" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/imgRefresh"
-                    android:layout_width="21dp"
-                    android:layout_height="25dp"
-                    android:layout_marginLeft="170dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginRight="5dp"
-                    android:src="@drawable/reload" />
+                    <TextView
+                        android:id="@+id/txtActivity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="Edit Details"
+                        android:textColor="@color/white"
+                        android:textSize="20dp" />
+
+                    <ImageView
+                        android:id="@+id/imgRefresh"
+                        android:layout_width="21dp"
+                        android:layout_height="25dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/reload" />
+                </RelativeLayout>
             </LinearLayout>
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
         <ScrollView
             android:layout_width="match_parent"
@@ -144,8 +151,8 @@
                                     android:id="@+id/edtOtherCourse"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginRight="5dp"
                                     android:layout_marginTop="7dp"
+                                    android:layout_marginRight="5dp"
                                     android:layout_weight="1"
                                     android:hint="Enter course here"
                                     android:padding="5dp"
@@ -194,8 +201,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:inputType="number"
-                                android:maxLength="14"
                                 android:padding="5dp"
                                 android:textColor="@color/editdetails_edittext"
                                 android:textSize="15dp"
@@ -245,8 +250,8 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:layout_marginRight="5dp"
+                                android:layout_weight="1"
                                 android:background="@drawable/spinner_layout_border">
 
                                 <Spinner
@@ -352,7 +357,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:inputType="number"
+                                android:inputType="phone"
                                 android:maxLength="10"
                                 android:padding="5dp"
                                 android:textColor="@color/editdetails_edittext"
@@ -475,7 +480,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginRight="5dp"
                                     android:layout_weight="1"
-                                    android:padding="5dp"/>
+                                    android:padding="5dp" />
                             </LinearLayout>
                         </LinearLayout>
                     </TableLayout>

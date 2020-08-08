@@ -67,7 +67,8 @@
                     android:paddingTop="3dp"
                     android:gravity="center"
                     android:id="@+id/txtDetails"
-                    android:background="@drawable/shape_btnrecords"
+                    android:textColor="@color/white"
+                    android:background="@drawable/shape_btnrenewacc"
                     android:text="Details"
                     android:textAllCaps="false" />
 

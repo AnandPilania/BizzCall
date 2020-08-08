@@ -4,15 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/activity_background"
-    tools:context="com.bizcall.wayto.mentebit.MailActiivity">
-    <android.support.v7.widget.Toolbar
+    android:background="@color/white"
+    tools:context="com.bizcall.wayto.mentebit13.MailActiivity">
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar1"
         android:layout_width="fill_parent"
-        android:layout_height="58dp"
-        android:background="#0090bf"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/toolbar_background"
         android:minHeight="?attr/actionBarSize"
-        android:titleTextColor="#ffff">
+        android:titleTextColor="@color/white">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -43,28 +43,7 @@
                 android:text="Send Mail"
                 android:textColor="@color/white"
                 android:textSize="20dp" />
-            <ImageView
-                android:id="@+id/imgAttachment"
-                android:layout_width="35dp"
-                android:layout_height="55dp"
-                android:layout_marginLeft="100dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="15dp"
-                android:visibility="visible"
-                android:src="@drawable/ic_attachment_black_24dp" />
 
-            <ImageView
-                android:id="@+id/imgSend"
-                android:layout_width="35dp"
-                android:layout_height="55dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="15dp"
-                android:visibility="visible"
-                android:src="@drawable/ic_send_black_24dp"/>
             <TextView
                 android:id="@+id/txtCoin"
                 android:layout_width="wrap_content"
@@ -108,7 +87,7 @@
                 android:visibility="gone" />
 
         </LinearLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
         <ScrollView
             android:layout_width="match_parent"
@@ -132,10 +111,10 @@
                     android:id="@+id/email_address"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:background="@drawable/border"
+                    android:layout_marginTop="3dp"
                     android:inputType="textEmailAddress"
                     android:padding="5dp"
+                    android:maxLength="150"
                     android:textSize="15dp" />
 
                 <TextView
@@ -150,7 +129,6 @@
                     android:layout_width="fill_parent"
                     android:layout_height="40dp"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/border"
                     android:padding="5dp"
                     android:textSize="15dp" />
 
@@ -164,11 +142,197 @@
                 <EditText
                     android:id="@+id/email_text"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="200dp"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/border"
+                    android:gravity="top|left"
                     android:padding="5dp"
+                    android:maxLength="4500"
+                    android:background="@drawable/table_drawable"
                     android:textSize="15dp" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:layout_marginTop="15dp">
+                <TextView
+                    android:id="@+id/imgAttachment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="0dp"
+                    android:gravity="right"
+                    android:padding="10dp"
+                    android:layout_gravity="left"
+                    android:textSize="15dp"
+                    android:textColor="@color/black"
+                    android:text="Attach"
+                    android:background="@drawable/shape_btnrenewacc"
+                    android:visibility="visible"
+                    android:drawableRight="@drawable/ic_attachment_black_24dp" />
+
+                <TextView
+                    android:id="@+id/imgSend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                   android:layout_weight="1"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:drawableRight="@drawable/ic_send_black_24dp"
+                    android:layout_gravity="right"
+                    android:gravity="right"
+                    android:padding="10dp"
+                    android:text="Send"
+                    android:textColor="@color/black"
+                    android:background="@drawable/shape_btnrenewacc"
+                    android:textSize="15dp"
+                    android:visibility="visible" />
+            </RelativeLayout>
+            <HorizontalScrollView
+                android:id="@+id/search_horizontalscroll"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:visibility="visible"
+                android:id="@+id/linearTableColumn">
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text=""
+                        android:gravity="center"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="5dp"
+                        android:background="@drawable/shape_txtinfo" />
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="MailId"
+                        android:id="@+id/txtMailId"
+                        android:gravity="center"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="5dp"
+                        android:background="@drawable/shape_txtinfo" />
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:id="@+id/txtMailBody"
+                        android:gravity="center"
+                        android:text="MailBody"
+                        android:visibility="gone"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="5dp"
+                        android:background="@drawable/shape_txtinfo" />
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:id="@+id/txtMailSubject"
+                        android:text="Subject"
+                        android:gravity="center"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="5dp"
+                        android:background="@drawable/shape_txtinfo" />
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:id="@+id/txtAttachment1"
+                        android:gravity="center"
+                        android:text="Attachment1"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="5dp"
+                        android:background="@drawable/shape_txtinfo" />
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:id="@+id/txtAttachment2"
+                        android:text="Attachment2"
+                        android:gravity="center"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="5dp"
+                        android:background="@drawable/shape_txtinfo" />
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:id="@+id/txtAttachment3"
+                        android:gravity="center"
+                        android:text="Attachment3"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="5dp"
+                        android:background="@drawable/shape_txtinfo" />
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:id="@+id/txtAttachment4"
+                        android:text="Attachment4"
+                        android:gravity="center"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="5dp"
+                        android:background="@drawable/shape_txtinfo" />
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:id="@+id/txtAttachment5"
+                        android:text="Attachment5"
+                        android:gravity="center"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="5dp"
+                        android:background="@drawable/shape_txtinfo" />
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:id="@+id/txtMailImage"
+                        android:text="MailImage"
+                        android:gravity="center"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="5dp"
+                        android:background="@drawable/shape_txtinfo" />
+            </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerMailTemplate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+            </HorizontalScrollView>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

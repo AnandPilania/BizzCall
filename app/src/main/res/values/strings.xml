@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BizzCall</string>
+    <string name="app_name">Bizcall</string>
     <string name="title_activity_home">Home</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -60,7 +60,6 @@
         <item> <font size="13">Nagaland</font></item>
         <item> <font size="13">Odisha</font></item>
         <item> <font size="13">Puducherry</font></item>
-        <item> <font size="13">Haryana</font></item>
         <item> <font size="13">Punjab</font></item>
         <item> <font size="13">Rajasthan</font></item>
         <item> <font size="13">Sikkim</font></item>

@@ -4,13 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar1"
         android:layout_width="fill_parent"
-        android:layout_height="58dp"
-        android:background="#0090bf"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/toolbar_background"
         android:minHeight="?attr/actionBarSize"
-        android:titleTextColor="#ffff">
+        android:titleTextColor="@color/white">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -45,10 +45,11 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="90dp"
                 android:src="@drawable/reload"
+                android:visibility="visible"
                 android:id="@+id/imgRefresh"/>
 
         </LinearLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -56,31 +57,6 @@
         android:layout_gravity="center"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/txtTitle"
-            android:layout_gravity="left"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="10dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="5dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="5dp"
-            android:text="Message:"
-            android:textColor="@color/black"
-            android:textSize="17dp" />
-
-        <EditText
-            android:id="@+id/edtMessage1"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="30dp"
-            android:background="@drawable/border"
-            android:hint="Enter message here"
-            android:textAlignment="center" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -105,7 +81,232 @@
             android:layout_marginTop="10dp"
             android:layout_marginRight="30dp"
             android:background="@drawable/border"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtTitle"
+            android:layout_gravity="left"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp"
+            android:text="Message:"
+            android:textColor="@color/black"
+            android:textSize="17dp" />
+
+        <EditText
+            android:id="@+id/edtMessage1"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="30dp"
+            android:maxLength="4500"
+            android:background="@drawable/border"
+            android:hint="Enter message here"
+            android:textAlignment="center"
+            android:gravity="center_horizontal" />
+
+
+
+            <LinearLayout
+                android:id="@+id/linearImage1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Attachment 1"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="10dp"
+                    android:padding="5dp" />
+
+                <ImageView
+                    android:id="@+id/imgReceipt1"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text=""
+                    android:background="@drawable/table_border"
+                    android:textSize="12dp" />
+
+                <ImageView
+                    android:id="@+id/imgDoc1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/gallery"
+                    android:padding="5dp"
+                    android:layout_marginTop="10dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linearImage2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Attachment 2"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="10dp"
+                    android:padding="5dp"
+                    />
+
+                <ImageView
+                    android:id="@+id/imgReceipt2"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text=""
+                    android:background="@drawable/table_border"
+                    android:textSize="12dp" />
+
+                <ImageView
+                    android:id="@+id/imgDoc2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/gallery"
+                    android:padding="5dp"
+                    android:layout_marginTop="10dp"/>
+            </LinearLayout>
+        <LinearLayout
+            android:id="@+id/linearImage3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Attachment 3"
+                android:textColor="@color/black"
+                android:layout_marginTop="10dp"
+                android:padding="5dp"
+                />
+
+            <ImageView
+                android:id="@+id/imgReceipt3"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:text=""
+                android:background="@drawable/table_border"
+                android:textSize="12dp" />
+
+            <ImageView
+                android:id="@+id/imgDoc3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/gallery"
+                android:padding="5dp"
+                android:layout_marginTop="10dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/linearImage4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Attachment 4"
+                android:textColor="@color/black"
+                android:layout_marginTop="10dp"
+                android:padding="5dp"
+                />
+
+            <ImageView
+                android:id="@+id/imgReceipt4"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:text=""
+                android:background="@drawable/table_border"
+                android:textSize="12dp" />
+
+            <ImageView
+                android:id="@+id/imgDoc4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/gallery"
+                android:padding="5dp"
+                android:layout_marginTop="10dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/linearImage5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Attachment 5"
+                android:textColor="@color/black"
+                android:layout_marginTop="10dp"
+                android:padding="5dp"
+                />
+
+            <ImageView
+                android:id="@+id/imgReceipt5"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:text=""
+                android:background="@drawable/table_border"
+                android:textSize="12dp" />
+
+            <ImageView
+                android:id="@+id/imgDoc5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/gallery"
+                android:padding="5dp"
+                android:layout_marginTop="10dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearImage6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Insert Image  "
+                android:textColor="@color/black"
+                android:layout_marginTop="10dp"
+                android:padding="5dp"
+                />
+
+            <ImageView
+                android:id="@+id/imgMailImagePre"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:text=""
+                android:background="@drawable/table_border"
+                android:textSize="12dp" />
+
+            <ImageView
+                android:id="@+id/imgMailImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/gallery"
+                android:padding="5dp"
+                android:layout_marginTop="10dp"/>
+        </LinearLayout>
 
         <Button
             android:id="@+id/btnSubmitMsg"
@@ -121,6 +322,11 @@
 
 
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recyclerTemplate"/>
 
 
 </LinearLayout>

@@ -1,0 +1,687 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar1"
+        android:layout_width="fill_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/toolbar_background"
+        android:minHeight="?attr/actionBarSize"
+        android:titleTextColor="@color/white">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/linerlayout_border_round"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/img_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow_back_black_24dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtActivityName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layout_marginLeft="5dp"
+                android:text="Discount Details"
+                android:visibility="visible"
+                android:textColor="@color/white"
+                android:textSize="17dp"
+                />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:layout_margin="10dp"
+                    android:id="@+id/txtMonth"
+                    android:textColor="@color/white"
+                    android:drawableRight="@drawable/ic_expand_more_white_24dp"
+                    />
+            </LinearLayout>
+            <ImageView
+                android:layout_width="21dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="130dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/reload"
+                android:id="@+id/imgRefresh"
+                android:visibility="gone"/>
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
+    <LinearLayout
+        android:id="@+id/linearPackageDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="@drawable/edittext_border"
+            android:orientation="vertical"
+            android:padding="3dp"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Amount in USD"
+                    android:padding="7dp"
+                    android:background="@drawable/edittext_border"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:layout_weight="1"
+                        android:textColor="@color/black"
+                        android:textSize="9sp"
+                        android:textStyle="normal" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Fees"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:textColor="@color/black"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="5dp"
+                        android:maxLength="9"
+                        android:gravity="center"
+                        android:text="Discount"
+                        android:textColor="@color/black"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Final"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:textColor="@color/black"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/txtCollegeFee1YearD"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="CollegeFee1YearD"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+                        <TextView
+                            android:id="@+id/txtCollegeFees"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:gravity="center"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+
+                        <EditText
+                            android:id="@+id/edtClgDiscount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:padding="5dp"
+                            android:maxLength="9"
+                            android:gravity="center"
+                            android:inputType="number"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="CollegeFee1YearD"
+                            android:id="@+id/txtClgFinal"
+                            android:gravity="center"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/txtHostalFee1YearD"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="HostalFee1YearD"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="9sp" />
+                        <TextView
+                            android:id="@+id/txtHostalFees"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:gravity="center"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+
+                        <EditText
+                            android:id="@+id/edtHostalDiscount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:padding="5dp"
+                            android:maxLength="9"
+                            android:gravity="center"
+                            android:inputType="number"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="CollegeFee1YearD"
+                            android:gravity="center"
+                            android:id="@+id/txtHostalFinal"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/txtOneTimeProcessingFeeD"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="OTProcessingFeeD"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:visibility="visible" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:gravity="center"
+                            android:id="@+id/txtOTProcessingFee"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+
+                        <EditText
+                            android:id="@+id/edtOTPDiscount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:padding="5dp"
+                            android:gravity="center"
+                            android:maxLength="9"
+                            android:inputType="number"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="CollegeFee1YearD"
+                            android:id="@+id/txtOTPFinal"
+                            android:gravity="center"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/txtAccidentalInsurance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="AccidentalInsurance"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:visibility="visible" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:gravity="center"
+                            android:id="@+id/txtAccidentalFee"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+
+                        <EditText
+                            android:id="@+id/edtAccidentalDiscount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:padding="5dp"
+                            android:maxLength="9"
+                            android:gravity="center"
+                            android:inputType="number"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="CollegeFee1YearD"
+                            android:id="@+id/txtAccidentalFinal"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/txtMess"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Mess"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:visibility="visible" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:id="@+id/txtMessFee"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:gravity="center"
+                            android:textStyle="normal" />
+
+                        <EditText
+                            android:id="@+id/edtMessDiscount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:padding="5dp"
+                            android:maxLength="9"
+                            android:gravity="center"
+                            android:inputType="number"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="CollegeFee1YearD"
+                            android:id="@+id/txtMessFinal"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="TotalFeeYearD"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:visibility="visible" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:gravity="center"
+                            android:id="@+id/txtTotalFeeD"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+
+                        <TextView
+                            android:id="@+id/txtTotalDiscountD"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:padding="5dp"
+                            android:inputType="number"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="CollegeFee1YearD"
+                            android:id="@+id/txtTotalFinalD"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/red"
+                        android:id="@+id/txtGreaterAmtUSD"
+                        android:textSize="6dp"
+                        android:visibility="gone"
+                        android:text="This amount should not be greater than amount entered above"/>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_weight="1"
+                android:visibility="visible"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Amount in INR"
+                    android:gravity="center"
+                    android:padding="7dp"
+                    android:textColor="@color/black"
+                    android:background="@drawable/edittext_border"
+                    android:textSize="15sp"
+                    android:textStyle="bold"></TextView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="7dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Fees"
+                            android:gravity="center"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:padding="5dp"
+                            android:maxLength="9"
+                            android:gravity="center"
+                            android:text="Discount"
+                            android:textColor="@color/black"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Final"
+                            android:gravity="center"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/txtAirFareFeeR"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="AirFareFeeR"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+                        <TextView
+                            android:id="@+id/txtAirfareFees"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:gravity="center"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+
+
+                        <EditText
+                            android:id="@+id/edtAirFareFeeR"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:padding="5dp"
+                            android:inputType="number"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:maxLength="9"
+                            android:textStyle="normal" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:gravity="center"
+                            android:id="@+id/txtAirFareFinal"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/txtIndiaOTC"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="India OTC"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="9sp" />
+                        <TextView
+                            android:id="@+id/txtIndiaOTCFee"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:gravity="center"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+
+                        <EditText
+                            android:id="@+id/edtIndiaOTC"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:padding="5dp"
+                            android:inputType="number"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:maxLength="9"
+                            android:textStyle="normal" />
+                        <TextView
+                            android:id="@+id/txtIndiaOTCFinal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:gravity="center"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:padding="5dp"
+                            android:text="TotalFeeYearR"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"
+                            android:textStyle="normal" />
+                        <TextView
+                            android:id="@+id/txtTotalFeeR"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:layout_marginTop="0dp"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginTop="0dp"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"/>
+
+                        <TextView
+                            android:id="@+id/txtTotalFinalR"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:layout_marginTop="0dp"
+                            android:textColor="@color/black"
+                            android:textSize="9sp"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:id="@+id/txtUpdateDiscount"
+            android:textSize="17dp"
+            android:layout_marginTop="10dp"
+            android:padding="7dp"
+            android:layout_gravity="center"
+            android:background="@color/toolbar_background"
+            android:visibility="visible"
+            android:text="Update"/>
+    </LinearLayout>
+</LinearLayout>

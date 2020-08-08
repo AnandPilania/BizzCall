@@ -7,4 +7,4 @@
     android:padding="5dip"
     android:paddingTop="20dp"
     android:textColor="@color/black"
-    android:textSize="15sp" />
+    android:textSize="13sp" />

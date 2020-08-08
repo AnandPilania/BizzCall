@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+    <TableLayout
+        android:id="@+id/table"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/table_border"
+                android:layout_weight="1"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:id="@+id/txtDate"
+                android:paddingTop="5dp"
+                android:paddingBottom="10dp"
+                android:hint="Date"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="12dp" />
+
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="match_parent"
+                android:id="@+id/txtSrno"
+                android:background="@drawable/table_border"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:layout_weight="1"
+                android:paddingTop="5dp"
+                android:paddingBottom="10dp"
+                android:gravity="center"
+                android:textColor="@color/ocean_blue"
+                android:hint="Total Call"
+                android:textSize="12dp" />
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="match_parent"
+                android:id="@+id/txtDebitCredit"
+                android:background="@drawable/table_border"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:layout_weight="1"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:hint="Debit/Credit"
+                android:textSize="12dp" />
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="match_parent"
+                android:id="@+id/txtBalance"
+                android:background="@drawable/table_border"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:layout_weight="1"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:hint="Balance"
+                android:textSize="12dp" />
+        </TableRow>
+    </TableLayout>
+
+
+</LinearLayout>

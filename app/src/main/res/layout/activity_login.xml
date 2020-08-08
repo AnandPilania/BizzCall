@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Login">
+    tools:context=".Login"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,26 +13,29 @@
         android:orientation="vertical"
         tools:ignore="MissingConstraints">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/blue_text"
+            android:background="@color/toolbar_background"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingRight="20dp">
+                android:paddingRight="20dp"
+                android:layout_gravity="center">
 
                 <TextView
                     android:id="@+id/txtUserName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Bizcall"
+                    android:text="BizcallCounselorVersion"
                     android:textColor="@color/white"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+
+                    android:gravity="center"/>
                 <!--<ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -40,7 +44,7 @@
                     android:textColor="#FFFF"
                     android:text="vdvsvvvdvbdb"/>-->
             </LinearLayout>
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
         <ScrollView
             android:layout_width="match_parent"
@@ -54,10 +58,10 @@
                 <ImageView
                     android:id="@+id/imageSplash"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="100dp"
                     android:layout_gravity="center"
                     android:layout_marginTop="20dp"
-                    app:srcCompat="@drawable/bizcall1" />
+                    app:srcCompat="@drawable/bizcall" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -97,7 +101,7 @@
                         android:layout_gravity="center"
                         android:layout_marginTop="15dp"
                         android:layout_marginBottom="8dp"
-                        android:background="@drawable/shape_loginbtn"
+                        android:background="@drawable/shape_btnrenewacc"
                         android:paddingLeft="5dp"
                         android:paddingTop="0dp"
                         android:paddingRight="5dp"
@@ -231,14 +235,14 @@
 
                     </LinearLayout>
 
-                    <android.support.v7.widget.AppCompatButton
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btnLogin"
                         android:layout_width="140dp"
                         android:layout_height="50dp"
                         android:layout_gravity="center"
                         android:layout_marginTop="15dp"
                         android:layout_marginBottom="8dp"
-                        android:background="@drawable/shape_loginbtn"
+                        android:background="@drawable/shape_btnrenewacc"
                         android:paddingLeft="5dp"
                         android:paddingTop="0dp"
                         android:paddingRight="5dp"
@@ -282,7 +286,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/blue_text"
+        android:background="@color/toolbar_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -290,7 +294,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingTop="10dp"
-            android:text="Version:1.6.1"
+            android:text="Version:2.1.1"
             android:textColor="@color/white"
             android:textSize="10dp" />
 
@@ -308,4 +312,4 @@
             android:textSize="12dp" />
 
     </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

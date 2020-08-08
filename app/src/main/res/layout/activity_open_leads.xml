@@ -4,15 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.bizcall.wayto.mentebit.OpenLeads">
+    tools:context="com.bizcall.wayto.mentebit13.OpenLeads">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar1"
             android:layout_width="fill_parent"
-            android:layout_height="58dp"
+            android:layout_height="?attr/actionBarSize"
             android:background="@color/toolbar_background"
             android:minHeight="?attr/actionBarSize"
-            android:titleTextColor="#ffff">
+            android:titleTextColor="@color/white">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -102,13 +102,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="0dp"
                 android:layout_gravity="right"
+                android:gravity="center"
                 android:orientation="vertical">
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/reload"
                     android:id="@+id/imgRefresh"
-                    android:visibility="visible"/>
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/reload" />
                 <TextView
                     android:id="@+id/txtDisplayInfo"
                     android:layout_width="wrap_content"
@@ -117,11 +124,11 @@
                     android:layout_marginLeft="7dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="0dp"
-                    android:text="Displaying"
-                    android:textColor="@color/red"
+                    android:text=""
+                    android:textColor="@color/white"
                     android:textSize="8dp" />
             </LinearLayout>
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
 
@@ -158,14 +165,30 @@
                 android:textColor="@color/red"
                 android:textSize="30dp"
                 android:visibility="gone"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginTop="20dp"
+                android:gravity="center_horizontal" />
+            <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right">
+            <ImageView
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/imgUpdate"
+                android:layout_alignParentRight="true"
+                android:visibility="visible"
+                android:layout_marginTop="13dp"
+                android:src="@drawable/international"/>
+            </LinearLayout>
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:id="@+id/recyclerOpenLeads"
              android:layout_marginTop="5dp">
-            </android.support.v7.widget.RecyclerView>
+            </androidx.recyclerview.widget.RecyclerView>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.bizcall.wayto.mentebit13.FilterLeads">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar1"
+        android:layout_width="fill_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/toolbar_background"
+        android:minHeight="?attr/actionBarSize"
+        android:titleTextColor="@color/white">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/linerlayout_border_round"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/img_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow_back_black_24dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtActivityName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Filter Leads"
+                android:textColor="@color/white"
+                android:textSize="20dp" />
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="0dp"
+            android:layout_gravity="right"
+            android:gravity="right"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/imgRefresh"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="0dp"
+                android:layout_marginBottom="7dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/reload" />
+
+        </RelativeLayout>
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
+    <Button
+        android:id="@+id/btnOnlineFaulty"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="#0090bf"
+        android:layout_gravity="center"
+        android:text="Remove Faulty Data"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:textSize="17dp"
+        android:textStyle="normal" />
+    <Button
+        android:id="@+id/btnSeperateInternational"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="#0090bf"
+        android:layout_gravity="center"
+        android:text="Seperate International Leads"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:textSize="17dp"
+        android:textStyle="normal" />
+    <Button
+        android:id="@+id/btnAdmissionForm"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="#0090bf"
+        android:layout_gravity="center"
+        android:text="Admission Form"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:textSize="17dp"
+        android:textStyle="normal"/>
+    <Button
+        android:id="@+id/btnWrongData"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="#0090bf"
+        android:layout_gravity="center"
+        android:text="Remove Wrong Data"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:textSize="17dp"
+        android:textStyle="normal" />
+    <Button
+        android:id="@+id/btnWhatsappLeads"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="#0090bf"
+        android:layout_gravity="center"
+        android:text="Whatsapp Leads to Open Leads"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:textSize="17dp"
+        android:textStyle="normal" />
+
+</LinearLayout>

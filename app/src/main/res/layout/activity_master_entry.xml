@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.bizcall.wayto.mentebit.MasterEntry">
-    <android.support.v7.widget.Toolbar
+        tools:context="com.bizcall.wayto.mentebit13.MasterEntry">
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar1"
         android:layout_width="fill_parent"
-        android:layout_height="58dp"
-        android:background="#0090bf"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/toolbar_background"
         android:minHeight="?attr/actionBarSize"
-        android:titleTextColor="#ffff">
+        android:titleTextColor="@color/white">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -21,7 +21,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="7dp"
                 android:background="@drawable/linerlayout_border_round"
                 android:orientation="horizontal">
 
@@ -95,12 +95,13 @@
                 android:textSize="20dp"
                 android:visibility="gone" />
         </LinearLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        >
 
         <TextView
             android:layout_width="wrap_content"
@@ -144,6 +145,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/edittext_border"
             android:textSize="15dp"
+
             android:paddingLeft="10dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
@@ -169,19 +171,19 @@
 
         <Button
             android:id="@+id/btn_search"
-            android:layout_width="150dp"
-            android:layout_height="40dp"
-            android:background="@drawable/shape_btnrecords"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_btnrenewacc"
             android:text="Search"
             android:textAllCaps="false"
             android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/btnAlldetails"
-            android:layout_width="150dp"
-            android:layout_height="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:background="@drawable/shape_btnrecords"
+            android:background="@drawable/shape_btnrenewacc"
             android:text="All Details"
             android:textAllCaps="false"
             android:textColor="@android:color/white" />
@@ -190,7 +192,7 @@
     <HorizontalScrollView
         android:id="@+id/search_horizontalscroll"
         android:layout_width="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp">
 
@@ -257,13 +259,9 @@
                             android:textAllCaps="false" />
 
                         <TextView
-                            android:layout_width="60dp"
+                            android:layout_width="65dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:layout_marginLeft="3dp"
-                            android:layout_marginRight="3dp"
-                            android:layout_marginTop="3dp"
-                            android:layout_marginBottom="3dp"
                             android:paddingLeft="3dp"
                             android:paddingRight="3dp"
                             android:paddingBottom="3dp"
@@ -417,10 +415,10 @@
 
             </LinearLayout>
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/detail_recyclerview"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+                        android:layout_height="wrap_content"/>
         </LinearLayout>
 
     </HorizontalScrollView>

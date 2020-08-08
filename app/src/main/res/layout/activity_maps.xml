@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.bizcall.wayto.mentebit.MapsActivity">
-    <android.support.v7.widget.Toolbar
+    tools:context="com.bizcall.wayto.mentebit13.MapsActivity">
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar1"
         android:layout_width="fill_parent"
         android:layout_height="58dp"
@@ -16,14 +16,12 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-
+                android:layout_marginTop="12dp"
                 android:background="@drawable/linerlayout_border_round"
                 android:orientation="horizontal">
                 <ImageView
@@ -32,25 +30,33 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_arrow_back_black_24dp" />
             </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/txtActivity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:text="Location Report"
-                android:textColor="@color/white"
-                android:textSize="20dp"
-                />
-            <ImageView
-                android:layout_width="21dp"
-                android:layout_height="25dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="130dp"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/reload"
-                android:id="@+id/imgRefresh"/>
+                <TextView
+                    android:id="@+id/txtActivity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="Location Report"
+                    android:textColor="@color/white"
+                    android:textSize="20dp" />
+
+                <ImageView
+                    android:id="@+id/imgRefresh"
+                    android:layout_width="21dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/reload" />
+            </RelativeLayout>
+
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -97,7 +103,7 @@
 
 
         </LinearLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -163,8 +169,11 @@
             android:layout_height="wrap_content"
             android:id="@+id/btn_markers"
             android:text="Show"
+            android:textColor="@color/white"
+            android:background="@drawable/shape_btnrenewacc"
             android:textAllCaps="false"
             android:layout_weight="2"
+            android:layout_margin="7dp"
             android:layout_gravity="right"/>
     </LinearLayout>
 

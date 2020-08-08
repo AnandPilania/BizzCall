@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <HorizontalScrollView
+        android:id="@+id/search_horizontalscroll"
+        android:layout_width="match_parent"
+        android:visibility="visible"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/black" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:visibility="visible"
+                android:id="@+id/linearTableColumn">
+
+
+
+
+
+                        <TextView
+                            android:layout_width="60dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="Data From"
+                            android:id="@+id/txtDataFrom"
+                            android:gravity="center"
+                            android:background="@drawable/shape_column" />
+
+                        <TextView
+                            android:id="@+id/txtCounselorName"
+                            android:layout_width="60dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="CounselorName"
+                            android:gravity="center"
+                            android:background="@drawable/shape_column" />
+
+                        <TextView
+                            android:layout_width="140dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="Current Statust"
+                            android:gravity="center"
+                            android:id="@+id/txtCurrentStatus"
+                            android:background="@drawable/shape_column" />
+
+                        <TextView
+                            android:layout_width="140dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Lead Date"
+                            android:id="@+id/txtLeadDate"
+                            android:background="@drawable/shape_column" />
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="Allocation Date"
+                            android:gravity="center"
+                            android:id="@+id/txtAllocationDate"
+                            android:background="@drawable/shape_column" />
+
+                        <TextView
+                            android:layout_width="80dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Country"
+                            android:id="@+id/txtCountry"
+                            android:background="@drawable/shape_column" />
+
+                        <TextView
+                            android:layout_width="140dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="Course"
+                            android:gravity="center"
+                            android:id="@+id/txtCourse"
+                            android:background="@drawable/shape_column" />
+
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="SrNo"
+                            android:id="@+id/txtSerialNo"
+                            android:background="@drawable/shape_column" />
+
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Candidate Name"
+                            android:id="@+id/txtCandidateName"
+                            android:background="@drawable/shape_column" />
+
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Mobile No"
+                            android:id="@+id/txtMobileNo"
+                            android:background="@drawable/shape_column"/>
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Address"
+                    android:id="@+id/txtAddress"
+                    android:background="@drawable/shape_column"/>
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="City"
+                    android:id="@+id/txtCity"
+                    android:background="@drawable/shape_column"/>
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="State"
+                    android:id="@+id/txtState"
+                    android:background="@drawable/shape_column"/>
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Pincode"
+                            android:id="@+id/txtUser_pincode"
+                            android:background="@drawable/shape_column"/>
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Mobile"
+                            android:id="@+id/txtUser_mobile"
+                            android:background="@drawable/shape_column"/>
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="Parent No"
+                            android:gravity="center"
+                            android:id="@+id/txtUser_parentno"
+                            android:background="@drawable/shape_column"/>
+                        <TextView
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="EmailId"
+                            android:id="@+id/txtUser_email"
+                            android:background="@drawable/shape_column"/>
+                        <TextView
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="Remarks"
+                            android:id="@+id/txtUser_remarks"
+                            android:background="@drawable/shape_column" />
+
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/detail_recyclerview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+
+</LinearLayout>

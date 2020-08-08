@@ -22,7 +22,8 @@
                 android:text="Point Id"
                 android:textColor="@color/black"
                 android:textAlignment="center"
-                android:textSize="17dp"></TextView>
+                android:textSize="13dp"
+                android:gravity="center_horizontal"></TextView>
 
             <TextView
                 android:id="@+id/txtEvent"
@@ -35,7 +36,8 @@
                 android:text="vvcv"
                 android:textColor="@color/black"
                 android:textAlignment="center"
-                android:textSize="17dp"></TextView>
+                android:textSize="13dp"
+                android:gravity="center_horizontal"></TextView>
 
             <TextView
                 android:id="@+id/txtPoint"
@@ -48,7 +50,8 @@
                 android:text="vfdvd"
                 android:textColor="@color/black"
                 android:textAlignment="center"
-                android:textSize="17dp"></TextView>
+                android:textSize="13dp"
+                android:gravity="center_horizontal"></TextView>
 
             <TextView
                 android:id="@+id/txtValidFrom"
@@ -60,7 +63,7 @@
                 android:paddingRight="10dp"
                 android:textColor="@color/black"
                 android:text="vvdvv"
-                android:textSize="17dp"></TextView>
+                android:textSize="13dp"></TextView>
             <TextView
                 android:id="@+id/txtValidUpto"
                 android:layout_width="120dp"
@@ -71,7 +74,7 @@
                 android:paddingRight="10dp"
                 android:textColor="@color/black"
                 android:text="vvdvv"
-                android:textSize="17dp"></TextView>
+                android:textSize="13dp"></TextView>
 
         </TableRow>
     </TableLayout>

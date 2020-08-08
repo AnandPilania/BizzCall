@@ -6,13 +6,13 @@
     tools:context=".GraphReport"
     android:orientation="vertical"
     android:background="@color/white">
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar1"
         android:layout_width="fill_parent"
-        android:layout_height="58dp"
-        android:background="#0090bf"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/toolbar_background"
         android:minHeight="?attr/actionBarSize"
-        android:titleTextColor="#ffff">
+        android:titleTextColor="@color/white">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -22,7 +22,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="3dp"
                 android:background="@drawable/linerlayout_border_round"
                 android:orientation="horizontal">
 
@@ -32,27 +32,36 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_arrow_back_black_24dp" />
             </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/txtActivityName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:layout_marginLeft="5dp"
-                android:text="Graph Report"
-                android:textColor="@color/white"
-                android:textSize="20dp"
-                />
-            <ImageView
-                android:layout_width="21dp"
-                android:layout_height="25dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="100dp"
-                android:src="@drawable/reload"
-                android:id="@+id/imgRefresh"/>
+                <TextView
+                    android:id="@+id/txtActivityName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="Graph Report"
+                    android:textColor="@color/white"
+                    android:textSize="20dp" />
+
+                <ImageView
+                    android:id="@+id/imgRefresh"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/reload" />
+            </RelativeLayout>
+
+
 
         </LinearLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
 
     <ScrollView
@@ -69,6 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:visibility="gone"
             android:id="@+id/linearSpinner">
         <TextView
             android:layout_width="match_parent"
@@ -102,7 +112,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone"
+            android:visibility="visible"
             android:id="@+id/linearUnderCounselor">
 
         <LinearLayout
@@ -275,10 +285,10 @@
                     </LinearLayout>
                     <TextView
                         android:id="@+id/btn_load"
-                        android:layout_width="150dp"
-                        android:layout_height="40dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginBottom="15dp"
-                        android:background="#0090bf"
+                        android:background="@drawable/shape_btnrenewacc"
                         android:gravity="center"
                         android:text="Load"
                         android:layout_marginTop="10dp"
@@ -374,12 +384,12 @@
                 </TableRow>
             </TableLayout>
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_table"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="visible">
-            </android.support.v7.widget.RecyclerView>
+            </androidx.recyclerview.widget.RecyclerView>
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -391,11 +401,11 @@
                 android:id="@+id/edtExcelName"/>
             <TextView
                 android:id="@+id/txtExport"
-                android:layout_width="150dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:background="#0090bf"
-                android:textColor="#fff"
+                android:background="@drawable/shape_btnrenewacc"
+                android:textColor="@color/white"
                 android:paddingLeft="5dp"
                 android:layout_marginTop="10dp"
                 android:gravity="center"

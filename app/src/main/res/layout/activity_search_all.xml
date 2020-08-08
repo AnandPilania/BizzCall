@@ -6,13 +6,13 @@
     tools:context=".SearchAllActivity"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar1"
         android:layout_width="fill_parent"
-        android:layout_height="58dp"
-        android:background="#0090bf"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/toolbar_background"
         android:minHeight="?attr/actionBarSize"
-        android:titleTextColor="#ffff">
+        android:titleTextColor="@color/white">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -76,28 +76,29 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="0dp"
             android:layout_gravity="right"
+            android:gravity="center"
             android:orientation="vertical">
             <ImageView
                 android:layout_width="21dp"
-                android:layout_height="25dp"
-                android:layout_marginTop="5dp"
+                android:layout_height="21dp"
+                android:layout_marginTop="17dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="7dp"
+                android:layout_marginRight="10dp"
                 android:src="@drawable/reload"
                 android:id="@+id/imgRefresh"/>
             <TextView
                 android:id="@+id/txtDisplayInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="4dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginBottom="0dp"
                 android:text=""
                 android:textColor="@color/white"
                 android:textSize="8dp" />
         </LinearLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -109,18 +110,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:descendantFocusability="beforeDescendants"
-            android:focusableInTouchMode="true"
             android:background="#ffc809"
-            android:orientation="horizontal">
+            android:gravity="center"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="0dp"
-
                 android:background="@drawable/spinner_layout_border"
                 android:orientation="horizontal">
                 <!--<TextView-->
@@ -133,140 +130,57 @@
 
                 <Spinner
                     android:id="@+id/spinnerFilter1"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="30dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginRight="0dp"></Spinner>
+                    android:layout_marginLeft="5dp" />
             </LinearLayout>
+
             <EditText
                 android:id="@+id/edtSearchtext"
                 android:layout_width="120dp"
                 android:layout_height="30dp"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="10dp"
+                android:background="@drawable/border1"
+                android:drawablePadding="10dp"
                 android:hint="Search here "
                 android:paddingLeft="10dp"
-                android:background="@drawable/border1"
-
                 android:paddingTop="5dp"
-                android:drawablePadding="10dp"
                 android:paddingRight="10dp"
                 android:paddingBottom="5dp"
                 android:textSize="15dp"
-                android:visibility="visible"/>
+                android:visibility="visible" />
 
             <ImageView
                 android:id="@+id/img_search"
                 android:layout_width="25dp"
-                android:layout_height="match_parent"
-
-                android:paddingRight="5dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:visibility="gone"
-                android:src="@drawable/ic_search_black_24dp" />
+                android:paddingRight="5dp"
+                android:src="@drawable/ic_search_black_24dp"
+                android:visibility="gone" />
 
             <LinearLayout
+                android:id="@+id/linearOrder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:id="@+id/linearOrder"
-
                 android:visibility="visible">
+
                 <TextView
+                    android:id="@+id/txtAsc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:paddingLeft="5dp"
-                    android:id="@+id/txtAsc"
                     android:drawableLeft="@drawable/ic_arrow_drop_up_black_24dp"
-                    />
+                    android:paddingLeft="5dp" />
+
                 <TextView
+                    android:id="@+id/txtDesc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="5dp"
-                    android:id="@+id/txtDesc"
                     android:drawableLeft="@drawable/ic_arrow_drop_down_black_24dp"
-                    />
+                    android:paddingLeft="5dp" />
             </LinearLayout>
-
-
-
-
-
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:descendantFocusability="beforeDescendants"-->
-                <!--android:focusableInTouchMode="true"-->
-                <!--android:orientation="horizontal">-->
-
-                <!--<LinearLayout-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginLeft="0dp"-->
-                    <!--android:layout_marginTop="10dp"-->
-                    <!--android:layout_marginRight="0dp"-->
-                    <!--android:orientation="horizontal">-->
-
-                    <!--<Spinner-->
-                        <!--android:id="@+id/spinnerFilter1"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_marginLeft="0dp"-->
-                        <!--android:layout_marginTop="0dp"-->
-                        <!--android:layout_marginRight="0dp"></Spinner>-->
-                <!--</LinearLayout>-->
-                <!--<EditText-->
-                    <!--android:id="@+id/edtSearchtext"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginLeft="2dp"-->
-                    <!--android:layout_marginTop="10dp"-->
-                    <!--android:hint="Search here "-->
-                    <!--android:paddingLeft="0dp"-->
-                    <!--android:paddingTop="5dp"-->
-                    <!--android:paddingRight="10dp"-->
-                    <!--android:paddingBottom="5dp"-->
-                    <!--android:textSize="15dp"-->
-                    <!--android:visibility="visible"/>-->
-
-                <!--<ImageView-->
-                    <!--android:id="@+id/img_search"-->
-                    <!--android:layout_width="25dp"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_marginLeft="0dp"-->
-                    <!--android:paddingRight="5dp"-->
-                    <!--android:layout_marginTop="24dp"-->
-                    <!--android:visibility="gone"-->
-                    <!--android:src="@drawable/ic_search_black_24dp" />-->
-                <!--<LinearLayout-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:orientation="vertical"-->
-                    <!--android:id="@+id/linearOrder"-->
-                    <!--android:visibility="visible">-->
-                    <!--<TextView-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_marginLeft="10dp"-->
-                        <!--android:layout_marginTop="10dp"-->
-                        <!--android:paddingRight="10dp"-->
-                        <!--android:paddingLeft="10dp"-->
-                        <!--android:id="@+id/txtAsc"-->
-                        <!--android:drawableLeft="@drawable/ic_arrow_drop_up_black_24dp"-->
-                        <!--/>-->
-                    <!--<TextView-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_marginLeft="10dp"-->
-                        <!--android:paddingRight="10dp"-->
-                        <!--android:paddingLeft="10dp"-->
-                        <!--android:id="@+id/txtDesc"-->
-                        <!--android:drawableLeft="@drawable/ic_arrow_drop_down_black_24dp"-->
-                        <!--/>-->
-                <!--</LinearLayout>-->
-            <!--</LinearLayout>-->
         </LinearLayout>
     </LinearLayout>
     <ScrollView
@@ -314,11 +228,11 @@
                 android:textSize="30dp"
                 android:visibility="gone"
                 android:layout_marginTop="20dp"/>
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerCounselorData1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"></android.support.v7.widget.RecyclerView>
+        android:layout_marginTop="10dp"></androidx.recyclerview.widget.RecyclerView>
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
